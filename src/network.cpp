@@ -30,6 +30,7 @@ Network(int nb, double p_E, double intensity, double lambda)
 }
 void makeConnections(double lambda)
 {
+    bool avoidProblem(false);
     std::map<Neuron*, double> connections;
     for (auto& neuron : _network)
     {
@@ -38,6 +39,19 @@ void makeConnections(double lambda)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
             int j(uniform(0, _network.size()));
+            while (connections.find(_network[j]) != connections.end() or _network[j] == neuron) //avoid to have 2 times the same neuron
+            {
+                
+                j+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
+                if (j>= _network.size())
+                {
+                    j=0;
+                    if (avoidProblem)
+                    {
+                        throw std::domain_error("This neuron is already connected to all other neurons of the network.");
+                    }
+                }
+            }
             connections.insert{_network[j], neuron.factor() * uniform(0, 2*_intensity)};
         }
         neuron.makeConnections(connections);
