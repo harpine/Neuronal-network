@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(Neuron network)
+project(Neuron_network)
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "" FORCE)
