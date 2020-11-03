@@ -17,7 +17,12 @@ Network(int nb, double p_E, double intensity, double lambda)
          //?? arguments à adapter selon constructeur
         _network.push_back(neuron);
     }
+    try{
     makeConnections(lambda);
+    }catch(domain_error& e){
+        std::cerr << e.what();
+        return 1;
+    }
 }
 
 ~Network()
@@ -34,11 +39,11 @@ void makeConnections(double lambda)
     std::map<Neuron*, double> connections;
     for (auto& neuron : _network)
     {
-        connection.erase(); //avoid to recreate a new temporary map for each neuron
+        connections.erase(); //avoid to recreate a new temporary map for each neuron
         for (int i(0), i< poisson(lambda), i++)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
-            int j(uniform(0, _network.size()));
+            int j(uniform_int(0, _network.size()));
             while (connections.find(_network[j]) != connections.end() or _network[j] == neuron) //avoid to have 2 times the same neuron
             {
                 
@@ -50,11 +55,12 @@ void makeConnections(double lambda)
                     {
                         throw std::domain_error("This neuron is already connected to all other neurons of the network.");
                     }
+                    avoidProblem = true;
                 }
             }
-            connections.insert{_network[j], neuron.factor() * uniform(0, 2*_intensity)};
+            connections.insert{_network[j], neuron->factor() * uniform_int(0, 2*_intensity)};
         }
-        neuron.makeConnections(connections);
+        neuron->makeConnections(connections);
     }
 }
 
@@ -62,7 +68,7 @@ void Network::update(double dt)
 {
     for (auto neuron: _network)
     {
-        neuron.update(dt);
+        neuron->update(dt);
     }
 }
 
@@ -91,7 +97,7 @@ void synapticCurrent(Neuron* neuron)
         }
     }
 
-    neuron.setSynapticCurrent(neuron.makeNoise() + excitatoryInput + inhibitoryInput);
+    neuron->setSynapticCurrent(neuron->makeNoise() + excitatoryInput + inhibitoryInput);
 
     // double excitatoryInput(0);
 

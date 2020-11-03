@@ -12,7 +12,6 @@
 class Network {
 
 public:
-/*! @name Constructors / Destructors*/
 
 /*! @brief Constructor 
     initialize the network by adding the neurons
