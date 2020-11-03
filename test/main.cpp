@@ -5,7 +5,7 @@ TEST(testing,thetest){
     EXPECT_EQ(0,0);
 }
 
-RandomNumbers *_RNG = new RandomNumbers(23948710923);
+Random* _RNG = new Random(23948710923);
 
 TEST(Random, distributions) {
     double mean = 0;

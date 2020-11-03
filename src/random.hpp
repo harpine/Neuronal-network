@@ -36,7 +36,7 @@ public:
     template<class T> void exponential(T&, const double rate=1);
     int poisson(double mean=1);
     template<class T> void poisson(T&, double mean=1);
-    bool bernouilli(double p=0.5);
+    bool bernoulli(double p=0.5);
 ///@}
 
 private:
