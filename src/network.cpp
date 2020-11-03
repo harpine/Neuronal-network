@@ -1,31 +1,32 @@
 #include "network.hpp"
 #include <map>
+#include <iostream>
 
-Network(int nb, double p_E, double intensity, double lambda)
-: _intensity(intensity)
+Network::Network(int nb, double p_E, double intensity, double lambda)
+    : _intensity(intensity)
 {
+    Neuron* neuron;
     for (int i(0); i < nb; ++i)
     {
         if(bernoulli(p_E))
         {
-            Neuron* neuron(new InhibitoryNeuron());
+            neuron = new InhibitoryNeuron();
         }
         else
         {
-            Neuron* neuron(new ExcitatoryNeuron());
+            neuron = new ExcitatoryNeuron();
         }
          //?? arguments à adapter selon constructeur
         _network.push_back(neuron);
     }
     try{
     makeConnections(lambda);
-    }catch(domain_error& e){
+    }catch(std::domain_error& e){
         std::cerr << e.what();
-        return 1;
     }
 }
 
-~Network()
+Network::~Network()
 {
     for (auto& neuron: _network)
     {
@@ -33,14 +34,14 @@ Network(int nb, double p_E, double intensity, double lambda)
         neuron = nullptr;
     }
 }
-void makeConnections(double lambda)
+void Network::makeConnections(double lambda)
 {
     bool avoidProblem(false);
-    std::map<Neuron*, double> connections;
+    std::map<Neuron* , double> connections;
     for (auto& neuron : _network)
     {
         connections.erase(); //avoid to recreate a new temporary map for each neuron
-        for (int i(0), i< poisson(lambda), i++)
+        for (int i(0); i < _RNG->poisson(lambda); i++)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
             int j(uniform_int(0, _network.size()));
@@ -72,7 +73,7 @@ void Network::update(double dt)
     }
 }
 
-void synapticCurrent(Neuron* neuron)
+void Network::synapticCurrent(Neuron* neuron)
 {
     // pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
     //std:map<Neuron*, double> excitatory;
