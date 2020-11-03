@@ -35,7 +35,7 @@ int Random::uniform_int (int lower, int upper) {
 	return unif(rng);
 }
 
-bool Random::bernouilli(double p) {
+bool Random::bernoulli(double p) {
     std::bernoulli_distribution bernou(p);
     return bernou(rng);
 }
