@@ -1,6 +1,7 @@
 #include "network.hpp"
 #include <map>
 #include <iostream>
+#include <algorithm>
 
 Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
@@ -16,14 +17,10 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
         {
             neuron = new ExcitatoryNeuron();
         }
-         //?? arguments à adapter selon constructeur
+         //TODO: arguments à adapter selon constructeur
         _network.push_back(neuron);
     }
-    try{
     makeConnections(lambda);
-    }catch(std::domain_error& e){
-        std::cerr << e.what();
-    }
 }
 
 Network::~Network()
@@ -37,21 +34,21 @@ Network::~Network()
 void Network::makeConnections(double lambda)
 {
     bool avoidProblem(false);
-    std::map<Neuron* , double> connections;
-    for (auto& neuron : _network)
+    std::map<Neuron*, double> connections;
+    for (int i(0); i<_network.size(); i++)
     {
-        connections.erase(); //avoid to recreate a new temporary map for each neuron
-        for (int i(0); i < _RNG->poisson(lambda); i++)
+        connections.clear(); //avoid to recreate a new temporary map for each neuron
+        for (int j(0); j < _RNG->poisson(lambda); j++)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
-            int j(uniform_int(0, _network.size()));
-            while (connections.find(_network[j]) != connections.end() or _network[j] == neuron) //avoid to have 2 times the same neuron
+            int k(uniform_int(0, _network.size()));
+            while (connections.find(_network[k]) != connections.end() or k == i) //avoid to have 2 times the same neuron
             {
                 
-                j+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
-                if (j>= _network.size())
+                k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
+                if (k>= _network.size())
                 {
-                    j=0;
+                    k=0;
                     if (avoidProblem)
                     {
                         throw std::domain_error("This neuron is already connected to all other neurons of the network.");
@@ -59,15 +56,15 @@ void Network::makeConnections(double lambda)
                     avoidProblem = true;
                 }
             }
-            connections.insert{_network[j], neuron->factor() * uniform_int(0, 2*_intensity)};
+            connections.insert(_network[k], _network[i]->factor() * uniform_int(0, 2*_intensity));
         }
-        neuron->makeConnections(connections);
+        _connections[i] = connections;
     }
 }
 
 void Network::update(double dt)
 {
-    for (auto neuron: _network)
+    for (auto& neuron: _network)
     {
         neuron->update(dt);
     }
@@ -82,7 +79,7 @@ void Network::synapticCurrent(Neuron* neuron)
     double inhibitoryInput(0);
     for (auto& pair: neuron.getConnections())
     {
-        if (pair->first->is_firing())
+        if (pair->first->isFiring())
         {
             if (pair->second > 0) // so it is an excitatory neuron
             {
@@ -98,7 +95,7 @@ void Network::synapticCurrent(Neuron* neuron)
         }
     }
 
-    neuron->setSynapticCurrent(neuron->makeNoise() + excitatoryInput + inhibitoryInput);
+    neuron->setCurrent(neuron->noise() + excitatoryInput + inhibitoryInput);
 
     // double excitatoryInput(0);
 
@@ -111,5 +108,5 @@ void Network::synapticCurrent(Neuron* neuron)
     // {
     //     inhibitoryInput += pair->second;
     // }
-    //return (neuron.makeNoise() + 0.5 * excitatoryInput - inhibitoryInput);
+    //return (neuron.noise() + 0.5 * excitatoryInput - inhibitoryInput);
 }
