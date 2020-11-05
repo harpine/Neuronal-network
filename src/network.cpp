@@ -11,11 +11,11 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     {
         if(_RNG->bernoulli(p_E))
         {
-            //neuron = new InhibitoryNeuron();
+            neuron = new InhibitoryNeuron(_RNG->norm(0,1));
         }
         else
         {
-            //neuron = new ExcitatoryNeuron();
+            neuron = new ExcitatoryNeuron(_RNG->norm(0,1));
         }
          //TODO: décommenter et arguments à adapter selon constructeur
         _network.push_back(neuron);
@@ -92,7 +92,6 @@ void Network::synapticCurrent(int index)
                 inhibitoryInput += pair.second; // we add negative values
                 //inhibitory.insert(pair);
             }
-            pair.first->hasFired();
         }
     }
 
