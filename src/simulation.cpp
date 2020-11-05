@@ -2,6 +2,7 @@
 #include "constants.hpp"
 
 Simulation::Simulation(int argc, char** argv)
+    : _dt(0.5)
     {
         try {
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
@@ -15,13 +16,16 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
+            cmd.add(ofile);
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
             if(lambda.getValue() <= 0 or lambda.getValue() >= (number.getValue() -1)) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            _time = time.getValue();
+            this->_net = new Network(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
 
-            net(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
         }
@@ -29,17 +33,14 @@ Simulation::Simulation(int argc, char** argv)
 
 Simulation::~Simulation() 
 {
-    delete net;
+    delete _net;
 }
 
-Simulation::run(double dt, double time) {
+void Simulation::run(double dt, double time) {
     double running_time(0);
     while (running_time <= time) {
         running_time += dt;
-        net.update(dt);
+        _net->update();
     }
 }
 
-Simulation::load_config(const std::string &infile) {
-    
-}
