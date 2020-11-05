@@ -9,6 +9,7 @@
 #define _PERC_ .5
 #define _LAMB_ 4
 #define _INT_  // TODO: decide what will be the default parameter
+#define _DISCHARGE_T_ 30
 
 // *text messages *
 
