@@ -2,6 +2,7 @@
 #define SIMULATION_HPP
 
 #include "network.hpp"
+#include <fstream>
 /*!
   The Simulation class is the main class in this program. It constructs the neuron network System according to user-specified parameters, and @ref run "runs" the simulation.
 
@@ -31,10 +32,12 @@ public :
     
     void load_config(const std::string &infile);
 
+    void print();
 
 private :
     double _dt, _time;
     Network *_net;
+    std::ofstream _outfile;
     
 };
 

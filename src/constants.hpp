@@ -1,5 +1,7 @@
 #include <tclap/CmdLine.h>
 #include <stdexcept>
+#include <iostream>
+#include <fstream>
 
 // * Default parameter values *
 
