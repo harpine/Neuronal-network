@@ -1,5 +1,5 @@
-#ifndef INHIBITORYNEURON_HPP
-#define INHIBITORYNEURON_HPP
+#ifndef EXCITATORYNEURON_HPP
+#define EXCITATORYNEURON_HPP
 #include "neuron.hpp"
 
 
@@ -12,4 +12,4 @@ class ExcitatoryNeuron :public Neuron
     virtual ~ExcitatoryNeuron() override;
 };
 
-#endif //INHIBITORYNEURON_HPP
+#endif //EXCITATORYNEURON_HPP
