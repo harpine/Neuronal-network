@@ -37,7 +37,7 @@ void makeConnections(double lambda);
  * Allows to update all the neurons of the network by step of time
  @param dt the time step
  */
-	void update(const double dt); 
+	void update();
 /*!
   @brief calculate synaptic current received by the neurons.
   calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.

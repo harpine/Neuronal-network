@@ -12,7 +12,7 @@ option(test "Build tests." ON)
 include_directories("/usr/local/include" ${CMAKE_SOURCE_DIR}/include)
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-add_executable(main src/main.cpp src/random.cpp src/network.cpp src/neuron.cpp)
+add_executable(main src/main.cpp src/random.cpp src/network.cpp src/neuron.cpp src/inhibitoryNeuron.cpp src/excitatoryNeuron.cpp)
 if (test)
   enable_testing()
   find_package(GTest)

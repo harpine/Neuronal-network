@@ -1,20 +1,34 @@
 #include "neuron.hpp"
-#include "random.hpp"
+#include "constants.hpp"
 
 
-double Neuron::noise() const
+
+Neuron::Neuron(double a,  double b, double c, double d)
+: _a(a),_b(b),_c(c),_d(d)
 {
-    return this->getW() * (_RNG->normal(0,1));
+    _v=-65;
+    _u=_b*_v;
 }
 
-void Neuron::update(double dt)
-{}
+Neuron::~Neuron(){
 
-bool Neuron::isFiring()
-{
-    return 1;
 }
-bool Neuron::hasFired()
+void Neuron::update()
 {
-    return 1;
+    if(isFiring()){
+        _v=_c;
+        _u=_u+_d;
+    }else{
+        _v+=(0.04*_v*_v+5*_v+140-_u+_current);
+        _u+=_a*(_b*_v-_u);
+    }
+
 }
+
+bool Neuron::isFiring(){
+    if(_v>=_DISCHARGE_T_){
+        return true;
+    }
+    return false;
+}
+

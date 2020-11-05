@@ -1,6 +1,8 @@
 #include "network.hpp"
 #include <map>
 #include <algorithm>
+#include "inhibitoryNeuron.hpp"
+#include "excitatoryNeuron.hpp"
 
 Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
@@ -11,11 +13,11 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     {
         if(_RNG->bernoulli(p_E))
         {
-            //neuron = new InhibitoryNeuron();
+            neuron = new InhibitoryNeuron(_RNG->normal(0,1));
         }
         else
         {
-            //neuron = new ExcitatoryNeuron();
+            neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
         }
          //TODO: décommenter et arguments à adapter selon constructeur
         _network.push_back(neuron);
@@ -62,12 +64,12 @@ void Network::makeConnections(double lambda)
     }
 }
 
-void Network::update(double dt)
+void Network::update()
 {
     for (size_t i(0); i <_network.size(); i++)
     {
         synapticCurrent(i);
-        _network[i]->update(dt);
+        _network[i]->update();
     }
 }
 
@@ -92,7 +94,6 @@ void Network::synapticCurrent(int index)
                 inhibitoryInput += pair.second; // we add negative values
                 //inhibitory.insert(pair);
             }
-            pair.first->hasFired();
         }
     }
 
