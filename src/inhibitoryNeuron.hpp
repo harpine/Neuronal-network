@@ -2,14 +2,38 @@
 #define INHIBITORYNEURON_HPP
 #include "neuron.hpp"
 
-
+/**
+ * @brief An inhibitory Neuron class.
+ * 
+ * A type of neuron inheriting from the pure virtual class Neuron.
+ */
 class InhibitoryNeuron :public Neuron
 {
     public:
+    /**
+     * @brief Construct a new Inhibitory Neuron object
+     * 
+     * @param r A random number
+     */
     InhibitoryNeuron(double r);
-    virtual int getW() const override;
-    virtual int factor() const override;
+    /**
+     * @brief Destroy the Inhibitory Neuron object
+     * 
+     */
     virtual ~InhibitoryNeuron() override;
+    /**
+     * @brief A getter for the W of the Neuron
+     * 
+     * @return int the W of the Inhibitory Neuron
+     */
+    virtual int getW() const override;
+    /**
+     * @brief A getter for the factor of the Neuron
+     * 
+     * @return int the factor of the Neuron
+     */
+    virtual int factor() const override;
+
 };
 
 #endif //INHIBITORYNEURON_HPP
