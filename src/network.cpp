@@ -1,23 +1,23 @@
 #include "network.hpp"
 #include <map>
-#include <iostream>
 #include <algorithm>
 
 Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
 {
     Neuron* neuron;
+    //TODO: arguments
     for (int i(0); i < nb; ++i)
     {
-        if(bernoulli(p_E))
+        if(_RNG->bernoulli(p_E))
         {
-            neuron = new InhibitoryNeuron();
+            //neuron = new InhibitoryNeuron();
         }
         else
         {
-            neuron = new ExcitatoryNeuron();
+            //neuron = new ExcitatoryNeuron();
         }
-         //TODO: arguments à adapter selon constructeur
+         //TODO: décommenter et arguments à adapter selon constructeur
         _network.push_back(neuron);
     }
     makeConnections(lambda);
@@ -35,13 +35,13 @@ void Network::makeConnections(double lambda)
 {
     bool avoidProblem(false);
     std::map<Neuron*, double> connections;
-    for (int i(0); i<_network.size(); i++)
+    for (size_t i(0); i<_network.size(); i++)
     {
         connections.clear(); //avoid to recreate a new temporary map for each neuron
         for (int j(0); j < _RNG->poisson(lambda); j++)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
-            int k(uniform_int(0, _network.size()));
+            size_t k(_RNG->uniform_int(0, _network.size()));
             while (connections.find(_network[k]) != connections.end() or k == i) //avoid to have 2 times the same neuron
             {
                 
@@ -56,7 +56,7 @@ void Network::makeConnections(double lambda)
                     avoidProblem = true;
                 }
             }
-            connections.insert(_network[k], _network[i]->factor() * uniform_int(0, 2*_intensity));
+            connections.insert(std::make_pair(_network[k], _network[i]->factor() * _RNG->uniform_double(0, 2*_intensity)));
         }
         _connections[i] = connections;
     }
@@ -64,38 +64,39 @@ void Network::makeConnections(double lambda)
 
 void Network::update(double dt)
 {
-    for (auto& neuron: _network)
+    for (size_t i(0); i <_network.size(); i++)
     {
-        neuron->update(dt);
+        synapticCurrent(i);
+        _network[i]->update(dt);
     }
 }
 
-void Network::synapticCurrent(Neuron* neuron)
+void Network::synapticCurrent(int index)
 {
-    // pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
+    //TODO: pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
     //std:map<Neuron*, double> excitatory;
     //std:map<Neuron*, double> inhibitory;
     double excitatoryInput(0);
     double inhibitoryInput(0);
-    for (auto& pair: neuron.getConnections())
+    for (auto& pair: _connections[index])
     {
-        if (pair->first->isFiring())
+        if (pair.first->isFiring())
         {
-            if (pair->second > 0) // so it is an excitatory neuron
+            if (pair.second > 0) // so it is an excitatory neuron
             {
-                excitatoryInput += 0.5 *(pair->second);
+                excitatoryInput += 0.5 *(pair.second);
                 //excitatory.insert(pair);
             }
             else
             {
-                inhibitoryInput += pair->second; // we add negative values
+                inhibitoryInput += pair.second; // we add negative values
                 //inhibitory.insert(pair);
             }
-            pair->first->has_fired();
+            pair.first->hasFired();
         }
     }
 
-    neuron->setCurrent(neuron->noise() + excitatoryInput + inhibitoryInput);
+    _network[index]->setCurrent(_network[index]->noise() + excitatoryInput + inhibitoryInput);
 
     // double excitatoryInput(0);
 

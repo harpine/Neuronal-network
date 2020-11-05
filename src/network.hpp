@@ -43,7 +43,7 @@ void makeConnections(double lambda);
   calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.
   @param neuron the neuron on which we want to caculate the total current.
  */
-	void synapticCurrent(Neuron* neuron);
+	void synapticCurrent(int index);
 
 private:
 /*!
@@ -61,6 +61,6 @@ std::vector<std::map<Neuron*, double>> _connections;
 /*! mean intensity of connexions between connexions
 */
 double _intensity;
-}
+};
 
 #endif //NETWORK_HPP

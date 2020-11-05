@@ -7,15 +7,15 @@
 class Neuron{
     public:
     Neuron(double a,double b,double c,double d);
-    
-    double noise();
+    virtual ~Neuron();
+    double noise() const;
     void update(double dt);
-    void setCurrent(const double current){_current=current};
+    void setCurrent(const double current){_current=current;};
 
     bool isFiring();
     bool hasFired();
-    int getW()=0 const;
-    int factor()=0 const;
+    virtual int getW() const =0;
+    virtual int factor() const =0;
 
     private:
     double _a;
@@ -25,7 +25,7 @@ class Neuron{
     double _current;
     bool _isfiring;
     std::map<Neuron*,double> _connections;
-}
+};
 
 
 #endif //NEURON_HPP
