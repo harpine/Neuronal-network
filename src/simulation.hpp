@@ -22,7 +22,7 @@ public :
         @param _lambda the mean connectivity
         @param _intensity the mean intensity of the connexions
     */
-    Simulation(int, char**);
+    Simulation(int argc, char** argv);
     ~Simulation();
     /*!
       Run the simulation at _delta_t interval
@@ -31,10 +31,11 @@ public :
     
     void load_config(const std::string &infile);
 
+
 private :
     double _dt, _time;
-    Network net;
+    Network *_net;
     
-}
+};
 
 #endif //SIMULATION_HPP

@@ -19,3 +19,4 @@
 #define _LAMBDA_ "Mean connectivity between the neurons"
 #define _INTENSITY_ "Mean intensity of a connection"
 #define _PRGRM_TEXT_ "Neuron simulation"
+#define _OFILE_TEXT_ "Output file name"
