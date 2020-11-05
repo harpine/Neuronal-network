@@ -8,7 +8,6 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
 {
     Neuron* neuron;
-    //TODO: arguments
     for (int i(0); i < nb; ++i)
     {
         if(_RNG->bernoulli(p_E))
@@ -19,7 +18,6 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
         {
             neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
         }
-         //TODO: décommenter et arguments à adapter selon constructeur
         _network.push_back(neuron);
     }
     makeConnections(lambda);
@@ -111,4 +109,14 @@ void Network::synapticCurrent(int index)
     //     inhibitoryInput += pair->second;
     // }
     //return (neuron.noise() + 0.5 * excitatoryInput - inhibitoryInput);
+}
+
+std::vector<bool> Network::getCurrentstatus() const
+{
+    std::vector<bool> status;
+    for (size_t i(0); i < _network.size(); i++)
+    {
+        status[i] = _network[i]->isFiring();
+    }
+    return status;
 }

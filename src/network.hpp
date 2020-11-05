@@ -45,6 +45,11 @@ void makeConnections(double lambda);
  */
 	void synapticCurrent(int index);
 
+	/*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
+	 * 0 = hasn't fired this step of time, 1 = fired this step of time
+	 */
+	 std::vector<bool> getCurrentstatus() const;
+
 private:
 /*!
  collection of neurons that are in the network
