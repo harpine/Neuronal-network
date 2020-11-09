@@ -45,7 +45,7 @@ int Simulation::run(double dt) {
     int ex_time = 0;
     double running_time(0);
     while (running_time <= this->_time) {
-        running_time += dt;
+        running_time += 2*dt;
         _net->update();
         print();
     } 

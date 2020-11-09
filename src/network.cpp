@@ -36,7 +36,6 @@ void Network::makeConnections(double lambda)
 {
     std::map<Neuron*, double> connections;
     bool avoidProblem(false);
-    std::cerr << _network.size();
     for (size_t i(0); i<_network.size(); i++)
     {
         connections.clear(); //avoid to recreate a new temporary map for each neuron
@@ -49,12 +48,13 @@ void Network::makeConnections(double lambda)
                 k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
                 if (k > _network.size()-1)
                 {
-                    if (avoidProblem)
+		    if (connections.size()>_network.size()-1)
+                    //if (avoidProblem)
                     {
                        throw std::domain_error ("this neuron is already connected to all neurons of the network");
                     }
                     k= 0;
-                    avoidProblem = true;
+                    //avoidProblem = true;
                 }
             }
 
