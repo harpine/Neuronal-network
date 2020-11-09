@@ -5,7 +5,7 @@ Simulation::Simulation()
     : _dt(_DELTA_T_), _time(_END_TIME_), _outfile(_OFILE_TEXT_) {}
 
 Simulation::Simulation(int argc, char** argv)
-    : _dt(0.5)
+    : _dt(_DELTA_T_)
     {
         try {
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
@@ -19,8 +19,6 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> cfile("c", "config", _CFILE_TEXT_, false, "", "string");
-            cmd.add(cfile);
             TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
             cmd.add(ofile);
             cmd.parse(argc, argv);
@@ -32,6 +30,7 @@ Simulation::Simulation(int argc, char** argv)
             std::string outname = ofile.getValue();
             this->_net = new Network(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
             if(outname.length()) _outfile.open(outname);
+            
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
         }
@@ -42,10 +41,10 @@ Simulation::~Simulation()
     delete _net;
 }
 
-int Simulation::run(double dt, double time) {
+int Simulation::run(double dt) {
     int ex_time = 0;
     double running_time(0);
-    while (running_time <= time) {
+    while (running_time <= this->_time) {
         running_time += dt;
         _net->update();
     } 
@@ -65,26 +64,3 @@ void Simulation::print() {
         *outstr << "\n" << std::endl;
     }
 }
-/*
-void Simulation::load_config(const std::string &infile) {
-    try {
-        std::ifstream myfile(infile);
-        std::string value,key_1,line, key_2;
-        std::vector<double> parameters;
-        std::vector<std::vector> elements;
-        if(myfile.is_open()){
-            while(std::getline(myfile,line)){
-                line.erase(std::remove_if(line.begin(),line.end(),isspace),line.end());
-                if(line[0]=='#') continue;
-                std::stringstream ss(line);
-                std::getline(ss, key_1, 'FS');
-                for(size_t n=0; std::getline(ss, value, ' '); n++) {
-                    parameters[n] = stod(value);
-                }
-            }
-        }
-    } catch {
-
-    }
-}
-*/

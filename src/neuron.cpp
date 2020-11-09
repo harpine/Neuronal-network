@@ -19,7 +19,8 @@ void Neuron::update()
         _v=_c;
         _u=_u+_d;
     }else{
-        _v+=(0.04*_v*_v+5*_v+140-_u+_current);
+        _v+=0.5*(0.04*_v*_v+5*_v+140-_u+_current);
+        _v+=0.5*(0.04*_v*_v+5*_v+140-_u+_current);
         _u+=_a*(_b*_v-_u);
     }
 
