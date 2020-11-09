@@ -12,15 +12,34 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     {
         if(_RNG->bernoulli(p_E))
         {
-            neuron = new InhibitoryNeuron(_RNG->normal(0,1));
+            neuron = new InhibitoryNeuron(_RNG->normal(0,1)); // TODO: existe plus du tout ?
         }
         else
         {
-            neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
+            neuron = new ExcitatoryNeuron(_RNG->normal(0,1)); //TODO: existe plus du tout? 
         }
         _network.push_back(neuron);
     }
     makeConnections(lambda);
+}
+
+Network::Network(std::vector<std::vector<double>> parameters, double intensity, double lambda)
+    :_intensity(intensity)
+{
+    Neuron* neuron;
+    for (size_t i(0); i < parameters.size(); i++)
+    {
+        if (parameters[i][0] == 0) {
+            neuron = new InhibitoryNeuron(parameters[i][1], parameters[i][2], parameters[i][3], parameters[i][4]);
+        }
+        if (parameters[i][0] == 1) {
+            neuron = new ExcitatoryNeuron(parameters[i][1], parameters[i][2], parameters[i][3], parameters[i][4]);
+        }
+    }
+
+    _network.push_back(neuron);
+
+
 }
 
 Network::~Network()
@@ -120,3 +139,5 @@ std::vector<bool> Network::getCurrentstatus() const
     }
     return status;
 }
+
+
