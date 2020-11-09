@@ -47,6 +47,7 @@ int Simulation::run(double dt) {
     while (running_time <= this->_time) {
         running_time += dt;
         _net->update();
+        print();
     } 
     ex_time = clock();
     return ex_time;
@@ -57,10 +58,8 @@ void Simulation::print() {
     if (_outfile.is_open()) outstr = &_outfile;
 
     std::vector<bool> matrix = _net->getCurrentstatus();
-    for (size_t i(0); i<_time; ++i) {
-        for(auto neuron : matrix) {
-            *outstr << neuron << " ";
-        }
-        *outstr << "\n" << std::endl;
+    for(auto neuron : matrix) {
+        *outstr << neuron << " ";
     }
+    *outstr << "\n" << std::endl;
 }
