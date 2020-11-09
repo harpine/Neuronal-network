@@ -24,15 +24,6 @@ public:
     */
 Network(int nb, double p_E, double intensity, double lambda);
 
-/*! @brief Constructor-configuration file.
-    initialize the network by adding the neurons, when a configuration file is given.
-    @param nb number of neurons wanted
-    @param p_E proportionality of excitatory neurons
-    @param intensity mean intensity of connection
-    @param lambda mean connectivity between neurons
-    */
-Network(std::vector<std::vector<double>> parameters, double intensity, double lambda);
-
 /*! @brief Destructor.
   Destroy all neurons in the set*/
 ~Network();

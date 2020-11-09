@@ -40,34 +40,34 @@ public:
 ///@}
 
 private:
-    std::mt19937 rng;
-    long int seed;
+    std::mt19937 _rng;
+    long int _seed;
 
 };
 
 template<class T> void Random::uniform_double(T &res, double lower, double upper) {
     std::uniform_real_distribution<> unif(lower, upper);
-    for (auto I=res.begin(); I!=res.end(); I++) *I = unif(rng);
+    for (auto I=res.begin(); I!=res.end(); I++) *I = unif(_rng);
 }
 
 template<class T> void Random::uniform_int(T& res, int lower, int upper){
 	std::uniform_int_distribution<> unif(lower, upper);
-    for (auto I=res.begin(); I!=res.end(); I++) *I = unif(rng);
+    for (auto I=res.begin(); I!=res.end(); I++) *I = unif(_rng);
 }
 
 template<class T> void Random::normal(T &res, double mean, double sd) {
     std::normal_distribution<> norm(mean, sd);
-    for (auto I=res.begin(); I!=res.end(); I++) *I = norm(rng);
+    for (auto I=res.begin(); I!=res.end(); I++) *I = norm(_rng);
 }
 
 template<class T> void Random::exponential(T& res, const double rate) {
 	std::exponential_distribution<> exp(rate);
-    for (auto I=res.begin(); I!=res.end(); I++) *I = exp(rng);
+    for (auto I=res.begin(); I!=res.end(); I++) *I = exp(_rng);
 }
 
 template<class T> void Random::poisson(T& res, double mean) {
 	std::poisson_distribution<> pois(mean);
-    for (auto I=res.begin(); I!=res.end(); I++) *I = pois(rng);
+    for (auto I=res.begin(); I!=res.end(); I++) *I = pois(_rng);
 }
 
 extern Random* _RNG;

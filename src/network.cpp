@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "inhibitoryNeuron.hpp"
 #include "excitatoryNeuron.hpp"
+#include <iostream>
 
 Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
@@ -12,34 +13,24 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     {
         if(_RNG->bernoulli(p_E))
         {
-            neuron = new InhibitoryNeuron(_RNG->normal(0,1)); // TODO: existe plus du tout ?
+            neuron = new InhibitoryNeuron(_RNG->normal(0,1));
         }
         else
         {
-            neuron = new ExcitatoryNeuron(_RNG->normal(0,1)); //TODO: existe plus du tout? 
+            neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
         }
         _network.push_back(neuron);
     }
     makeConnections(lambda);
-}
 
-Network::Network(std::vector<std::vector<double>> parameters, double intensity, double lambda)
-    :_intensity(intensity)
-{
-    Neuron* neuron;
-    for (size_t i(0); i < parameters.size(); i++)
+/*    for (size_t i(0); i < _connections.size(); i++)
     {
-        if (parameters[i][0] == 0) {
-            neuron = new InhibitoryNeuron(parameters[i][1], parameters[i][2], parameters[i][3], parameters[i][4]);
-        }
-        if (parameters[i][0] == 1) {
-            neuron = new ExcitatoryNeuron(parameters[i][1], parameters[i][2], parameters[i][3], parameters[i][4]);
+        for (auto pair: _connections[i])
+        {
+            pair.first->getW();
         }
     }
-
-    _network.push_back(neuron);
-
-
+    */
 }
 
 Network::~Network()
@@ -52,32 +43,33 @@ Network::~Network()
 }
 void Network::makeConnections(double lambda)
 {
-    bool avoidProblem(false);
     std::map<Neuron*, double> connections;
+    bool avoidProblem(false);
     for (size_t i(0); i<_network.size(); i++)
     {
         connections.clear(); //avoid to recreate a new temporary map for each neuron
-        for (int j(0); j < _RNG->poisson(lambda); j++)
+        for (int j(0); j < _RNG->poisson(lambda) and _connections.size()< _network.size(); j++)
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
-            size_t k(_RNG->uniform_int(0, _network.size()));
+            size_t k(_RNG->uniform_int(0, _network.size()-1)); //because k is the index, so we have to substract 1 to the total size
             while (connections.find(_network[k]) != connections.end() or k == i) //avoid to have 2 times the same neuron
             {
-                
                 k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
-                if (k>= _network.size())
+                if (k > _network.size()-1)
                 {
-                    k=0;
+
                     if (avoidProblem)
                     {
-                        throw std::domain_error("This neuron is already connected to all other neurons of the network.");
+                       throw std::domain_error ("this neuron is already connected to all neurons of the network");
                     }
+                    k= 0;
                     avoidProblem = true;
                 }
             }
+
             connections.insert(std::make_pair(_network[k], _network[i]->factor() * _RNG->uniform_double(0, 2*_intensity)));
         }
-        _connections[i] = connections;
+        _connections.push_back(connections);
     }
 }
 
@@ -135,7 +127,7 @@ std::vector<bool> Network::getCurrentstatus() const
     std::vector<bool> status;
     for (size_t i(0); i < _network.size(); i++)
     {
-        status[i] = _network[i]->isFiring();
+        status.push_back(_network[i]->isFiring());
     }
     return status;
 }
