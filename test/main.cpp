@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "../src/random.hpp"
 #include "../src/simulation.hpp"
+#include "../src/constants.hpp"
 
 TEST(testing,thetest){
     EXPECT_EQ(0,0);
