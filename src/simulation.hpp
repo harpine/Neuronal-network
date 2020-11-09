@@ -24,11 +24,16 @@ public :
         @param _intensity the mean intensity of the connexions
     */
     Simulation(int argc, char** argv);
+    Simulation();
     ~Simulation();
     /*!
-      Run the simulation at _delta_t interval
+      @brief run the simulation and return the execution time
+      @param dt step time 
+      @param time total time of the simulation
+
+      @return the total time of execution
     */
-    void run(const double dt, const double time);
+    int run(const double dt, const double time);
     
     void load_config(const std::string &infile);
 
