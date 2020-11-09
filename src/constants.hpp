@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
+#include <time.h>
+#include <map>
 
 // * Default parameter values *
 
@@ -21,4 +23,5 @@
 #define _LAMBDA_ "Mean connectivity between the neurons"
 #define _INTENSITY_ "Mean intensity of a connection"
 #define _PRGRM_TEXT_ "Neuron simulation"
+#define _CFILE_TEXT_ "Configuration file name"
 #define _OFILE_TEXT_ "Output file name"
