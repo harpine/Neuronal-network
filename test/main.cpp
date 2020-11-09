@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "../src/random.hpp"
+#include "../src/simulation.hpp"
 
 TEST(testing,thetest){
     EXPECT_EQ(0,0);
@@ -30,7 +31,6 @@ TEST(Random, distributions) {
     for (auto I : res) mean += I*1e-4;
     EXPECT_NEAR(input_mean, mean, 2e-2*input_mean);
 }
-
 
 int main(int argc,char **argv){
     ::testing::InitGoogleTest(&argc,argv);

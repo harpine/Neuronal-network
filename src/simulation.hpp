@@ -3,6 +3,27 @@
 
 #include "network.hpp"
 #include <fstream>
+
+/*!
+  * @brief storage of neuron parameters when given by a configuration.
+  * 
+  * @param type indicates if the neuron is excitatory (1) or inhibitory (0).
+  * @param a describes the time scale of the recovery variable u
+  * @param b describes the sensitivity of the recovery variable b.
+  * @param c describes the after-spike reset vaue of the membrane potential v.
+  * @param d describes the after-spike reset of the recovery variable u.
+*/
+struct Param {
+  std::string type;
+  double a;
+  double b;
+  double c;
+  double d;
+  double inhibitory;
+  double valence;
+  double degree;
+};
+
 /*!
   The Simulation class is the main class in this program. It constructs the neuron network System according to user-specified parameters, and @ref run "runs" the simulation.
 
@@ -15,7 +36,7 @@ class Simulation {
 
 public : 
     /*!
-    Simulation takes the command-line options and extracts the following parameters from them:
+    @brief Simulation takes the command-line options and extracts the following parameters from them:
         @param _nb the number of neurons in the network
         @param _p_E the percentage of activatory neurons
         @param _time the time until the end of the simulation 
@@ -27,15 +48,13 @@ public :
     Simulation();
     ~Simulation();
     /*!
-      @brief run the simulation and return the execution time
+      @brief run the simulation and return the execution time.
       @param dt step time 
       @param time total time of the simulation
 
       @return the total time of execution
     */
-    int run(const double dt, const double time);
-    
-    void load_config(const std::string &infile);
+    int run(const double dt);
 
     void print();
 
