@@ -58,12 +58,11 @@ void Network::makeConnections(double lambda)
                 if (k > _network.size()-1)
                 {
 
-                    if (avoidProblem)
+                    if (connections.size()>_network.size()-1)
                     {
                        throw std::domain_error ("this neuron is already connected to all neurons of the network");
                     }
                     k= 0;
-                    avoidProblem = true;
                 }
             }
 
