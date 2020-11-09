@@ -28,7 +28,7 @@ Simulation::Simulation(int argc, char** argv)
             if(lambda.getValue() <= 0 or lambda.getValue() >= (number.getValue() -1)) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             _time = time.getValue();
             std::string outname = ofile.getValue();
-            this->_net = new Network(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
+            _net = new Network(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
             if(outname.length()) _outfile.open(outname);
             
         } catch(const std::exception& e) {
