@@ -48,16 +48,15 @@ void Network::makeConnections(double lambda)
                 k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
                 if (k > _network.size()-1)
                 {
-		    if (connections.size()>_network.size()-1)
-                    //if (avoidProblem)
-                    {
-                       throw std::domain_error ("this neuron is already connected to all neurons of the network");
-                    }
+                        if (avoidProblem)
+                        {
+                           throw std::domain_error ("this neuron is already connected to all neurons of the network");
+                        }
                     k= 0;
-                    //avoidProblem = true;
+                    avoidProblem = true;
                 }
             }
-
+            avoidProblem = false;
             connections.insert(std::make_pair(_network[k], _network[i]->factor() * _RNG->uniform_double(0, 2*_intensity)));
         }
         _connections.push_back(connections);
