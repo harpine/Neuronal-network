@@ -2,7 +2,7 @@
 #include "constants.hpp"
 
 Simulation::Simulation()
-    : _dt(_DELTA_T_), _time(_END_TIME_), _outfile(_OFILE_TEXT_) {}
+    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_NB_, _PERC_, _INT_, _LAMB_)), _outfile(_OFILE_TEXT_) {}
 
 Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
