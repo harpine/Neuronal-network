@@ -17,6 +17,15 @@ class InhibitoryNeuron :public Neuron
      */
     InhibitoryNeuron(double r);
     /**
+     * @brief Construct a new Inhibitory Neuron object
+     * 
+     * @param a describes the time scale of the recovery variable u
+     * @param b describes the sensitivity of the recovery variable b.
+     * @param c describes the after-spike reset vaue of the membrane potential v.
+     * @param d describes the after-spike reset of the recovery variable u.
+     */
+    InhibitoryNeuron(double a,double b, double c, double d,);
+    /**
      * @brief Destroy the Inhibitory Neuron object
      * 
      */
