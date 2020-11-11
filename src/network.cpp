@@ -122,4 +122,11 @@ std::vector<bool> Network::getCurrentstatus() const
     return status;
 }
 
-
+std::vector<Neuron*> Network::getNet()
+{
+    return _network ;
+}
+std::vector<std::map<Neuron*, double>> Network::getCon()
+{
+    return _connections;
+}

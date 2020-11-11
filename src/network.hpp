@@ -51,6 +51,15 @@ void makeConnections(double lambda);
 	 */
 	 std::vector<bool> getCurrentstatus() const;
 
+	 /*! @brief get the list of the neurons in the network
+	  * @return the network
+	  */
+	  std::vector<Neuron*> getNet();
+    /*! @brief get the list of the neurons in the network
+    * @return the vector of connections of the network
+    */
+    std::vector<std::map<Neuron*, double>> getCon();
+
 private:
 /*!
  collection of neurons that are in the network
