@@ -58,8 +58,10 @@ void Simulation::print() {
     if (_outfile.is_open()) outstr = &_outfile;
 
     std::vector<bool> matrix = _net->getCurrentstatus();
+
     for(auto neuron : matrix) {
         *outstr << neuron << " ";
     }
     *outstr << "\n" << std::endl;
+    
 }
