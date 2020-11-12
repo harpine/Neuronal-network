@@ -39,7 +39,8 @@ void Network::makeConnections(double lambda)
     for (size_t i(0); i<_network.size(); i++)
     {
         connections.clear(); //avoid to recreate a new temporary map for each neuron
-        for (int j(0); j < _RNG->poisson(lambda) and _connections.size()< _network.size(); j++)
+        for (int j(0); j < std::min(_RNG->poisson(lambda), int(_network.size())-2) and _connections.size() < _network.size(); j++)
+        // we have to take the minimum of both, because the distribution result can be higher than lambda and make an error occuring.
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??
             size_t k(_RNG->uniform_int(0, _network.size()-1)); //because k is the index, so we have to substract 1 to the total size
