@@ -22,15 +22,6 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
         _network.push_back(neuron);
     }
     makeConnections(lambda);
-
-/*    for (size_t i(0); i < _connections.size(); i++)
-    {
-        for (auto pair: _connections[i])
-        {
-            pair.first->getW();
-        }
-    }
-    */
 }
 
 Network::~Network()
@@ -57,15 +48,15 @@ void Network::makeConnections(double lambda)
                 k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
                 if (k > _network.size()-1)
                 {
-
-                    if (connections.size()>_network.size()-1)
-                    {
-                       throw std::domain_error ("this neuron is already connected to all neurons of the network");
-                    }
+                        if (avoidProblem)
+                        {
+                           throw std::domain_error ("this neuron is already connected to all neurons of the network");
+                        }
                     k= 0;
+                    avoidProblem = true;
                 }
             }
-
+            avoidProblem = false;
             connections.insert(std::make_pair(_network[k], _network[i]->factor() * _RNG->uniform_double(0, 2*_intensity)));
         }
         _connections.push_back(connections);
@@ -131,4 +122,11 @@ std::vector<bool> Network::getCurrentstatus() const
     return status;
 }
 
-
+std::vector<Neuron*> Network::getNet()
+{
+    return _network ;
+}
+std::vector<std::map<Neuron*, double>> Network::getCon()
+{
+    return _connections;
+}
