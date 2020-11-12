@@ -33,6 +33,46 @@ TEST(Random, distributions) {
     EXPECT_NEAR(input_mean, mean, 2e-2*input_mean);
 }
 
+TEST(Network, connections) {
+    size_t test_size(6);
+    Network net(int(test_size), _PERC_, _INT_, _LAMB_);
+    std::vector<Neuron*> netw(net.getNet());
+    std::vector<std::map<Neuron*, double>> con(net.getCon());
+
+    //test création Network
+    EXPECT_FALSE(netw.empty());
+    EXPECT_FALSE(con.empty());
+
+    //test bon nombre neurones crées
+    EXPECT_EQ(test_size, netw.size());
+    EXPECT_EQ(con.size(), netw.size());
+
+    //test association map/neurone
+    int problems(0);
+    for (size_t i(0); i<netw.size(); ++i) {
+        for (auto pair : con[i]) {
+            if(pair.first == netw[i]) ++problems;
+        }   
+    }
+    EXPECT_EQ(problems, 0);
+
+    //test pas nullptr
+    int sumNull(0);
+    for (size_t i(0); i<netw.size(); ++i) {
+        if (netw[i]==nullptr) ++sumNull;
+    }
+    EXPECT_EQ(sumNull, 0);
+    sumNull = 0;
+    for (size_t i(0); i<con.size(); ++i) {
+        for (auto& pair : con[i]) {
+            if (pair.first == nullptr) ++sumNull;
+        }
+    }
+    EXPECT_EQ(sumNull, 0);
+    
+}
+
+
 int main(int argc,char **argv){
     ::testing::InitGoogleTest(&argc,argv);
     return RUN_ALL_TESTS();

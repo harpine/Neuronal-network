@@ -11,8 +11,8 @@ option(test "Build tests." ON)
 
 include_directories("/usr/local/include" ${CMAKE_SOURCE_DIR}/include)
 link_directories(${CMAKE_SOURCE_DIR}/lib)
-
 add_executable(neuron_network src/main.cpp src/random.cpp src/network.cpp src/neuron.cpp src/inhibitoryNeuron.cpp src/excitatoryNeuron.cpp src/simulation.cpp)
+
 if (test)
   enable_testing()
   find_package(GTest)
@@ -21,7 +21,7 @@ if (test)
     set(GTEST_BOTH_LIBRARIES libgtest.a libgtest_main.a)
   endif(NOT GTEST_FOUND)
   include_directories(${GTEST_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/test)
-  add_executable (Test test/main.cpp src/random.cpp)
+  add_executable (Test test/main.cpp src/random.cpp src/network.cpp src/neuron.cpp src/inhibitoryNeuron.cpp src/excitatoryNeuron.cpp)
   target_link_libraries(Test ${GTEST_BOTH_LIBRARIES} pthread)
   add_test(main_Test Test)
 endif(test)
