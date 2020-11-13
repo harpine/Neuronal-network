@@ -72,6 +72,26 @@ TEST(Network, connections) {
     
 }
 
+TEST(Simulation, output) {
+    Simulation sim(_OUTFILE_);
+    int result = sim.run(_DELTA_T_);
+    EXPECT_LE(result, 60);
+
+    std::string print = sim.read_file(_OUTFILE_);
+    size_t nb_line(0);
+    size_t nb_column(0);
+    bool value = false;
+    for (size_t i(1); i<=print.size(); ++i) {
+        size_t j(i-1);
+        if(print[i] == '\n') nb_line +=1;
+        if((print[i] == ' ') and (print[j] == '\n')) nb_column +=1;
+        if((print[i] != ' ') or (print[i] != '\n') or 
+           (print[i] != '1') or (print[i] != '0')) value = true;
+    }
+    //EXPECT_EQ(nb_line, _END_TIME_);
+    //EXPECT_EQ(nb_column, _NB_);
+    EXPECT_FALSE(value);
+}
 
 int main(int argc,char **argv){
     ::testing::InitGoogleTest(&argc,argv);

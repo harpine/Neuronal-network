@@ -1,8 +1,8 @@
 #include "simulation.hpp"
 #include "constants.hpp"
 
-Simulation::Simulation()
-    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_NB_, _PERC_, _INT_, _LAMB_)), _outfile(_OFILE_TEXT_) {}
+Simulation::Simulation(std::string outfile)
+    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_NB_, _PERC_, _INT_, _LAMB_)), _outfile(outfile) {}
 
 Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
@@ -19,16 +19,17 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _OUTFILE_, "string");
             cmd.add(ofile);
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
-            if(lambda.getValue() <= 0 or lambda.getValue() >= (number.getValue())) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(lambda.getValue() <= 0 or lambda.getValue() >= (number.getValue() -1)) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             _time = time.getValue();
             std::string outname = ofile.getValue();
-            _net = new Network(number.getValue(), perc.getValue(), inten.getValue(), lambda.getValue());
+            double tmp = number.getValue() - 1;
+            _net = new Network(number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp));
             if(outname.length()) _outfile.open(outname);
             
         } catch(const std::exception& e) {
@@ -42,15 +43,17 @@ Simulation::~Simulation()
 }
 
 int Simulation::run(double dt) {
-    int ex_time = 0;
+    time_t ex_time = time(NULL);
+    struct tm * ptm;
     double running_time(0);
-    while (running_time <= this->_time) {
+    while (running_time <= _time) {
         running_time += 2*dt;
         _net->update();
         print();
     } 
-    ex_time = clock();
-    return ex_time;
+    ex_time = time(NULL);
+    ptm = gmtime(&ex_time);
+    return ptm->tm_sec;
 }
 
 void Simulation::print() {
@@ -58,10 +61,21 @@ void Simulation::print() {
     if (_outfile.is_open()) outstr = &_outfile;
 
     std::vector<bool> matrix = _net->getCurrentstatus();
-
     for(auto neuron : matrix) {
         *outstr << neuron << " ";
     }
-    *outstr << "\n" << std::endl;
+    *outstr << "\n";
+}
+
+std::string Simulation::read_file(std::string filename) {
+    std::string result, line, value;
+    std::ifstream myfile(filename);
+    if(myfile.is_open()) {
+        while(std::getline(myfile, line)) {
+            result += line;
+        }
+    }
+    //std::cout << result << "hgfjhf" << std::endl;
+    return result;
     
 }

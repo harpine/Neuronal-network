@@ -3,6 +3,7 @@
 
 #include "network.hpp"
 #include <fstream>
+#include <time.h>
 
 /*!
   * @brief storage of neuron parameters when given by a configuration.
@@ -45,7 +46,7 @@ public :
         @param _intensity the mean intensity of the connexions
     */
     Simulation(int argc, char** argv);
-    Simulation();
+    Simulation(std::string outfile);
     ~Simulation();
     /*!
       @brief run the simulation and return the execution time.
@@ -55,6 +56,8 @@ public :
       @return the total time of execution
     */
     int run(const double dt);
+
+    std::string read_file(std::string filename);
 
     void print();
 

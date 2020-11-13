@@ -4,6 +4,8 @@
 #include <fstream>
 #include <time.h>
 #include <map>
+#include <string>
+#include <algorithm>
 
 // * Default parameter values *
 
@@ -14,6 +16,7 @@
 #define _LAMB_ 4
 #define _INT_ 2 // TODO: decide what will be the default parameter
 #define _DISCHARGE_T_ 30
+#define _OUTFILE_ "outfile"
 
 // *text messages *
 
