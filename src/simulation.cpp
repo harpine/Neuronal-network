@@ -25,10 +25,10 @@ Simulation::Simulation(int argc, char** argv)
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
-            if(lambda.getValue() <= 0 or lambda.getValue() >= (number.getValue() -1)) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(lambda.getValue() <= 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             _time = time.getValue();
             std::string outname = ofile.getValue();
-            double tmp = number.getValue() - 1;
+            double tmp = (number.getValue() - 1);
             _net = new Network(number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp));
             if(outname.length()) _outfile.open(outname);
             
@@ -75,7 +75,6 @@ std::string Simulation::read_file(std::string filename) {
             result += line;
         }
     }
-    //std::cout << result << "hgfjhf" << std::endl;
     return result;
     
 }
