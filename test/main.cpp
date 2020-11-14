@@ -88,8 +88,8 @@ TEST(Simulation, output) {
         if((print[i] != ' ') or (print[i] != '\n') or 
            (print[i] != '1') or (print[i] != '0')) value = true;
     }
-    //EXPECT_EQ(nb_line, _END_TIME_);
-    //EXPECT_EQ(nb_column, _NB_);
+    EXPECT_EQ(nb_line, _END_TIME_);
+    EXPECT_EQ(nb_column, _NB_);
     EXPECT_FALSE(value);
 }
 
