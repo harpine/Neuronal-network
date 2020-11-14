@@ -2,10 +2,8 @@
 #include "../src/random.hpp"
 #include "../src/simulation.hpp"
 #include "../src/constants.hpp"
-
-TEST(testing,thetest){
-    EXPECT_EQ(0,0);
-}
+#include "../src/excitatoryNeuron.hpp"
+#include "../src/inhibitoryNeuron.hpp"
 
 Random* _RNG = new Random(23948710923);
 
@@ -91,6 +89,31 @@ TEST(Simulation, output) {
     //EXPECT_EQ(nb_line, _END_TIME_);
     //EXPECT_EQ(nb_column, _NB_);
     EXPECT_FALSE(value);
+}
+
+TEST(Neuron, attributs){
+    double r=1.0;
+    ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
+    InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
+    std::vector<double> excit_attributs={0.1*(1-0.8*r),0.2*(1+0.25*r),-65,2};
+    std::vector<double> inhib_attributs={0.02,0.2,-65*(1-(1/13))*r*r,8*(1-(3/4))*r*r};
+    for(size_t i(0);i<excit_attributs.size();++i){
+        EXPECT_EQ(excitatory->getAttributs()[i],excit_attributs[i]);
+        EXPECT_EQ(inhibitory->getAttributs()[i],inhib_attributs[i]);
+    }
+}
+TEST(Neuron, update){
+    double r=1.0;
+    ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
+    InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
+    std::vector<double> excit_variablesInitial=excitatory->getVariables();
+    std::vector<double> inhib_varaiblesInitial=inhibitory->getVariables();
+    excitatory->update();
+    inhibitory->update();
+    for(size_t i(0);i<excit_variablesInitial.size();++i){
+        EXPECT_NE(excit_variablesInitial[i],excitatory->getVariables()[i]);
+        EXPECT_NE(inhib_varaiblesInitial[i],inhibitory->getVariables()[i]);
+    }
 }
 
 int main(int argc,char **argv){
