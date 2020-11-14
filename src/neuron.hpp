@@ -1,5 +1,6 @@
 #ifndef NEURON_HPP
 #define NEURON_HPP
+#include <vector>
 #include "random.hpp"
 
 
@@ -71,6 +72,8 @@ class Neuron{
      * @return int factor of the neuron
      */
     virtual int factor() const = 0;
+    std::vector<double> getAttributs();
+    std::vector<double> getVariables();
 
     private:
     double _a;
