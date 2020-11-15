@@ -71,24 +71,30 @@ TEST(Network, connections) {
 }
 
 TEST(Simulation, output) {
-    Simulation sim(_OUTFILE_);
+    std::string path_outfile(_PATH_OUTFILE_);
+    Simulation sim(path_outfile + _PATH_TEST_ + _OUTFILE_);
     int result = sim.run(_DELTA_T_);
     EXPECT_LE(result, 60);
 
-    std::string print = sim.read_file(_OUTFILE_);
-    size_t nb_line(0);
-    size_t nb_column(0);
-    bool value = false;
-    for (size_t i(1); i<=print.size(); ++i) {
-        size_t j(i-1);
-        if(print[i] == '\n') nb_line +=1;
-        if((print[i] == ' ') and (print[j] == '\n')) nb_column +=1;
-        if((print[i] != ' ') or (print[i] != '\n') or 
-           (print[i] != '1') or (print[i] != '0')) value = true;
+    std::ifstream myfile;
+    std::string print;
+
+    myfile.open(path_outfile + _PATH_TEST_ + _OUTFILE_);
+    if (myfile.is_open()) {
+        EXPECT_FALSE(myfile.eof());
+        size_t i(0);
+        while (std::getline(myfile, print)) {
+            print.erase(std::remove_if(print.begin(), print.end(), isspace), print.end());
+            EXPECT_EQ(print.size(), _NB_);
+            i += 1;
+            for(auto neuron : print) {
+                EXPECT_TRUE(neuron == '1' or neuron == '0');
+            }
+        }
+        EXPECT_EQ(i, _END_TIME_);
     }
-    EXPECT_EQ(nb_line, _END_TIME_);
-    EXPECT_EQ(nb_column, _NB_);
-    EXPECT_FALSE(value);
+
+    myfile.close();
 }
 
 TEST(Neuron, attributs){

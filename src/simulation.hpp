@@ -57,8 +57,6 @@ public :
     */
     int run(const double dt);
 
-    std::string read_file(std::string filename);
-
     void print();
 
 private :

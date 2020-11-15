@@ -8,6 +8,8 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
+            std::string path_outfile(_PATH_OUTFILE_);
+            std::string outfile(path_outfile + _OUTFILE_);
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
             cmd.add(time);
@@ -19,7 +21,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _OUTFILE_, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, outfile, "string");
             cmd.add(ofile);
             cmd.parse(argc, argv);
 
@@ -46,13 +48,14 @@ int Simulation::run(double dt) {
     time_t ex_time = time(NULL);
     struct tm * ptm;
     double running_time(0);
-    while (running_time <= _time) {
+    while (running_time < _time) {
         running_time += 2*dt;
         _net->update();
         print();
     } 
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
+    _outfile.close();
     return ptm->tm_sec;
 }
 
@@ -65,16 +68,4 @@ void Simulation::print() {
         *outstr << neuron << " ";
     }
     *outstr << "\n";
-}
-
-std::string Simulation::read_file(std::string filename) {
-    std::string result, line, value;
-    std::ifstream myfile(filename);
-    if(myfile.is_open()) {
-        while(std::getline(myfile, line)) {
-            result += line;
-        }
-    }
-    return result;
-    
 }
