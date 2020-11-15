@@ -59,7 +59,18 @@ class Neuron{
      * @return false When v is under the threshold
      */
     bool isFiring();
-
+    /**
+     * @brief Getter for the _a,_b,_c,_d attributes
+     * 
+     * @return std::vector<double> {_a,_b,_c,_d}
+     */
+    std::vector<double> getAttributs();
+    /**
+     * @brief Getter for the _v,_u variables
+     * 
+     * @return std::vector<double> {_v,_u}
+     */
+    std::vector<double> getVariables();
     /**
      * @brief pure virtual method returning the W of the neuron
      * 
@@ -72,8 +83,7 @@ class Neuron{
      * @return int factor of the neuron
      */
     virtual int factor() const = 0;
-    std::vector<double> getAttributs();
-    std::vector<double> getVariables();
+
 
     private:
     double _a;
