@@ -82,13 +82,13 @@ TEST(Simulation, output) {
     myfile.open(path_outfile + _PATH_TEST_ + _OUTFILE_);
     if (myfile.is_open()) {
         EXPECT_FALSE(myfile.eof());
-        size_t i(0);
+        int i(0);
         while (std::getline(myfile, print)) {
             print.erase(std::remove_if(print.begin(), print.end(), isspace), print.end());
-            EXPECT_EQ(print.size(), _NB_);
             i += 1;
+            EXPECT_EQ(print.size(), _NB_ + 1);
             for(auto neuron : print) {
-                EXPECT_TRUE(neuron == '1' or neuron == '0');
+                EXPECT_TRUE(neuron == '1' or neuron == '0' or neuron == i);
             }
         }
         EXPECT_EQ(i, _END_TIME_);

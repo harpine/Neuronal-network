@@ -49,9 +49,10 @@ int Simulation::run(double dt) {
     struct tm * ptm;
     double running_time(0);
     while (running_time < _time) {
+        int index = 1;
         running_time += 2*dt;
         _net->update();
-        print();
+        print(index);
     } 
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
@@ -59,11 +60,12 @@ int Simulation::run(double dt) {
     return ptm->tm_sec;
 }
 
-void Simulation::print() {
+void Simulation::print(int index) {
     std::ostream *outstr = &std::cout;
     if (_outfile.is_open()) outstr = &_outfile;
 
     std::vector<bool> matrix = _net->getCurrentstatus();
+    *outstr << index << " "; 
     for(auto neuron : matrix) {
         *outstr << neuron << " ";
     }

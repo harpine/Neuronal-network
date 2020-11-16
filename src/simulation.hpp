@@ -57,7 +57,7 @@ public :
     */
     int run(const double dt);
 
-    void print();
+    void print(int index);
 
 private :
     double _dt, _time;
