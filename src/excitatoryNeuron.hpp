@@ -15,8 +15,8 @@ class ExcitatoryNeuron :public Neuron
      * 
      * @param r A random number
      */
-    ExcitatoryNeuron(double r);
-        /**
+    ExcitatoryNeuron(double r,std::string type="RS");
+    /**
      * @brief Construct a new Excitatory Neuron object
      * 
      * @param a describes the time scale of the recovery variable u

@@ -3,7 +3,7 @@
 //TODO: Add JSON file with config of InhibitoryNeuron
 
 
-ExcitatoryNeuron::ExcitatoryNeuron(double r)
+ExcitatoryNeuron::ExcitatoryNeuron(double r,std::string type)
 :Neuron(0.1*(1-0.8*r),0.2*(1+0.25*r),-65,2)
 {
 
