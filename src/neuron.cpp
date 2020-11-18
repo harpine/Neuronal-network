@@ -36,5 +36,5 @@ std::vector<double> Neuron::getAttributs(){
     return {_a,_b,_c,_d};
 }
 std::vector<double> Neuron::getVariables(){
-    return {_v,_u};
+    return {_v,_u, _current};
 }
