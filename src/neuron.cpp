@@ -6,7 +6,7 @@
 Neuron::Neuron(double a,  double b, double c, double d)
 : _a(a),_b(b),_c(c),_d(d)
 {
-    _v=-65;
+    _v=_c;
     _u=_b*_v;
 }
 
