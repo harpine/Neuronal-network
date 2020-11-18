@@ -15,14 +15,29 @@ class Network {
 
 public:
 
-/*! @brief Constructor.
-    initialize the network by adding the neurons, when no configuration file is given.
-    @param nb number of neurons wanted
-    @param p_E proportionality of excitatory neurons
-    @param intensity mean intensity of connection
-    @param lambda mean connectivity between neurons
+/*! @brief Basic constructor.
+    initialize the network by adding the inhibitory & excitatory neurons, given a proportion of inhibitory neurons.
+    @param nb the number of neurons wanted
+    @param p_E the proportion of excitatory neurons
+    @param intensity the mean intensity of connection
+    @param lambda the mean connectivity between neurons
+    @param delta the variability of distribution of noise TODO: find better definition
     */
-Network(int nb, double p_E, double intensity, double lambda);
+Network(char model, int nb, double p_E, double intensity, double lambda, double delta);
+
+/*! @brief Constructor with extended neurons types.
+    initialize the network by adding the neurons, given the different types proportions.
+    Each type has to be explicitly given, except the type RS, which will be the rest of the neurons.
+    @param nb the number of neurons wanted
+    @param p_FS the proportion of neurons of type FS
+    @param p_IB the proportion of neurons of type IB
+    @param p_RZ the proportion of neurons of type RZ
+    @param p_LTS the proportion of neurons of type LTS
+    @param intensity the mean intensity of connection
+    @param lambda the mean connectivity between neurons
+    @param delta the variability of distribution of noise TODO: find better definition
+    */
+Network(char model, int nb, double p_FS, double p_IB, double p_RZ, double p_LTS, double intensity, double lambda, double delta);
 
 /*! @brief Destructor.
   Destroy all neurons in the set*/
@@ -65,10 +80,7 @@ private:
  collection of neurons that are in the network
  */
 std::vector<Neuron*> _network;
-// /*! mean connectivity between neurons -> to use with Poisson distribution
-// */
-// double _lambda;
-//TODO: pas besoin en attribut non?
+
 /*! collection of connections to the neurons of corresponding index.
 */
 std::vector<std::map<Neuron*, double>> _connections;
@@ -76,6 +88,10 @@ std::vector<std::map<Neuron*, double>> _connections;
 /*! mean intensity of connexions between connexions
 */
 double _intensity;
+
+/*! name of model used for connections: basic, constant or overdispersed
+ */
+ char _model;
 };
 
 #endif //NETWORK_HPP
