@@ -9,16 +9,15 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
     : _intensity(intensity)
 {
     Neuron* neuron;
-    for (int i(0); i < nb; ++i)
+    int excit(p_E * nb);
+    for (int i(0); i < excit; ++i)
     {
-        if(_RNG->bernoulli(p_E))
-        {
-            neuron = new InhibitoryNeuron(_RNG->normal(0,1));
-        }
-        else
-        {
-            neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
-        }
+        neuron = new ExcitatoryNeuron(_RNG->normal(0,1));
+        _network.push_back(neuron);
+    }
+    for (int i(0); i < nb - excit; ++i)
+    {
+        neuron = new InhibitoryNeuron(_RNG->normal(0,1));
         _network.push_back(neuron);
     }
     makeConnections(lambda);
