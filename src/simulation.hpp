@@ -44,10 +44,14 @@ public :
         @param _dt the time step 
         @param _lambda the mean connectivity
         @param _intensity the mean intensity of the connexions
+        @param _model the model chosen for the connections
+        @param _delta a tunable parameter for neuron noise
+        @param _rep the repartition of under categories of neurons
     */
     Simulation(int argc, char** argv);
     Simulation(std::string outfile);
     ~Simulation();
+
     /*!
       @brief run the simulation and return the execution time.
       @param dt step time 
@@ -57,13 +61,20 @@ public :
     */
     int run(const double dt);
 
-    void print(int index);
+/*!
+      @brief write into the output stream the status of each neuron in the network for every step of time.
+    */
+    void print();
+
+    void testParamPrint();
+    void testSamplePrint();
 
 private :
     double _dt, _time;
     Network *_net;
     std::ofstream _outfile;
-    
+
+    void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
 };
 
 #endif //SIMULATION_HPP
