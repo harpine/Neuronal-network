@@ -20,6 +20,7 @@ Network::Network(int nb, double p_E, double intensity, double lambda)
         neuron = new InhibitoryNeuron(_RNG->normal(0,1));
         _network.push_back(neuron);
     }
+
     makeConnections(lambda);
 }
 
