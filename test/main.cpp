@@ -30,10 +30,21 @@ TEST(Random, distributions) {
     for (auto I : res) mean += I*1e-4;
     EXPECT_NEAR(input_mean, mean, 2e-2*input_mean);
 }
+TEST(Network, current) {
+    Network net(_NB_TEST_, _PERC_, _INT_, _LAMB_);
+    std::vector<double> variables;
+    std::vector<double> variables_updated;
+    for (auto pair : net.getNet()) {
+        variables = pair->getVariables();
+        net.update();
+        variables_updated = pair->getVariables();
+        //test current was updated
+        EXPECT_FALSE(variables.back() == variables_updated.back());
+    }
 
+}
 TEST(Network, connections) {
-    size_t test_size(6);
-    Network net(int(test_size), _PERC_, _INT_, _LAMB_);
+    Network net(_NB_TEST_, _PERC_, _INT_, _LAMB_);
     std::vector<Neuron*> netw(net.getNet());
     std::vector<std::map<Neuron*, double>> con(net.getCon());
 
@@ -42,7 +53,7 @@ TEST(Network, connections) {
     EXPECT_FALSE(con.empty());
 
     //test bon nombre neurones crées
-    EXPECT_EQ(test_size, netw.size());
+    EXPECT_EQ(_NB_TEST_, netw.size());
     EXPECT_EQ(con.size(), netw.size());
 
     //test association map/neurone
