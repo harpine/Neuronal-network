@@ -56,6 +56,7 @@ Network::Network(char model, int nb, double p_FS, double p_IB, double p_RZ, doub
         neuron = new ExcitatoryNeuron(delta, type[4]);
         _network.push_back(neuron);
     }
+    makeConnections(lambda);
 }
 
 Network::~Network()

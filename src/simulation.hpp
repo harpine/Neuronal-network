@@ -64,7 +64,7 @@ public :
 /*!
       @brief write into the output stream the status of each neuron in the network for every step of time.
     */
-    void print();
+    void print(int index);
 
     void testParamPrint();
     void testSamplePrint();

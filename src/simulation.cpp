@@ -90,13 +90,13 @@ void Simulation::testParamPrint() {
     std::ostream *outstr = &std::cout;
     if (_outfile.is_open()) outstr = &_outfile;
 
-    std::vector<Neuron*> netw(_net.getNet());
-    std::vector<std::map<Neuron*, double>> con(_net.getCon());
+    std::vector<Neuron*> netw(_net->getNet());
+    std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
     int inhib(0);
     *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n";
     for(size_t i(0); i<netw.size(); ++i) {
-        attributs = netw[i]->getAttributs;
+        attributs = netw[i]->getAttributs();
         *outstr << i+1 << "\t ";
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
         if (netw[i]->getW() == 2) inhib = 1;
@@ -109,15 +109,16 @@ void Simulation::testSamplePrint() {
     std::ostream *outstr = &std::cout;
     if (_outfile.is_open()) outstr = &_outfile;
 
-    std::vector<Neuron*> netw(_net.getNet());
+    std::vector<Neuron*> netw(_net->getNet());
     *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     double running_time(0);
+    std::vector<double> attributs;
     while (running_time < _time) {
-        attributs = netw[netw.size()-1]->getVariables; //inhibitory
-        std::vector<std::map<Neuron*, double>> con(_net.getCon());
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" << ;
-        attributs = netw[0]->getVariables; //excitatory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" << ;
+        attributs = netw[netw.size()-1]->getVariables(); //inhibitory
+        std::vector<std::map<Neuron*, double>> con(_net->getCon());
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        attributs = netw[0]->getVariables(); //excitatory
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
     }
 }
 
@@ -136,7 +137,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "LTS") lts = stod(value); //faire aussi CH ???
         //undifined are RS (excitateurs)
     }
-    if (std::abs(fs+ib+rz+lts > 1) {
+    if (std::abs(fs+ib+rz+lts > 1)) {
         throw std::logic_error("The sum of all proportions is greater than 1");
     }
 }
