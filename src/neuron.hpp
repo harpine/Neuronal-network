@@ -3,7 +3,7 @@
 #include <vector>
 #include "random.hpp"
 
-
+//TODO: Code temps d'attente
 
 /**
  * @brief A pure virtual class Neuron.
@@ -20,7 +20,7 @@ class Neuron{
      * 
      * @param a describes the time scale of the recovery variable u
      * @param b describes the sensitivity of the recovery variable b.
-     * @param c describes the after-spike reset vaue of the membrane potential v.
+     * @param c describes the after-spike reset value of the membrane potential v.
      * @param d describes the after-spike reset of the recovery variable u.
      */
     Neuron(double a,double b,double c,double d);
@@ -51,7 +51,6 @@ class Neuron{
      * @return (double) The noise produced 
      */
     double noise() const {return this->getW() * (_RNG->normal(0,1));};
-    
     /**
      * @brief Descrbies the firing state of the neuron
      * 
@@ -86,9 +85,24 @@ class Neuron{
 
 
     private:
+    /**
+     * @brief a describes the time scale of the recovery variable u
+     */
     double _a;
+    /**
+     * @brief describes the sensitivity of the recovery variable v.
+     * 
+     */
     double _b;
+    /**
+     * @brief describes the after-spike reset value of the membrane potential v.
+     * 
+     */
     double _c;
+    /**
+     * @brief describes the after-spike reset of the recovery variable u.
+     * 
+     */
     double _d;
     double _v;
     double _u;

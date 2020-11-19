@@ -9,11 +9,7 @@ ExcitatoryNeuron::ExcitatoryNeuron(double r)
 
 }
 
-ExcitatoryNeuron::ExcitatoryNeuron(double a,double b, double c, double d)
-:Neuron(a,b,c,d)
-{
 
-}
 
 
 ExcitatoryNeuron::~ExcitatoryNeuron(){
