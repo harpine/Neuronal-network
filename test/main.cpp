@@ -33,7 +33,7 @@ TEST(Random, distributions) {
 
 TEST(Network, connections) {
     size_t test_size(6);
-    Network net(int(test_size), _PERC_, _INT_, _LAMB_);
+    Network net(_MOD_, int(test_size), _PERC_, _INT_, _LAMB_, _DEL_);
     std::vector<Neuron*> netw(net.getNet());
     std::vector<std::map<Neuron*, double>> con(net.getCon());
 
