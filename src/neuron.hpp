@@ -1,8 +1,8 @@
 #ifndef NEURON_HPP
 #define NEURON_HPP
 #include <vector>
+#include <string>
 #include "random.hpp"
-
 
 
 /**
@@ -23,7 +23,7 @@ class Neuron{
      * @param c describes the after-spike reset vaue of the membrane potential v.
      * @param d describes the after-spike reset of the recovery variable u.
      */
-    Neuron(double a,double b,double c,double d);
+    Neuron(std::string type);
     /**
      * @brief Destroy the Neuron object
      * 
@@ -85,7 +85,7 @@ class Neuron{
     virtual int factor() const = 0;
 
 
-    private:
+    protected:
     double _a;
     double _b;
     double _c;
@@ -93,6 +93,7 @@ class Neuron{
     double _v;
     double _u;
     double _current;
+    std::string _type;
 };
 
 
