@@ -15,7 +15,7 @@ class InhibitoryNeuron :public Neuron
      * 
      * @param r A random number
      */
-    InhibitoryNeuron(double r,std::string type="FS");
+    InhibitoryNeuron(double delta,std::string type="FS");
     /**
      * @brief Construct a new Inhibitory Neuron object
      * 

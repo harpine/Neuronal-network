@@ -3,16 +3,31 @@
 //TODO: Add JSON file with config of InhibitoryNeuron
 
 
-ExcitatoryNeuron::ExcitatoryNeuron(double r,std::string type)
-:Neuron(0.1*(1-0.8*r),0.2*(1+0.25*r),-65,2)
+ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
+:Neuron(type)
 {
-
-}
-
-ExcitatoryNeuron::ExcitatoryNeuron(double a,double b, double c, double d)
-:Neuron(a,b,c,d)
-{
-
+    double lowerbound(1-delta);
+    double upperbound(1+delta);
+    if (type=="RS"){
+        _a=0.02*_RNG->uniform_double(lowerbound,upperbound);
+        _b=0.2*_RNG->uniform_double(lowerbound,upperbound);
+        _c=-65*_RNG->uniform_double(lowerbound,upperbound);
+        _d=8*_RNG->uniform_double(lowerbound,upperbound);
+        }
+    else if (type=="IB"){
+        _a=0.02*_RNG->uniform_double(lowerbound,upperbound);
+        _b=0.2*_RNG->uniform_double(lowerbound,upperbound);
+        _c=-55*_RNG->uniform_double(lowerbound,upperbound);
+        _d=4*_RNG->uniform_double(lowerbound,upperbound);
+        }
+    else if (type=="CH"){
+        _a=0.02*_RNG->uniform_double(lowerbound,upperbound);
+        _b=0.2*_RNG->uniform_double(lowerbound,upperbound);
+        _c=-50*_RNG->uniform_double(lowerbound,upperbound);
+        _d=2*_RNG->uniform_double(lowerbound,upperbound);
+        }
+    _v=_c;
+    _u=_b*_v;
 }
 
 

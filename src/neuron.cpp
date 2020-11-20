@@ -1,12 +1,11 @@
 #include "neuron.hpp"
 #include "constants.hpp"
+#include "random.hpp"
 
-
-
-Neuron::Neuron(double a,  double b, double c, double d)
-: _a(a),_b(b),_c(c),_d(d)
+Neuron::Neuron(std::string type)
+: _type(type)
 {
-    _v=-65;
+    _v=_c;
     _u=_b*_v;
 }
 
