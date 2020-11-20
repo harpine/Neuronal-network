@@ -19,6 +19,7 @@
 #define _MOD_ 'b'
 #define _DEL_ .5
 #define _DISCHARGE_T_ 30
+#define _NB_TEST_ 6
 #define _OUTFILE_ "outfile"
 #define _PATH_OUTFILE_ "../"
 #define _PATH_TEST_ "test/"
