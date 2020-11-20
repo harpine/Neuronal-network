@@ -20,8 +20,7 @@ InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
         _c=-65*_RNG->uniform_double(lowerbound,upperbound);
         _d=2*_RNG->uniform_double(lowerbound,upperbound);
     }
-    _v=_c;
-    _u=_b*_v;
+
 }
 
 InhibitoryNeuron::~InhibitoryNeuron(){

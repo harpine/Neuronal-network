@@ -20,6 +20,7 @@
 #define _DEL_ .5
 #define _OPT_ false
 #define _DISCHARGE_T_ 30
+#define _NB_TEST_ 6
 #define _OUTFILE_ "outfile"
 #define _PARAMETERS_ "_parameters"
 #define _SAMPLES_ "_samples"

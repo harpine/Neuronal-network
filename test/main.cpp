@@ -32,8 +32,7 @@ TEST(Random, distributions) {
 }
 
 TEST(Network, connections) {
-    size_t test_size(6);
-    Network net(_MOD_, int(test_size), _PERC_, _INT_, _LAMB_, _DEL_);
+    Network net(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_);
     std::vector<Neuron*> netw(net.getNet());
     std::vector<std::map<Neuron*, double>> con(net.getCon());
 
@@ -42,7 +41,7 @@ TEST(Network, connections) {
     EXPECT_FALSE(con.empty());
 
     //test bon nombre neurones crées
-    EXPECT_EQ(test_size, netw.size());
+    EXPECT_EQ(_NB_TEST_, netw.size());
     EXPECT_EQ(con.size(), netw.size());
 
     //test association map/neurone
@@ -68,6 +67,22 @@ TEST(Network, connections) {
     }
     EXPECT_EQ(sumNull, 0);
     
+}
+
+TEST(Network, current) {
+    Network net(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_);
+    double variables = 0.0;
+    double variables_updated = 0.0;
+    for(size_t i(0); i<net.getNet().size(); ++i) {
+        if(net.getNet()[i]->isFiring()) {
+            for (auto link : net.getCon()[i]) {
+                variables = link.first->getVariables().back();
+                net.synapticCurrent(i);
+                variables_updated = link.first->getVariables().back();
+                EXPECT_FALSE(variables == variables_updated);
+            }
+        }
+    }
 }
 
 TEST(Simulation, output) {
@@ -116,6 +131,7 @@ TEST(Neuron, update){
     std::vector<double> inhib_varaiblesInitial=inhibitory->getVariables();
     excitatory->update();
     inhibitory->update();
+    std::cerr << excit_variablesInitial.back() << " " << excitatory->getVariables().back() << std::endl;
     for(size_t i(0);i<excit_variablesInitial.size();++i){
         EXPECT_NE(excit_variablesInitial[i],excitatory->getVariables()[i]);
         EXPECT_NE(inhib_varaiblesInitial[i],inhibitory->getVariables()[i]);
