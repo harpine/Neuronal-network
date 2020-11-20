@@ -74,6 +74,7 @@ private :
     Network *_net;
     std::ofstream _outfile;
     bool _options;
+    std::string _file_name;
 
     void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
 };

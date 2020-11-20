@@ -8,8 +8,6 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
-            std::string path_outfile(_PATH_OUTFILE_);
-            std::string outfile(path_outfile + _OUTFILE_);
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
             cmd.add(time);
@@ -23,7 +21,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, outfile, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _OUTFILE_, "string");
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
             cmd.add(model);
@@ -40,7 +38,8 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
-            std::string outname = ofile.getValue();
+            _file_name = ofile.getValue();
+            std::cout << _file_name << std::endl;
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
@@ -49,7 +48,7 @@ Simulation::Simulation(int argc, char** argv)
                 readLine(rep.getValue(), FS, IB, RZ, LTS);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             }
-            if(outname.length()) _outfile.open(outname);
+            if(_file_name.length()) _outfile.open(_file_name);
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
@@ -96,7 +95,7 @@ void Simulation::print(int index) {
 void Simulation::testParamPrint() {
     std::ostream *outstr = &std::cout;
     std::ofstream param;
-    param.open(_PARAMETERS_);
+    param.open(_file_name + _PARAMETERS_);
     if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
@@ -118,7 +117,7 @@ void Simulation::testParamPrint() {
 void Simulation::testSamplePrint() {
     std::ostream *outstr = &std::cout;
     std::ofstream samples;
-    samples.open(_SAMPLES_);
+    samples.open(_file_name + _SAMPLES_);
     if (samples.is_open()) outstr = &samples;
 
     std::vector<Neuron*> netw(_net->getNet());
