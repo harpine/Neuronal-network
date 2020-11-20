@@ -73,6 +73,7 @@ private :
     double _dt, _time;
     Network *_net;
     std::ofstream _outfile;
+    bool _options;
 
     void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
 };
