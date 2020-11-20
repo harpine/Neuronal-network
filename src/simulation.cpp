@@ -29,6 +29,8 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
+            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPT_, "bool");
+            cmd.add(option);
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
@@ -37,6 +39,7 @@ Simulation::Simulation(int argc, char** argv)
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
+            _options = option.getValue();
             std::string outname = ofile.getValue();
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
@@ -68,6 +71,10 @@ int Simulation::run(double dt) {
         _net->update();
         print(index);
     } 
+    if(_options) {
+        testParamPrint();
+        testSamplePrint();
+    }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     _outfile.close();
@@ -88,7 +95,9 @@ void Simulation::print(int index) {
 
 void Simulation::testParamPrint() {
     std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    std::ofstream param;
+    param.open(_PARAMETERS_);
+    if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
@@ -102,12 +111,15 @@ void Simulation::testParamPrint() {
         if (netw[i]->getW() == 2) inhib = 1;
         *outstr << inhib << "\t" << con[i].size() << "\t valence\n";
     }
+    param.close();
 }
 
 
 void Simulation::testSamplePrint() {
     std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    std::ofstream samples;
+    samples.open(_SAMPLES_);
+    if (samples.is_open()) outstr = &samples;
 
     std::vector<Neuron*> netw(_net->getNet());
     *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
@@ -119,7 +131,9 @@ void Simulation::testSamplePrint() {
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
         attributs = netw[0]->getVariables(); //excitatory
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        running_time += 2*_dt;
     }
+   samples.close();
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
