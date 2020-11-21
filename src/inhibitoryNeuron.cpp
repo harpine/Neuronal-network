@@ -1,6 +1,7 @@
 #include "inhibitoryNeuron.hpp"
 #include <stdexcept>
 #include <iostream>
+#include "constants.hpp"
 //TODO: Add JSON file with config of InhibitoryNeuron
 
 
@@ -11,16 +12,16 @@ InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
     double upperbound(1+delta);
     try{
     if (type=="LTS"){
-        _a=0.02*_RNG->uniform_double(lowerbound,upperbound);
-        _b=0.25*_RNG->uniform_double(lowerbound,upperbound);
-        _c=-65*_RNG->uniform_double(lowerbound,upperbound);
-        _d=2*_RNG->uniform_double(lowerbound,upperbound);
+        _a=_LTS_A_*_RNG->uniform_double(lowerbound,upperbound);
+        _b=_LTS_B_*_RNG->uniform_double(lowerbound,upperbound);
+        _c=_LTS_C_*_RNG->uniform_double(lowerbound,upperbound);
+        _d=_LTS_D_*_RNG->uniform_double(lowerbound,upperbound);
         }
     else if (type=="FS"){
-        _a=0.1*_RNG->uniform_double(lowerbound,upperbound);
-        _b=0.2*_RNG->uniform_double(lowerbound,upperbound);
-        _c=-65*_RNG->uniform_double(lowerbound,upperbound);
-        _d=2*_RNG->uniform_double(lowerbound,upperbound);
+        _a=_FS_A_*_RNG->uniform_double(lowerbound,upperbound);
+        _b=_FS_B_*_RNG->uniform_double(lowerbound,upperbound);
+        _c=_FS_C_*_RNG->uniform_double(lowerbound,upperbound);
+        _d=_FS_D_*_RNG->uniform_double(lowerbound,upperbound);
     }else{
        throw std::domain_error("There is no neuron"); 
     }
