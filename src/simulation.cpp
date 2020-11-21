@@ -27,7 +27,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPT_, "bool");
+            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPTION_TEXT_, "bool");
             cmd.add(option);
             cmd.parse(argc, argv);
 
@@ -38,8 +38,7 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
-            _file_name = ofile.getValue();
-            std::cout << _file_name << std::endl;
+            std::string outname = ofile.getValue();
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
@@ -48,7 +47,7 @@ Simulation::Simulation(int argc, char** argv)
                 readLine(rep.getValue(), FS, IB, RZ, LTS);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             }
-            if(_file_name.length()) _outfile.open(_file_name);
+            if(outname.length()) _outfile.open(outname);
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
@@ -64,24 +63,27 @@ int Simulation::run() {
     time_t ex_time = time(NULL);
     struct tm * ptm;
     double running_time(0);
+    int index = 1;
+    std::ofstream samples; 
+    samples.open(_SAMPLES_); //trouver moyen plus optimal, deuxième attribut ?
+    if (_options) samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     while (running_time < _time) {
-        int index = 1;
         running_time += 2*_dt;
         _net->update();
         print(index);
         if (_options) {
-            std::ofstream samples;
             samples << index << '\t';
             testSamplePrint(samples);
         }
+        index += 1;
     } 
     if(_options) {
         testParamPrint();
-        testSamplePrint();
     }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     _outfile.close();
+    samples.close();
     return ptm->tm_sec;
 }
 
@@ -100,7 +102,7 @@ void Simulation::print(int index) {
 void Simulation::testParamPrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
-    param.open(_file_name + _PARAMETERS_);
+    param.open(_PARAMETERS_);
     if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
@@ -121,16 +123,15 @@ void Simulation::testParamPrint() {
 
 void Simulation::testSamplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
-    file.open(_file_name + _SAMPLES_);
     if (file.is_open()) outstr = &file;
 
     std::vector<Neuron*> netw(_net->getNet());
-    *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     std::vector<double> attributs;
         attributs = netw[netw.size()-1]->getVariables(); //inhibitory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
         attributs = netw[0]->getVariables(); //excitatory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\n" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] ;
+    *outstr << "\n";
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
