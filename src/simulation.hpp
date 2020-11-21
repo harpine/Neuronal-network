@@ -34,12 +34,10 @@ public :
 
     /*!
       @brief run the simulation and return the execution time.
-      @param dt step time 
-      @param time total time of the simulation
-
+      Use attribute \ref _dt as step of time for the simulation.
       @return the total time of execution
     */
-    int run(const double dt);
+    int run();
 
 /*!
       @brief write into the output stream the status of each neuron in the network for every step of time.
