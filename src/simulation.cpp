@@ -95,7 +95,7 @@ void Simulation::print(int index) {
 void Simulation::testParamPrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
-    param.open(_file_name + _PARAMETERS_);
+    param.open(_PARAMETERS_);
     if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
@@ -117,7 +117,7 @@ void Simulation::testParamPrint() {
 void Simulation::testSamplePrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream samples;
-    samples.open(_file_name + _SAMPLES_);
+    samples.open(_SAMPLES_);
     if (samples.is_open()) outstr = &samples;
 
     std::vector<Neuron*> netw(_net->getNet());
