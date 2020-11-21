@@ -8,7 +8,7 @@
 
 /*! @brief class that handles the network of neurons.
     Network class implement the notion of network, connecting the neurons together and handling the interactions between them.
-    it is defined bya set of neurons and the mean intensity of the connections
+    it is defined by a set of neurons and the mean intensity of the connections
 */
 
 class Network {
@@ -69,11 +69,19 @@ void makeConnections(double lambda);
 	 /*! @brief get the list of the neurons in the network
 	  * @return the network
 	  */
-	  std::vector<Neuron*> getNet();
+	  std::vector<Neuron*> getNet() const;
     /*! @brief get the list of the neurons in the network
     * @return the vector of connections of the network
     */
-    std::vector<std::map<Neuron*, double>> getCon();
+    std::vector<std::map<Neuron*, double>> getCon() const;
+    /*! @brief get the 1st neuron, that is an inhibitory one
+     * @return the pointer on the first neuron
+     */
+    Neuron* getInhibitory() const;
+    /*! @brief get the last neuron, that is an inhibitory one
+    * @return the pointer on the last neuron
+    */
+    Neuron* getExcitatory() const;
 
 private:
 /*!

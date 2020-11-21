@@ -9,14 +9,14 @@ Network::Network(char model, int nb, double p_E, double intensity, double lambda
 {
     Neuron* neuron;
     int excit(p_E * nb);
-    for (int i(0); i < excit; ++i)
-    {
-        neuron = new ExcitatoryNeuron(delta);
-        _network.push_back(neuron);
-    }
     for (int i(0); i < nb - excit; ++i)
     {
         neuron = new InhibitoryNeuron(delta);
+        _network.push_back(neuron);
+    }
+    for (int i(0); i < excit; ++i)
+    {
+        neuron = new ExcitatoryNeuron(delta);
         _network.push_back(neuron);
     }
     makeConnections(lambda);
@@ -171,11 +171,21 @@ std::vector<bool> Network::getCurrentstatus() const
     return status;
 }
 
-std::vector<Neuron*> Network::getNet()
+std::vector<Neuron*> Network::getNet() const
 {
     return _network ;
 }
-std::vector<std::map<Neuron*, double>> Network::getCon()
+std::vector<std::map<Neuron*, double>> Network::getCon() const
 {
     return _connections;
+}
+
+Neuron* Network::getInhibitory() const
+{
+    return _network.front();
+}
+
+Neuron* Network::getExcitatory() const
+{
+    return _network.back();
 }
