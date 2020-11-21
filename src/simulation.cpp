@@ -125,11 +125,10 @@ void Simulation::testSamplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     if (file.is_open()) outstr = &file;
 
-    std::vector<Neuron*> netw(_net->getNet());
     std::vector<double> attributs;
-        attributs = netw[netw.size()-1]->getVariables(); //inhibitory
+        attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        attributs = netw[0]->getVariables(); //excitatory
+        attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] ;
     *outstr << "\n";
 }
