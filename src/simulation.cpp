@@ -27,7 +27,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPT_, "bool");
+            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
             cmd.add(option);
             cmd.parse(argc, argv);
 
