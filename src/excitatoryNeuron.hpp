@@ -13,7 +13,7 @@ class ExcitatoryNeuron :public Neuron
     /**
      * @brief Construct a new Excitatory Neuron object
      * 
-     * @param r A random number
+     * @param delta The delta of uniform distribution determining the noise 
      */
     ExcitatoryNeuron(double delta,std::string type="RS");
     /**
