@@ -49,8 +49,9 @@ public :
     void testParamPrint();
 
 /*! @brief write into new file the v, u and intensity of one inhibitory and one excitatory neuron for each step of time.
+    @param file the outfile
    */ 
-    void testSamplePrint();
+    void testSamplePrint(std::ofstream& file);
 
 /*! @brief read the line passed as argument and affects value if finds corresponding value
     @param line from what we can extract informations

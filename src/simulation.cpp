@@ -69,6 +69,11 @@ int Simulation::run() {
         running_time += 2*_dt;
         _net->update();
         print(index);
+        if (_options) {
+            std::ofstream samples;
+            samples << index << '\t';
+            testSamplePrint(samples);
+        }
     } 
     if(_options) {
         testParamPrint();
@@ -114,24 +119,18 @@ void Simulation::testParamPrint() {
 }
 
 
-void Simulation::testSamplePrint() {
+void Simulation::testSamplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
-    std::ofstream samples;
-    samples.open(_file_name + _SAMPLES_);
-    if (samples.is_open()) outstr = &samples;
+    file.open(_file_name + _SAMPLES_);
+    if (file.is_open()) outstr = &file;
 
     std::vector<Neuron*> netw(_net->getNet());
     *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     std::vector<double> attributs;
-    int index(0);
-    for (double running_time(0); running_time < _time; running_time += 2*_dt) {
         attributs = netw[netw.size()-1]->getVariables(); //inhibitory
         for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
         attributs = netw[0]->getVariables(); //excitatory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        ++index;
-    }
-   samples.close();
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\n" ;
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
