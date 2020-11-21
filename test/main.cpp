@@ -4,6 +4,7 @@
 #include "../src/constants.hpp"
 #include "../src/excitatoryNeuron.hpp"
 #include "../src/inhibitoryNeuron.hpp"
+#include <cmath>
 
 Random* _RNG = new Random(23948710923);
 
@@ -32,8 +33,7 @@ TEST(Random, distributions) {
 }
 
 TEST(Network, connections) {
-    size_t test_size(6);
-    Network net(_MOD_, int(test_size), _PERC_, _INT_, _LAMB_, _DEL_);
+    Network net(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_);
     std::vector<Neuron*> netw(net.getNet());
     std::vector<std::map<Neuron*, double>> con(net.getCon());
 
@@ -42,7 +42,7 @@ TEST(Network, connections) {
     EXPECT_FALSE(con.empty());
 
     //test bon nombre neurones crées
-    EXPECT_EQ(test_size, netw.size());
+    EXPECT_EQ(_NB_TEST_, netw.size());
     EXPECT_EQ(con.size(), netw.size());
 
     //test association map/neurone
@@ -70,25 +70,41 @@ TEST(Network, connections) {
     
 }
 
+TEST(Network, current) {
+    Network net(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_);
+    double variables = 0.0;
+    double variables_updated = 0.0;
+    for(size_t i(0); i<net.getNet().size(); ++i) {
+        if(net.getNet()[i]->isFiring()) {
+            for (auto link : net.getCon()[i]) {
+                variables = link.first->getVariables().back();
+                net.synapticCurrent(i);
+                variables_updated = link.first->getVariables().back();
+                EXPECT_FALSE(variables == variables_updated);
+            }
+        }
+    }
+}
+
 TEST(Simulation, output) {
-    std::string path_outfile(_PATH_OUTFILE_);
-    Simulation sim(path_outfile + _PATH_TEST_ + _OUTFILE_);
-    int result = sim.run(_DELTA_T_);
+    Simulation sim(_OUTFILE_);
+    int result = sim.run();
     EXPECT_LE(result, 60);
 
     std::ifstream myfile;
     std::string print;
 
-    myfile.open(path_outfile + _PATH_TEST_ + _OUTFILE_);
+    myfile.open(_OUTFILE_);
     if (myfile.is_open()) {
         EXPECT_FALSE(myfile.eof());
         int i(0);
         while (std::getline(myfile, print)) {
+            print.erase(print.begin(), print.begin() + print.find(' '));
             print.erase(std::remove_if(print.begin(), print.end(), isspace), print.end());
             i += 1;
-            EXPECT_EQ(print.size(), _NB_ + 1);
+            EXPECT_EQ(print.size(), _NB_);
             for(auto neuron : print) {
-                EXPECT_TRUE(neuron == '1' or neuron == '0' or neuron == i);
+                EXPECT_TRUE(neuron == '1' or neuron == '0');
             }
         }
         EXPECT_EQ(i, _END_TIME_);
@@ -99,24 +115,33 @@ TEST(Simulation, output) {
 
 TEST(Neuron, attributs){
     double r=1.0;
-    ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
-    InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
-    std::vector<double> excit_attributs={0.1*(1-0.8*r),0.2*(1+0.25*r),-65,2};
-    std::vector<double> inhib_attributs={0.02,0.2,-65*(1-(1/13))*r*r,8*(1-(3/4))*r*r};
-    for(size_t i(0);i<excit_attributs.size();++i){
-        EXPECT_EQ(excitatory->getAttributs()[i],excit_attributs[i]);
-        EXPECT_EQ(inhibitory->getAttributs()[i],inhib_attributs[i]);
+    ExcitatoryNeuron* excitatory_RS = new ExcitatoryNeuron(r, "RS");
+    ExcitatoryNeuron* excitatory_IB = new ExcitatoryNeuron(r, "IB");
+    ExcitatoryNeuron* excitatory_CH = new ExcitatoryNeuron(r, "CH");
+    InhibitoryNeuron* inhibitory_LTS = new InhibitoryNeuron(r, "LTS");
+    InhibitoryNeuron* inhibitory_FS = new InhibitoryNeuron(r, "FS");
+    std::vector<double> excit_attributs_RS = {_RS_A_, _RS_B_, _RS_C_, _RS_D_};
+    std::vector<double> excit_attributs_IB = {_IB_A_, _IB_B_, _IB_C_, _IB_D_};
+    std::vector<double> excit_attributs_CH = {_CH_A_, _CH_B_, _CH_C_, _CH_D_};
+    std::vector<double> inhib_attributs_LTS = {_LTS_A_, _LTS_B_, _LTS_C_, _LTS_D_};
+    std::vector<double> inhib_attributs_FS = {_FS_A_, _FS_B_, _FS_C_, _FS_D_};
+    for(size_t i(0);i<excit_attributs_RS.size();++i){
+        EXPECT_NEAR(excitatory_RS->getAttributs()[i], excit_attributs_RS[i], std::abs(excit_attributs_RS[i]*r));
+        EXPECT_NEAR(excitatory_IB->getAttributs()[i], excit_attributs_IB[i], std::abs(excit_attributs_IB[i]*r));
+        EXPECT_NEAR(excitatory_CH->getAttributs()[i], excit_attributs_CH[i], std::abs(excit_attributs_CH[i]*r));
+        EXPECT_NEAR(inhibitory_LTS->getAttributs()[i], inhib_attributs_LTS[i], std::abs(inhib_attributs_LTS[i]*r));
+        EXPECT_NEAR(inhibitory_FS->getAttributs()[i], inhib_attributs_FS[i], std::abs(inhib_attributs_FS[i]*r));
     }
 }
 TEST(Neuron, update){
-    double r=1.0;
+    double r=0.5;
     ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
     InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
     std::vector<double> excit_variablesInitial=excitatory->getVariables();
     std::vector<double> inhib_varaiblesInitial=inhibitory->getVariables();
     excitatory->update();
     inhibitory->update();
-    for(size_t i(0);i<excit_variablesInitial.size();++i){
+    for(size_t i(0);i<excit_variablesInitial.size()-1;++i){
         EXPECT_NE(excit_variablesInitial[i],excitatory->getVariables()[i]);
         EXPECT_NE(inhib_varaiblesInitial[i],inhibitory->getVariables()[i]);
     }

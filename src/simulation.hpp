@@ -6,26 +6,6 @@
 #include <time.h>
 
 /*!
-  * @brief storage of neuron parameters when given by a configuration.
-  * 
-  * @param type indicates if the neuron is excitatory (1) or inhibitory (0).
-  * @param a describes the time scale of the recovery variable u
-  * @param b describes the sensitivity of the recovery variable b.
-  * @param c describes the after-spike reset vaue of the membrane potential v.
-  * @param d describes the after-spike reset of the recovery variable u.
-*/
-struct Param {
-  std::string type;
-  double a;
-  double b;
-  double c;
-  double d;
-  double inhibitory;
-  double valence;
-  double degree;
-};
-
-/*!
   The Simulation class is the main class in this program. It constructs the neuron network System according to user-specified parameters, and @ref run "runs" the simulation.
 
   A Simulation is made of an object \ref network, which is a vector of pointers to \ref neuron objects. These neurons are constructed with the function \ref add_neurons
@@ -54,27 +34,37 @@ public :
 
     /*!
       @brief run the simulation and return the execution time.
-      @param dt step time 
-      @param time total time of the simulation
-
+      Use attribute \ref _dt as step of time for the simulation.
       @return the total time of execution
     */
-    int run(const double dt);
+    int run();
 
 /*!
       @brief write into the output stream the status of each neuron in the network for every step of time.
     */
     void print(int index);
 
+/*! @brief write into new file status of the parameters for each neuron.
+   */ 
     void testParamPrint();
+
+/*! @brief write into new file the v, u and intensity of one inhibitory and one excitatory neuron for each step of time.
+   */ 
     void testSamplePrint();
+
+/*! @brief read the line passed as argument and affects value if finds corresponding value
+    @param line from what we can extract informations
+    @param fs, ib, rz, lts proportions of neurons initialized to zero and updated if contained in the line
+
+    can throw logic error if sum of all proportions greater than 1
+   */ 
+    void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
 
 private :
     double _dt, _time;
     Network *_net;
     std::ofstream _outfile;
-
-    void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
+    bool _options;
 };
 
 #endif //SIMULATION_HPP

@@ -8,8 +8,6 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
-            std::string path_outfile(_PATH_OUTFILE_);
-            std::string outfile(path_outfile + _OUTFILE_);
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
             cmd.add(time);
@@ -23,12 +21,14 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, outfile, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _OUTFILE_, "string");
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
+            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
+            cmd.add(option);
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
@@ -37,6 +37,7 @@ Simulation::Simulation(int argc, char** argv)
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
+            _options = option.getValue();
             std::string outname = ofile.getValue();
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
@@ -58,16 +59,21 @@ Simulation::~Simulation()
     delete _net;
 }
 
-int Simulation::run(double dt) {
+int Simulation::run() {
     time_t ex_time = time(NULL);
     struct tm * ptm;
     double running_time(0);
+    int index = 1;
     while (running_time < _time) {
-        int index = 1;
-        running_time += 2*dt;
+        running_time += 2*_dt;
         _net->update();
         print(index);
+        index += 1;
     } 
+    if(_options) {
+        testParamPrint();
+        testSamplePrint();
+    }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     _outfile.close();
@@ -87,14 +93,16 @@ void Simulation::print(int index) {
 }
 
 void Simulation::testParamPrint() {
-    std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    std::ostream *outstr = &std::cout; //pas nécessaire ?
+    std::ofstream param;
+    param.open(_PARAMETERS_);
+    if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
     int inhib(0);
-    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n";
+    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n"; //déterminer si valence utile
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
         *outstr << i+1 << "\t ";
@@ -102,24 +110,28 @@ void Simulation::testParamPrint() {
         if (netw[i]->getW() == 2) inhib = 1;
         *outstr << inhib << "\t" << con[i].size() << "\t valence\n";
     }
+    param.close();
 }
 
 
 void Simulation::testSamplePrint() {
-    std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    std::ostream *outstr = &std::cout; //pas nécessaire ?
+    std::ofstream samples;
+    samples.open(_SAMPLES_);
+    if (samples.is_open()) outstr = &samples;
 
     std::vector<Neuron*> netw(_net->getNet());
     *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
-    double running_time(0);
     std::vector<double> attributs;
-    while (running_time < _time) {
+    int index(0);
+    for (double running_time(0); running_time < _time; running_time += 2*_dt) {
         attributs = netw[netw.size()-1]->getVariables(); //inhibitory
-        std::vector<std::map<Neuron*, double>> con(_net->getCon());
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
         attributs = netw[0]->getVariables(); //excitatory
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        ++index;
     }
+   samples.close();
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 

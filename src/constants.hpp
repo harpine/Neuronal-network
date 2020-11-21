@@ -18,10 +18,39 @@
 #define _INT_ 8 // TODO: decide what will be the default parameter
 #define _MOD_ 'b'
 #define _DEL_ .5
+#define _OPT_ false
 #define _DISCHARGE_T_ 30
-#define _OUTFILE_ "outfile"
+#define _NB_TEST_ 6
+#define _OUTFILE_ "outfile.txt"
+#define _PARAMETERS_ "test_parameters.txt"
+#define _SAMPLES_ "test_samples.txt"
 #define _PATH_OUTFILE_ "../"
 #define _PATH_TEST_ "test/"
+
+#define _RS_A_ .02
+#define _RS_B_ .2
+#define _RS_C_ -65.
+#define _RS_D_ 8.
+
+#define _IB_A_ .02
+#define _IB_B_ .2
+#define _IB_C_ -55.
+#define _IB_D_ 4.
+
+#define _CH_A_ .02
+#define _CH_B_ .2
+#define _CH_C_ -50.
+#define _CH_D_ 2.
+
+#define _LTS_A_ .02
+#define _LTS_B_ .25
+#define _LTS_C_ -65.
+#define _LTS_D_ 2.
+
+#define _FS_A_ .1
+#define _FS_B_ .2
+#define _FS_C_ -65.
+#define _FS_D_ 2.
 
 // *text messages *
 
@@ -36,3 +65,4 @@
 #define _OFILE_TEXT_ "Output file name"
 #define _MODEL_TEXT_ "Model for neuron connection, can be 'b' for basic, 'c' for constant and 'o' for overdispersed"
 #define _D_TEXT_ "Tunable number for neuron parameters creation"
+#define _OPTION_TEXT_ "Choice of optional output of supplementary files parameters and sample"
