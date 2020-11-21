@@ -124,14 +124,14 @@ TEST(Neuron, attributs){
     }
 }
 TEST(Neuron, update){
-    double r=1.0;
+    double r=0.5;
     ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
     InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
     std::vector<double> excit_variablesInitial=excitatory->getVariables();
     std::vector<double> inhib_varaiblesInitial=inhibitory->getVariables();
     excitatory->update();
     inhibitory->update();
-    for(size_t i(0);i<excit_variablesInitial.size();++i){
+    for(size_t i(0);i<excit_variablesInitial.size()-1;++i){
         EXPECT_NE(excit_variablesInitial[i],excitatory->getVariables()[i]);
         EXPECT_NE(inhib_varaiblesInitial[i],inhibitory->getVariables()[i]);
     }
