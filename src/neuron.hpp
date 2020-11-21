@@ -18,10 +18,7 @@ class Neuron{
     /**
      * @brief Construct a new Neuron object
      * 
-     * @param a describes the time scale of the recovery variable u
-     * @param b describes the sensitivity of the recovery variable b.
-     * @param c describes the after-spike reset vaue of the membrane potential v.
-     * @param d describes the after-spike reset of the recovery variable u.
+     * @param type string indicating the type of the Neuron 
      */
     Neuron(std::string type);
     /**

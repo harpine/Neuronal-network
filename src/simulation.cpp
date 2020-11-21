@@ -60,13 +60,13 @@ Simulation::~Simulation()
     delete _net;
 }
 
-int Simulation::run(double dt) {
+int Simulation::run() {
     time_t ex_time = time(NULL);
     struct tm * ptm;
     double running_time(0);
     while (running_time < _time) {
         int index = 1;
-        running_time += 2*dt;
+        running_time += 2*_dt;
         _net->update();
         print(index);
     } 
@@ -93,7 +93,7 @@ void Simulation::print(int index) {
 }
 
 void Simulation::testParamPrint() {
-    std::ostream *outstr = &std::cout;
+    std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
     param.open(_file_name + _PARAMETERS_);
     if (param.is_open()) outstr = &param;
@@ -102,7 +102,7 @@ void Simulation::testParamPrint() {
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
     int inhib(0);
-    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n";
+    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n"; //déterminer si valence utile
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
         *outstr << i+1 << "\t ";
@@ -115,22 +115,21 @@ void Simulation::testParamPrint() {
 
 
 void Simulation::testSamplePrint() {
-    std::ostream *outstr = &std::cout;
+    std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream samples;
     samples.open(_file_name + _SAMPLES_);
     if (samples.is_open()) outstr = &samples;
 
     std::vector<Neuron*> netw(_net->getNet());
     *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
-    double running_time(0);
     std::vector<double> attributs;
-    while (running_time < _time) {
+    int index(0);
+    for (double running_time(0); running_time < _time; running_time += 2*_dt) {
         attributs = netw[netw.size()-1]->getVariables(); //inhibitory
-        std::vector<std::map<Neuron*, double>> con(_net->getCon());
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
         attributs = netw[0]->getVariables(); //excitatory
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        running_time += 2*_dt;
+        ++index;
     }
    samples.close();
 }

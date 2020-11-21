@@ -86,9 +86,9 @@ TEST(Network, current) {
 }
 
 TEST(Simulation, output) {
-    std::string build = "build/";
-    Simulation sim(_PATH_OUTFILE_ + build + _OUTFILE_);
-    int result = sim.run(_DELTA_T_);
+    std::string path_outfile(_PATH_OUTFILE_);
+    Simulation sim(path_outfile + _PATH_TEST_ + _OUTFILE_);
+    int result = sim.run();
     EXPECT_LE(result, 60);
 
     std::ifstream myfile;
