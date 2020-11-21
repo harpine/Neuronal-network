@@ -31,8 +31,10 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
         _d=_CH_D_*_RNG->uniform_double(lowerbound,upperbound);
         }
     else{
-       throw std::domain_error("There is no "+type+" neuron"); 
+       throw std::domain_error("The "+type+" neuron does not exist"); 
     }
+    _v=-65;
+    _u=_b*_v;
     }catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
     }
