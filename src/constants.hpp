@@ -21,9 +21,9 @@
 #define _OPT_ false
 #define _DISCHARGE_T_ 30
 #define _NB_TEST_ 6
-#define _OUTFILE_ "outfile"
-#define _PARAMETERS_ "_parameters"
-#define _SAMPLES_ "_samples"
+#define _OUTFILE_ "outfile.txt"
+#define _PARAMETERS_ "test_parameters"
+#define _SAMPLES_ "test_samples"
 #define _PATH_OUTFILE_ "../"
 #define _PATH_TEST_ "test/"
 
