@@ -86,15 +86,14 @@ TEST(Network, current) {
 }
 
 TEST(Simulation, output) {
-    std::string path_outfile(_PATH_OUTFILE_);
-    Simulation sim(path_outfile + _PATH_TEST_ + _OUTFILE_);
+    Simulation sim(_OUTFILE_);
     int result = sim.run();
     EXPECT_LE(result, 60);
 
     std::ifstream myfile;
     std::string print;
 
-    myfile.open(_PATH_OUTFILE_ + build + _OUTFILE_);
+    myfile.open(_OUTFILE_);
     if (myfile.is_open()) {
         EXPECT_FALSE(myfile.eof());
         int i(0);
@@ -116,7 +115,7 @@ TEST(Neuron, attributs){
     double r=1.0;
     ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);
     InhibitoryNeuron* inhibitory= new InhibitoryNeuron(r);
-    std::vector<double> excit_attributs={0.1*(1-0.8*r),0.2*(1+0.25*r),-65,2};
+    std::vector<double> excit_attributs={};
     std::vector<double> inhib_attributs={0.02,0.2,-65*(1-(1/13))*r*r,8*(1-(3/4))*r*r};
     for(size_t i(0);i<excit_attributs.size();++i){
         EXPECT_NEAR(excitatory->getAttributs()[i],excit_attributs[i], r);

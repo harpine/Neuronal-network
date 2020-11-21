@@ -38,8 +38,7 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
-            _file_name = ofile.getValue();
-            std::cout << _file_name << std::endl;
+            std::string outname = ofile.getValue();
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
@@ -48,7 +47,7 @@ Simulation::Simulation(int argc, char** argv)
                 readLine(rep.getValue(), FS, IB, RZ, LTS);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             }
-            if(_file_name.length()) _outfile.open(_file_name);
+            if(outname.length()) _outfile.open(outname);
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
@@ -64,11 +63,12 @@ int Simulation::run() {
     time_t ex_time = time(NULL);
     struct tm * ptm;
     double running_time(0);
+    int index = 1;
     while (running_time < _time) {
-        int index = 1;
         running_time += 2*_dt;
         _net->update();
         print(index);
+        index += 1;
     } 
     if(_options) {
         testParamPrint();
