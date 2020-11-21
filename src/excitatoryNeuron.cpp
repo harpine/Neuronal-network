@@ -1,11 +1,14 @@
 #include "excitatoryNeuron.hpp"
-#include "random"
+#include "random.hpp"
+#include <stdexcept>
+#include <iostream>
 //TODO: Add JSON file with config of InhibitoryNeuron
 
 
 ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
 :Neuron(type)
 {
+    try{
     double lowerbound(1-delta);
     double upperbound(1+delta);
     if (type=="RS"){
@@ -26,6 +29,12 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
         _c=-50*_RNG->uniform_double(lowerbound,upperbound);
         _d=2*_RNG->uniform_double(lowerbound,upperbound);
         }
+    else{
+       throw std::domain_error("There is no "+type+" neuron"); 
+    }
+    }catch(const std::exception& e) {
+            std::cerr << e.what() << '\n';
+    }
 
 }
 
