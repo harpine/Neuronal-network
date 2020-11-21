@@ -22,8 +22,8 @@
 #define _DISCHARGE_T_ 30
 #define _NB_TEST_ 6
 #define _OUTFILE_ "outfile.txt"
-#define _PARAMETERS_ "test_parameters"
-#define _SAMPLES_ "test_samples"
+#define _PARAMETERS_ "test_parameters.txt"
+#define _SAMPLES_ "test_samples.txt"
 #define _PATH_OUTFILE_ "../"
 #define _PATH_TEST_ "test/"
 
@@ -51,8 +51,6 @@
 #define _FS_B_ .2
 #define _FS_C_ -65.
 #define _FS_D_ 2.
-
-
 
 // *text messages *
 
