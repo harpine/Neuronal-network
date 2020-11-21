@@ -27,7 +27,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
+            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPTION_TEXT_, "bool");
             cmd.add(option);
             cmd.parse(argc, argv);
 
@@ -64,19 +64,26 @@ int Simulation::run() {
     struct tm * ptm;
     double running_time(0);
     int index = 1;
+    std::ofstream samples; 
+    samples.open(_SAMPLES_); //trouver moyen plus optimal, deuxième attribut ?
+    if (_options) samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     while (running_time < _time) {
         running_time += 2*_dt;
         _net->update();
         print(index);
+        if (_options) {
+            samples << index << '\t';
+            testSamplePrint(samples);
+        }
         index += 1;
     } 
     if(_options) {
         testParamPrint();
-        testSamplePrint();
     }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     _outfile.close();
+    samples.close();
     return ptm->tm_sec;
 }
 
@@ -114,24 +121,16 @@ void Simulation::testParamPrint() {
 }
 
 
-void Simulation::testSamplePrint() {
+void Simulation::testSamplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
-    std::ofstream samples;
-    samples.open(_SAMPLES_);
-    if (samples.is_open()) outstr = &samples;
+    if (file.is_open()) outstr = &file;
 
-    std::vector<Neuron*> netw(_net->getNet());
-    *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     std::vector<double> attributs;
-    int index(0);
-    for (double running_time(0); running_time < _time; running_time += 2*_dt) {
-        attributs = netw[netw.size()-1]->getVariables(); //inhibitory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
-        attributs = netw[0]->getVariables(); //excitatory
+        attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        ++index;
-    }
-   samples.close();
+        attributs = (_net->getInhibitory())->getVariables(); 
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] ;
+    *outstr << "\n";
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
