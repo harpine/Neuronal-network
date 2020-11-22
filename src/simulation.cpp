@@ -138,7 +138,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     std::string value, key;
     line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
     std::stringstream ss(line);
-    while (std::getline(ss, value, ':')) 
+    while (std::getline(ss, key, ':')) 
     {
         if (key.empty()) continue;
         std::getline(ss, value, ',');

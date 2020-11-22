@@ -113,6 +113,17 @@ TEST(Simulation, output) {
     myfile.close();
 }
 
+TEST(Simulation, readLine) {
+    Simulation sim(_OUTFILE_);
+    double FS(0.), IB(0.), RZ(0.), LTS(0.);
+    std::string proportions = "FS:0.1, IB:0.2, RZ:0.3, LTS:0.3";
+    sim.readLine(proportions, FS, IB, RZ, LTS);
+    EXPECT_NE(FS, 0);
+    EXPECT_NE(IB, 0);
+    EXPECT_NE(RZ, 0);
+    EXPECT_NE(LTS, 0);
+}
+
 TEST(Neuron, attributs){
     double r=1.0;
     ExcitatoryNeuron* excitatory_RS = new ExcitatoryNeuron(r, "RS");
