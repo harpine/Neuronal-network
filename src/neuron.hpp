@@ -80,6 +80,11 @@ class Neuron{
      * @return int factor of the neuron
      */
     virtual int factor() const = 0;
+    /**
+     * @brief 
+     * 
+     */
+    std::string getType() const; 
 
 
     protected:

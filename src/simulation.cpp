@@ -112,7 +112,7 @@ void Simulation::paramPrint() {
     *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n"; //déterminer si valence utile
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
-        *outstr << i+1 << "\t ";
+        *outstr << netw[i]->getType()<< "\t ";
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
         if (netw[i]->getW() == 2) inhib = 1;
         else inhib = 0;

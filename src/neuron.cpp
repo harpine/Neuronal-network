@@ -34,3 +34,6 @@ std::vector<double> Neuron::getAttributs(){
 std::vector<double> Neuron::getVariables(){
     return {_v,_u, _current};
 }
+std::string Neuron::getType() const{
+    return _type;
+} 
