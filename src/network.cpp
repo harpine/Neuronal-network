@@ -120,7 +120,7 @@ void Network::update()
     }
 }
 
-void Network::synapticCurrent(int index)
+double Network::synapticCurrent(int index)
 {
     //TODO: pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
     //std:map<Neuron*, double> excitatory;
@@ -135,6 +135,7 @@ void Network::synapticCurrent(int index)
     }
 
     _network[index]->setCurrent(_network[index]->noise() + Input);
+    return Input;
 
     // double excitatoryInput(0);
 
