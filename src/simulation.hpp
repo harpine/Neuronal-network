@@ -29,7 +29,7 @@ public :
         @param _rep the repartition of under categories of neurons
     */
     Simulation(int argc, char** argv);
-    Simulation(std::string outfile);
+    Simulation(const std::string& outfile);
     ~Simulation();
 
     /*!

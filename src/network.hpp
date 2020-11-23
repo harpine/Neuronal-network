@@ -58,11 +58,13 @@ void makeConnections(double lambda);
   @brief calculate synaptic current received by the neurons.
   calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.
   @param neuron the neuron on which we want to caculate the total current.
+  @return the intensity of the current on the neuron of index given.
  */
-	void synapticCurrent(int index);
+	double synapticCurrent(int index);
 
 	/*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
 	 * 0 = hasn't fired this step of time, 1 = fired this step of time
+	 * @return the list of neurons saying, if each neuron is firing (1) or not (0)
 	 */
 	 std::vector<bool> getCurrentstatus() const;
 

@@ -1,8 +1,8 @@
 #include "simulation.hpp"
 #include "constants.hpp"
 
-Simulation::Simulation(std::string outfile)
-    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile) {}
+Simulation::Simulation(const std::string& outfile)
+    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
 
 Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
@@ -116,7 +116,7 @@ void Simulation::paramPrint() {
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
         if (netw[i]->getW() == 2) inhib = 1;
         else inhib = 0;
-        *outstr << inhib << "\t" << con[i].size() << "\t valence\n";
+        *outstr << inhib << "\t" << con[i].size() << "\t" << _net->synapticCurrent(i) << "\n";
     }
     param.close();
 }
