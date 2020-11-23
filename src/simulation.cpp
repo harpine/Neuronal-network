@@ -127,10 +127,13 @@ void Simulation::samplePrint(std::ofstream& file) {
     if (file.is_open()) outstr = &file;
 
     std::vector<double> attributs;
-        attributs = (_net->getInhibitory())->getVariables(); 
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << "\t"  << attributs[j] ;
-        attributs = (_net->getExcitatory())->getVariables(); 
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << "\t" <<  attributs[j];
+    std::cerr << _net->getNeuronsOutput().size();
+    for (size_t k(0); k < _net->getNeuronsOutput().size(); k++) {
+        if (_net->getNeuronsOutput()[k] != nullptr) {
+            attributs = (_net->getNeuronsOutput()[k])->getVariables();
+            for (size_t j(0); j < attributs.size(); ++j) *outstr << "\t" << attributs[j];
+        }
+    }
     *outstr << "\n";
 }
 

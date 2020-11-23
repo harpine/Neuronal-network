@@ -2,6 +2,7 @@
 #define NETWORK_HPP
 #include <vector>
 #include <map>
+#include <array>
 #include "random.hpp"
 #include "neuron.hpp"
 
@@ -76,14 +77,10 @@ void makeConnections(double lambda);
     * @return the vector of connections of the network
     */
     std::vector<std::map<Neuron*, double>> getCon() const;
-    /*! @brief get the 1st neuron, that is an inhibitory one
-     * @return the pointer on the first neuron
+    /*! @brief get the 1st neuron of each type and put it in a list
+     * @return the an array on the first neuron
      */
-    Neuron* getInhibitory() const;
-    /*! @brief get the last neuron, that is an inhibitory one
-    * @return the pointer on the last neuron
-    */
-    Neuron* getExcitatory() const;
+    std::array<Neuron*,6> getNeuronsOutput() const;
     /*! @brief get Valence of neuron given in parameters
      * @return the sum of pondered intensity of current
      */
@@ -106,6 +103,11 @@ double _intensity;
 /*! name of model used for connections: basic, constant or overdispersed
  */
  char _model;
+
+ /*! list of neurons that are taken for the test, the order is:
+  * FS, LTS, IB, RZ, TC, CH, RS
+  */
+  std::array<Neuron*,6> _neuronsforoutputs;
 };
 
 #endif //NETWORK_HPP

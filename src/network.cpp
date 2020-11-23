@@ -12,11 +12,13 @@ Network::Network(char model, int nb, double p_E, double intensity, double lambda
     {
         neuron = new InhibitoryNeuron(delta);
         _network.push_back(neuron);
+        _neuronsforoutputs[0] = neuron;
     }
     for (int i(0); i < excit; ++i)
     {
         neuron = new ExcitatoryNeuron(delta);
         _network.push_back(neuron);
+        _neuronsforoutputs[6] = neuron;
     }
     makeConnections(lambda);
 }
@@ -31,40 +33,47 @@ Network::Network(char model, int nb, double p_FS, double p_IB, double p_RZ, doub
     {
         neuron = new InhibitoryNeuron(delta, type[0]);
         _network.push_back(neuron);
+        _neuronsforoutputs[0] = neuron;
     }
     int lts(nb*p_LTS);
     for (int i(0); i < lts; i++)
     {
         neuron = new InhibitoryNeuron(delta, type[1]);
         _network.push_back(neuron);
+        _neuronsforoutputs[1] = neuron;
     }
     int ib(nb*p_IB);
     for (int i(0); i < ib; i++)
     {
         neuron = new ExcitatoryNeuron(delta, type[2]);
         _network.push_back(neuron);
+        _neuronsforoutputs[2] = neuron;
     }
     int rz(nb*p_RZ);
     for (int i(0); i < rz; i++)
     {
         neuron = new ExcitatoryNeuron(delta, type[3]);
         _network.push_back(neuron);
+        _neuronsforoutputs[3] = neuron;
     }
     int tc(nb*p_TC);
     for(int i(0); i < tc; i++) {
         neuron = new ExcitatoryNeuron(delta, type[4]);
         _network.push_back(neuron);
+        _neuronsforoutputs[4] = neuron;
     }
     int ch(nb*p_CH);
     for(int i(0); i < ch; i++) {
         neuron = new ExcitatoryNeuron(delta, type[5]);
         _network.push_back(neuron);
+        _neuronsforoutputs[5] = neuron;
     }
 
     for (int i(0); i < (nb - fs - lts - ib - rz - tc - ch); i++)
     {
         neuron = new ExcitatoryNeuron(delta, type[6]);
         _network.push_back(neuron);
+        _neuronsforoutputs[6] = neuron;
     }
 
     makeConnections(lambda);
@@ -181,14 +190,9 @@ std::vector<std::map<Neuron*, double>> Network::getCon() const
     return _connections;
 }
 
-Neuron* Network::getInhibitory() const
+std::array<Neuron*,6> Network::getNeuronsOutput() const
 {
-    return _network.front();
-}
-
-Neuron* Network::getExcitatory() const
-{
-    return _network.back();
+    return _neuronsforoutputs;
 }
 
 double Network::getValence(int index) const
