@@ -87,14 +87,14 @@ TEST(Network, current) {
 }
 
 TEST(Simulation, output) {
-    Simulation sim(_OUTFILE_);
+    Simulation sim(_SPIKES_);
     int result = sim.run();
     EXPECT_LE(result, 60);
 
     std::ifstream myfile;
     std::string print;
 
-    myfile.open(_OUTFILE_);
+    myfile.open(_SPIKES_);
     if (myfile.is_open()) {
         EXPECT_FALSE(myfile.eof());
         int i(0);
@@ -114,7 +114,7 @@ TEST(Simulation, output) {
 }
 
 TEST(Simulation, readLine) {
-    Simulation sim(_OUTFILE_);
+    Simulation sim(_SPIKES_);
     double FS(0.), IB(0.), RZ(0.), LTS(0.), TC(0.), CH(0.);
     std::string proportions = "FS:0.1, IB:0.2, RZ:0.1, LTS:0.1, TC:0.2, CH:0.1";
     sim.readLine(proportions, FS, IB, RZ, LTS, TC, CH);

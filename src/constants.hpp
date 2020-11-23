@@ -17,14 +17,15 @@
 #define _LAMB_ 10
 #define _INT_ 8 // TODO: decide what will be the default parameter
 #define _MOD_ 'b'
-#define _DEL_ .5
+#define _DEL_ .05
 #define _OPT_ false
 #define _DISCHARGE_T_ 30
 #define _NB_TEST_ 6
-#define _OUTFILE_ "outfile.txt"
-#define _PARAMETERS_ "test_parameters.txt"
-#define _SAMPLES_ "test_samples.txt"
+#define _SPIKES_ "spikes"
+#define _PARAMETERS_ "parameters"
+#define _SAMPLES_ "samples"
 #define _PATH_OUTFILE_ "../"
+#define _EXTENSION_ ".txt"
 #define _PATH_TEST_ "test/"
 
 #define _RS_A_ .02

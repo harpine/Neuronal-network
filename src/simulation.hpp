@@ -65,6 +65,7 @@ private :
     double _dt, _time;
     Network *_net;
     std::ofstream _outfile;
+    std::string _filename;
     bool _options;
 };
 
