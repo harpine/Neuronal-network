@@ -52,6 +52,16 @@
 #define _FS_C_ -65.
 #define _FS_D_ 2.
 
+#define _TC_A_ .02
+#define _TC_B_ .25
+#define _TC_C_ -65.
+#define _TC_D_ .05
+
+#define _RZ_A_ .1
+#define _RZ_B_ .26
+#define _RZ_C_ -65.
+#define _RZ_D_ 2.
+
 // *text messages *
 
 #define _TIME_TEXT_ "Simulation end time"

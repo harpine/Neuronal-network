@@ -30,6 +30,18 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
         _c=_CH_C_*_RNG->uniform_double(lowerbound,upperbound);
         _d=_CH_D_*_RNG->uniform_double(lowerbound,upperbound);
         }
+    else if(type=="TC"){
+        _a=_TC_A_*_RNG->uniform_double(lowerbound,upperbound); 
+        _b=_TC_B_*_RNG->uniform_double(lowerbound,upperbound);
+        _c=_TC_C_*_RNG->uniform_double(lowerbound,upperbound);
+        _d=_TC_D_*_RNG->uniform_double(lowerbound,upperbound);
+    }
+    else if(type=="RZ"){
+        _a=_RZ_A_*_RNG->uniform_double(lowerbound,upperbound); 
+        _b=_RZ_B_*_RNG->uniform_double(lowerbound,upperbound);
+        _c=_RZ_C_*_RNG->uniform_double(lowerbound,upperbound);
+        _d=_RZ_D_*_RNG->uniform_double(lowerbound,upperbound);
+    }
     else{
        throw std::domain_error("The "+type+" neuron does not exist"); 
     }
