@@ -27,7 +27,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(model);
             TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::ValueArg<bool> option("c", "options", _OPTION_TEXT_, false, _OPTION_TEXT_, "bool");
+            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
             cmd.add(option);
             cmd.parse(argc, argv);
 
@@ -73,12 +73,12 @@ int Simulation::run() {
         print(index);
         if (_options) {
             samples << index << '\t';
-            testSamplePrint(samples);
+            samplePrint(samples);
         }
         index += 1;
     } 
     if(_options) {
-        testParamPrint();
+        paramPrint();
     }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
@@ -99,7 +99,7 @@ void Simulation::print(int index) {
     *outstr << "\n";
 }
 
-void Simulation::testParamPrint() {
+void Simulation::paramPrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
     param.open(_PARAMETERS_);
@@ -121,7 +121,7 @@ void Simulation::testParamPrint() {
 }
 
 
-void Simulation::testSamplePrint(std::ofstream& file) {
+void Simulation::samplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     if (file.is_open()) outstr = &file;
 
@@ -129,7 +129,7 @@ void Simulation::testSamplePrint(std::ofstream& file) {
         attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
         attributs = (_net->getInhibitory())->getVariables(); 
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j]<<"\t" ;
     *outstr << "\n";
 }
 
