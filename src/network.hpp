@@ -80,7 +80,7 @@ void makeConnections(double lambda);
     /*! @brief get the 1st neuron of each type and put it in a list
      * @return the an array on the first neuron
      */
-    std::array<Neuron*,6> getNeuronsOutput() const;
+    std::array<Neuron*,7> getNeuronsOutput() const;
     /*! @brief get Valence of neuron given in parameters
      * @return the sum of pondered intensity of current
      */
@@ -107,7 +107,7 @@ double _intensity;
  /*! list of neurons that are taken for the test, the order is:
   * FS, LTS, IB, RZ, TC, CH, RS
   */
-  std::array<Neuron*,6> _neuronsforoutputs;
+  std::array<Neuron*,7> _neuronsforoutputs;
 };
 
 #endif //NETWORK_HPP

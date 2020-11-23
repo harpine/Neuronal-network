@@ -42,10 +42,56 @@ Simulation::Simulation(int argc, char** argv)
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
-            } else {
+                if (_options) {
+                    std::ofstream samples;
+                    std::string file = _SAMPLES_;
+                    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+                    if (perc.getValue() == 0) {
+                        samples << "FS.v\t FS.u\t FS.I\n";
+                    }
+                    if (perc.getValue() == 1) {
+                        samples << "RS.v\t RS.u\t RS.I\n";
+                    } else {
+                        samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
+                    }
+                    samples.close();
+                }
+            }
+            else {
+                //TODO: tester pour chaque type de la même manière que ci-dessus.
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
+                if (_options) {
+                    std::ofstream samples;
+                    std::string file = _SAMPLES_;
+                    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+                    std::string headers;
+                    if (FS != 0) {
+                        headers += "FS.v\t FS.u\t FS.I";
+                    }
+                    if (LTS != 0) {
+                        headers += "\t LTS.v\t LTS.u\t LTS.I";
+                    }
+                    if (IB != 0) {
+                        headers += "\t IB.v\t IB.u\t IB.I";
+                    }
+                    if (RZ != 0) {
+                        headers += "\t RZ.v\t RZ.u\t RZ.I";
+                    }
+                    if (TC != 0) {
+                        headers += "\t TC.v\t TC.u\t TC.I";
+                    }
+                    if (CH != 0) {
+                        headers += "\t CH.v\t CH.u\t CH.I";
+                    }
+                    if ((1-FS -IB - RZ -LTS - TC -CH) != 0) {
+                        headers += "\t RS.v\t RS.u\t RS.I";
+                    }
+                    headers += "\n";
+                    samples << headers;
+                    samples.close();
+                }
             }
             _outfile.open(_filename + _SPIKES_ + _EXTENSION_);
             
@@ -64,10 +110,11 @@ int Simulation::run() {
     struct tm * ptm;
     double running_time(0);
     int index = 1;
-    std::ofstream samples; 
-    std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
-    if (_options) samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
+    //if (_options){
+        std::ofstream samples;
+        std::string file = _SAMPLES_;
+        samples.open(file + _EXTENSION_, std::ios::app); //trouver moyen plus optimal, deuxième attribut ?
+
     while (running_time < _time) {
         running_time += 2*_dt;
         _net->update();
@@ -77,7 +124,7 @@ int Simulation::run() {
             samplePrint(samples);
         }
         index += 1;
-    } 
+    }
     if(_options) {
         paramPrint();
     }
@@ -129,7 +176,6 @@ void Simulation::samplePrint(std::ofstream& file) {
     if (file.is_open()) outstr = &file;
 
     std::vector<double> attributs;
-    std::cerr << _net->getNeuronsOutput().size();
     for (size_t k(0); k < _net->getNeuronsOutput().size(); k++) {
         if (_net->getNeuronsOutput()[k] != nullptr) {
             attributs = (_net->getNeuronsOutput()[k])->getVariables();
@@ -149,9 +195,9 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key.empty()) continue;
         std::getline(ss, value, ',');
         if (key == "FS") fs = stod(value);
+        if (key == "LTS") lts = stod(value);
         if (key == "IB") ib = stod(value);
         if (key == "RZ") rz = stod(value);
-        if (key == "LTS") lts = stod(value);
         if (key == "TC") tc = stod(value);
         if (key == "CH") ch = stod(value);
     }

@@ -190,7 +190,7 @@ std::vector<std::map<Neuron*, double>> Network::getCon() const
     return _connections;
 }
 
-std::array<Neuron*,6> Network::getNeuronsOutput() const
+std::array<Neuron*,7> Network::getNeuronsOutput() const
 {
     return _neuronsforoutputs;
 }
