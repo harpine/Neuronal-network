@@ -21,11 +21,11 @@ Network::Network(char model, int nb, double p_E, double intensity, double lambda
     makeConnections(lambda);
 }
 
-Network::Network(char model, int nb, double p_FS, double p_IB, double p_RZ, double p_LTS, double intensity, double lambda, double delta)
+Network::Network(char model, int nb, double p_FS, double p_IB, double p_RZ, double p_LTS, double p_TC, double p_CH, double intensity, double lambda, double delta)
         : _intensity(intensity), _model(model)
 {
     Neuron* neuron;
-    std::vector<std::string> type = {"FS", "LTS", "IB", "RZ", "RS"};
+    std::vector<std::string> type = {"FS", "LTS", "IB", "RZ", "TC", "CH", "RS"};
     int fs(nb*p_FS);
     for (int i(0); i < fs; i++)
     {
@@ -50,9 +50,20 @@ Network::Network(char model, int nb, double p_FS, double p_IB, double p_RZ, doub
         neuron = new ExcitatoryNeuron(delta, type[3]);
         _network.push_back(neuron);
     }
-    for (int i(0); i < (nb- fs - lts -ib - rz); i++)
-    {
+    int tc(nb*p_TC);
+    for(int i(0); i < tc; i++) {
         neuron = new ExcitatoryNeuron(delta, type[4]);
+        _network.push_back(neuron);
+    }
+    int ch(nb*p_CH);
+    for(int i(0); i < ch; i++) {
+        neuron = new ExcitatoryNeuron(delta, type[5]);
+        _network.push_back(neuron);
+    }
+
+    for (int i(0); i < (nb - fs - lts - ib - rz - tc - ch); i++)
+    {
+        neuron = new ExcitatoryNeuron(delta, type[6]);
         _network.push_back(neuron);
     }
     makeConnections(lambda);

@@ -43,9 +43,9 @@ Simulation::Simulation(int argc, char** argv)
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             } else {
-                double FS(0), IB(0), RZ(0), LTS(0);
-                readLine(rep.getValue(), FS, IB, RZ, LTS);
-                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
+                double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
+                readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
+                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             }
             if(outname.length()) _outfile.open(outname);
             
@@ -134,7 +134,7 @@ void Simulation::samplePrint(std::ofstream& file) {
     *outstr << "\n";
 }
 
-void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
+void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts, double& tc, double& ch) 
 {
     std::string value, key;
     line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
@@ -146,10 +146,11 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "FS") fs = stod(value);
         if (key == "IB") ib = stod(value);
         if (key == "RZ") rz = stod(value);
-        if (key == "LTS") lts = stod(value); //faire aussi CH ???
-        //undifined are RS (excitateurs)
+        if (key == "LTS") lts = stod(value);
+        if (key == "TC") tc = stod(value);
+        if (key == "CH") ch = stod(value);
     }
-    if (std::abs(fs+ib+rz+lts > 1)) {
+    if (std::abs(fs+ib+rz+lts+tc+ch > 1)) {
         throw std::logic_error("The sum of all proportions is greater than 1");
     }
 }

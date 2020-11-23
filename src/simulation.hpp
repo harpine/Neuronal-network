@@ -59,7 +59,7 @@ public :
 
     can throw logic error if sum of all proportions greater than 1
    */ 
-    void readLine(std::string& line, double& fs, double& ib, double& rz, double& lts);
+    void readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts, double& tc, double& ch);
 
 private :
     double _dt, _time;
