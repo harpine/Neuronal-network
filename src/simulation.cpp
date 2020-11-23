@@ -72,7 +72,7 @@ int Simulation::run() {
         _net->update();
         print(index);
         if (_options) {
-            samples << index << '\t';
+            samples << index;
             samplePrint(samples);
         }
         index += 1;
@@ -128,9 +128,9 @@ void Simulation::samplePrint(std::ofstream& file) {
 
     std::vector<double> attributs;
         attributs = (_net->getInhibitory())->getVariables(); 
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << "\t"  << attributs[j] ;
         attributs = (_net->getExcitatory())->getVariables(); 
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j]<<"\t" ;
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << "\t" <<  attributs[j];
     *outstr << "\n";
 }
 
