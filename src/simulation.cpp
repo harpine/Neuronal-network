@@ -115,6 +115,7 @@ void Simulation::paramPrint() {
         *outstr << i+1 << "\t ";
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
         if (netw[i]->getW() == 2) inhib = 1;
+        else inhib = 0;
         *outstr << inhib << "\t" << con[i].size() << "\t valence\n";
     }
     param.close();
@@ -128,7 +129,7 @@ void Simulation::samplePrint(std::ofstream& file) {
     std::vector<double> attributs;
         attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        attributs = (_net->getInhibitory())->getVariables(); 
+        attributs = (_net->getExcitatory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j]<<"\t" ;
     *outstr << "\n";
 }
