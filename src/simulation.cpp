@@ -116,7 +116,7 @@ void Simulation::paramPrint() {
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
         if (netw[i]->getW() == 2) inhib = 1;
         else inhib = 0;
-        *outstr << inhib << "\t" << con[i].size() << "\t" << _net->synapticCurrent(i) << "\n";
+        *outstr << inhib << "\t" << con[i].size() << "\t" << _net->getValence(i) << "\n";
     }
     param.close();
 }
