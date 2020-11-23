@@ -21,7 +21,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
             cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _OUTFILE_, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
             cmd.add(model);
@@ -38,7 +38,7 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
-            std::string outname = ofile.getValue();
+            _filename = ofile.getValue();
             double tmp = (number.getValue() - 1);
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
@@ -47,7 +47,7 @@ Simulation::Simulation(int argc, char** argv)
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
             }
-            if(outname.length()) _outfile.open(outname);
+            _outfile.open(_filename + _SPIKES_ + _EXTENSION_);
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
@@ -65,7 +65,8 @@ int Simulation::run() {
     double running_time(0);
     int index = 1;
     std::ofstream samples; 
-    samples.open(_SAMPLES_); //trouver moyen plus optimal, deuxième attribut ?
+    std::string file = _SAMPLES_;
+    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
     if (_options) samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     while (running_time < _time) {
         running_time += 2*_dt;
@@ -102,7 +103,8 @@ void Simulation::print(int index) {
 void Simulation::paramPrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
-    param.open(_PARAMETERS_);
+    std::string file = _PARAMETERS_;
+    param.open(file + _EXTENSION_);
     if (param.is_open()) outstr = &param;
 
     std::vector<Neuron*> netw(_net->getNet());
