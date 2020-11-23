@@ -23,8 +23,10 @@ InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
         _c=_FS_C_*_RNG->uniform_double(lowerbound,upperbound);
         _d=_FS_D_*_RNG->uniform_double(lowerbound,upperbound);
     }else{
-       throw std::domain_error("There is no neuron"); 
+       throw std::domain_error("The Inhibitory "+type+" neuron does not exist"); 
     }
+    _v=-65;
+    _u=_b*_v;
     }catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
     }

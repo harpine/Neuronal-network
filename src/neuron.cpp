@@ -5,8 +5,6 @@
 Neuron::Neuron(std::string type)
 : _type(type)
 {
-    _v=-65;
-    _u=_b*_v;
 }
 
 Neuron::~Neuron(){

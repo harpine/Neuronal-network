@@ -64,19 +64,26 @@ int Simulation::run() {
     struct tm * ptm;
     double running_time(0);
     int index = 1;
+    std::ofstream samples; 
+    samples.open(_SAMPLES_); //trouver moyen plus optimal, deuxième attribut ?
+    if (_options) samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     while (running_time < _time) {
         running_time += 2*_dt;
         _net->update();
         print(index);
+        if (_options) {
+            samples << index << '\t';
+            samplePrint(samples);
+        }
         index += 1;
     } 
     if(_options) {
-        testParamPrint();
-        testSamplePrint();
+        paramPrint();
     }
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     _outfile.close();
+    samples.close();
     return ptm->tm_sec;
 }
 
@@ -92,7 +99,7 @@ void Simulation::print(int index) {
     *outstr << "\n";
 }
 
-void Simulation::testParamPrint() {
+void Simulation::paramPrint() {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     std::ofstream param;
     param.open(_PARAMETERS_);
@@ -114,24 +121,16 @@ void Simulation::testParamPrint() {
 }
 
 
-void Simulation::testSamplePrint() {
+void Simulation::samplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
-    std::ofstream samples;
-    samples.open(_SAMPLES_);
-    if (samples.is_open()) outstr = &samples;
+    if (file.is_open()) outstr = &file;
 
-    std::vector<Neuron*> netw(_net->getNet());
-    *outstr << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     std::vector<double> attributs;
-    int index(0);
-    for (double running_time(0); running_time < _time; running_time += 2*_dt) {
-        attributs = netw[netw.size()-1]->getVariables(); //inhibitory
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << index <<attributs[j] << "\t" ;
-        attributs = netw[0]->getVariables(); //excitatory
+        attributs = (_net->getInhibitory())->getVariables(); 
         for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t" ;
-        ++index;
-    }
-   samples.close();
+        attributs = (_net->getInhibitory())->getVariables(); 
+        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j]<<"\t" ;
+    *outstr << "\n";
 }
 
 void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts) 
@@ -139,7 +138,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     std::string value, key;
     line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
     std::stringstream ss(line);
-    while (std::getline(ss, value, ':')) 
+    while (std::getline(ss, key, ':')) 
     {
         if (key.empty()) continue;
         std::getline(ss, value, ',');
