@@ -60,7 +60,7 @@ void makeConnections(double lambda);
   @param neuron the neuron on which we want to caculate the total current.
   @return the intensity of the current on the neuron of index given.
  */
-	double synapticCurrent(int index);
+	void synapticCurrent(int index);
 
 	/*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
 	 * 0 = hasn't fired this step of time, 1 = fired this step of time
@@ -84,6 +84,10 @@ void makeConnections(double lambda);
     * @return the pointer on the last neuron
     */
     Neuron* getExcitatory() const;
+    /*! @brief get Valence of neuron given in parameters
+     * @return the sum of pondered intensity of current
+     */
+     double getValence(int index) const;
 
 private:
 /*!

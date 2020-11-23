@@ -120,22 +120,21 @@ void Network::update()
     }
 }
 
-double Network::synapticCurrent(int index)
+void Network::synapticCurrent(int index)
 {
     //TODO: pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
     //std:map<Neuron*, double> excitatory;
     //std:map<Neuron*, double> inhibitory;
-    double Input(0);
+    double input(0);
     for (auto& pair: _connections[index])
     {
         if (pair.first->isFiring())
         {
-            Input += pair.second;
+            input += pair.second;
         }
     }
 
-    _network[index]->setCurrent(_network[index]->noise() + Input);
-    return Input;
+    _network[index]->setCurrent(_network[index]->noise() + input);
 
     // double excitatoryInput(0);
 
@@ -178,4 +177,14 @@ Neuron* Network::getInhibitory() const
 Neuron* Network::getExcitatory() const
 {
     return _network.back();
+}
+
+double Network::getValence(int index) const
+{
+    double input(0);
+    for (auto& pair: _connections[index])
+    {
+            input += pair.second;
+    }
+    return input;
 }
