@@ -45,3 +45,4 @@
 /lib64/
 /include/
 
+.vscode/settings.json

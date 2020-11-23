@@ -1,9 +1,9 @@
 #ifndef NEURON_HPP
 #define NEURON_HPP
 #include <vector>
+#include <string>
 #include "random.hpp"
 
-//TODO: Code temps d'attente
 
 /**
  * @brief A pure virtual class Neuron.
@@ -18,12 +18,9 @@ class Neuron{
     /**
      * @brief Construct a new Neuron object
      * 
-     * @param a describes the time scale of the recovery variable u
-     * @param b describes the sensitivity of the recovery variable b.
-     * @param c describes the after-spike reset value of the membrane potential v.
-     * @param d describes the after-spike reset of the recovery variable u.
+     * @param type string indicating the type of the Neuron 
      */
-    Neuron(double a,double b,double c,double d);
+    Neuron(std::string type);
     /**
      * @brief Destroy the Neuron object
      * 
@@ -82,12 +79,14 @@ class Neuron{
      * @return int factor of the neuron
      */
     virtual int factor() const = 0;
-
-
-    private:
     /**
-     * @brief a describes the time scale of the recovery variable u
+     * @brief 
+     * 
      */
+    std::string getType() const; 
+
+
+    protected:
     double _a;
     /**
      * @brief describes the sensitivity of the recovery variable v.
@@ -107,6 +106,7 @@ class Neuron{
     double _v;
     double _u;
     double _current;
+    std::string _type;
 };
 
 

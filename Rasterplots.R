@@ -5,7 +5,7 @@ pdf.options(onefile=F, width=10, height=10)
 
 args = commandArgs(T)
 Rname = args[1]
-rast = read.table(gzfile(Rname), row.names=NULL)
+rast = read.table(gzfile(Rname), row.names=1)
 
 T = nrow(rast)
 times = 1:T/1000

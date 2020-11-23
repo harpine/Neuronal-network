@@ -2,6 +2,7 @@
 #define INHIBITORYNEURON_HPP
 #include "neuron.hpp"
 
+
 /**
  * @brief An inhibitory Neuron class.
  * 
@@ -13,18 +14,9 @@ class InhibitoryNeuron :public Neuron
     /**
      * @brief Construct a new Inhibitory Neuron object
      * 
-     * @param r A random number
+     * @param delta The delta of uniform distribution determining the noise 
      */
-    InhibitoryNeuron(double r);
-    /**
-     * @brief Construct a new Inhibitory Neuron object
-     * 
-     * @param a describes the time scale of the recovery variable u
-     * @param b describes the sensitivity of the recovery variable b.
-     * @param c describes the after-spike reset vaue of the membrane potential v.
-     * @param d describes the after-spike reset of the recovery variable u.
-     */
-    InhibitoryNeuron(double a,double b, double c, double d);
+    InhibitoryNeuron(double delta,std::string type="FS");
     /**
      * @brief Destroy the Inhibitory Neuron object
      * 
