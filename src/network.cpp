@@ -1,5 +1,4 @@
 #include "network.hpp"
-#include <map>
 #include <algorithm>
 #include "inhibitoryNeuron.hpp"
 #include "excitatoryNeuron.hpp"
@@ -126,26 +125,16 @@ void Network::synapticCurrent(int index)
     //TODO: pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
     //std:map<Neuron*, double> excitatory;
     //std:map<Neuron*, double> inhibitory;
-    double excitatoryInput(0);
-    double inhibitoryInput(0);
+    double Input(0);
     for (auto& pair: _connections[index])
     {
         if (pair.first->isFiring())
         {
-            if (pair.second > 0) // so it is an excitatory neuron
-            {
-                excitatoryInput += 0.5 *(pair.second);
-                //excitatory.insert(pair);
-            }
-            else
-            {
-                inhibitoryInput += pair.second; // we add negative values
-                //inhibitory.insert(pair);
-            }
+            Input += pair.second;
         }
     }
 
-    _network[index]->setCurrent(_network[index]->noise() + excitatoryInput + inhibitoryInput);
+    _network[index]->setCurrent(_network[index]->noise() + Input);
 
     // double excitatoryInput(0);
 
