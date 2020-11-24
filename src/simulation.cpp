@@ -9,9 +9,9 @@ Simulation::Simulation(int argc, char** argv)
     {
         try {
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
+            TCLAP::ValueArg<unsigned int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
             cmd.add(time);
-            TCLAP::ValueArg<int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
+            TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
             cmd.add(number);
             TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
             cmd.add(perc);
@@ -48,8 +48,7 @@ Simulation::Simulation(int argc, char** argv)
                     samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
                     if (perc.getValue() == 0) {
                         samples << "FS.v\t FS.u\t FS.I\n";
-                    }
-                    if (perc.getValue() == 1) {
+                    } else if (perc.getValue() == 1) {
                         samples << "RS.v\t RS.u\t RS.I\n";
                     } else {
                         samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
@@ -97,6 +96,7 @@ Simulation::Simulation(int argc, char** argv)
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
+            throw std::domain_error("Program aborted");
         }
     } 
 
@@ -205,8 +205,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "TC") tc = stod(value);
         if (key == "CH") ch = stod(value);
     }
-    if (std::abs(fs+ib+rz+lts+tc+ch > 1 + 1e-5)) {
-        std::cerr << fs+ib+rz+lts+tc+ch;
+    if ((fs+ib+rz+lts+tc+ch) > 1 + 1e-10) {
         throw std::logic_error("The sum of all proportions is greater than 1");
     }
 }
