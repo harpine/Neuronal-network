@@ -17,7 +17,7 @@
 #define _LAMB_ 10
 #define _INT_ 8 // TODO: decide what will be the default parameter
 #define _MOD_ 'b'
-#define _DEL_ .05
+#define _DEL_ .5
 #define _OPT_ false
 #define _DISCHARGE_T_ 30
 #define _NB_TEST_ 6

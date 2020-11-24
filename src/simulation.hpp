@@ -60,6 +60,19 @@ public :
     can throw logic error if sum of all proportions greater than 1
    */ 
     void readLine(std::string& line,  double& fs, double& ib, double& rz, double& lts, double& tc, double& ch);
+    /*!@brief Initialisation of file samples.
+     * @param p_E proportion of excitatory Neurons
+     */
+    void initializeSample(double p_E);
+    /*!@brief Initialisation of file samples.
+     * @param p_FS proportion of FS Neurons
+     * @param p_LTS proportion of LTS Neurons
+     * @param p_IB proportion of IB Neurons
+     * @param p_RZ proportion of RZ Neurons
+     * @param p_TC proportion of TC Neurons
+     * @param p_CH proportion of CH Neurons
+ */
+    void initializeSample(double p_FS, double p_LTS, double p_IB, double p_RZ, double p_TC, double p_CH);
 
 private :
     double _dt, _time;
