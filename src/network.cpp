@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "inhibitoryNeuron.hpp"
 #include "excitatoryNeuron.hpp"
+#include "iostream"
 
 Network::Network(char model, int nb, double p_E, double intensity, double lambda, double delta)
     : _intensity(intensity), _model(model)
@@ -156,19 +157,6 @@ void Network::synapticCurrent(int index)
     }
 
     _network[index]->setCurrent(_network[index]->noise() + input);
-
-    // double excitatoryInput(0);
-
-    // for (auto pair: excitatory)
-    // {
-    //         excitatoryInput += pair->second;
-    // }
-    // double inhibitoryInput(0);
-    // for (auto neuron: inhibitory)
-    // {
-    //     inhibitoryInput += pair->second;
-    // }
-    //return (neuron.noise() + 0.5 * excitatoryInput - inhibitoryInput);
 }
 
 std::vector<bool> Network::getCurrentstatus() const
