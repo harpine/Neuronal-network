@@ -110,28 +110,33 @@ int Simulation::run() {
     struct tm * ptm;
     double running_time(0);
     int index = 1;
-    //if (_options){
+    if (_options) {
         std::ofstream samples;
         std::string file = _SAMPLES_;
         samples.open(file + _EXTENSION_, std::ios::app); //trouver moyen plus optimal, deuxième attribut ?
-
-    while (running_time < _time) {
-        running_time += 2*_dt;
-        _net->update();
-        print(index);
-        if (_options) {
+        while (running_time < _time) {
+            running_time += 2 * _dt;
+            _net->update();
+            print(index);
             samples << index;
             samplePrint(samples);
+            index += 1;
         }
-        index += 1;
-    }
-    if(_options) {
+        samples.close();
         paramPrint();
     }
+    else
+    {
+        while (running_time < _time) {
+            running_time += 2 * _dt;
+            _net->update();
+            print(index);
+            index += 1;
+        }
+    }
+    _outfile.close();
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
-    _outfile.close();
-    samples.close();
     return ptm->tm_sec;
 }
 
@@ -170,7 +175,6 @@ void Simulation::paramPrint() {
     param.close();
 }
 
-
 void Simulation::samplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; //pas nécessaire ?
     if (file.is_open()) outstr = &file;
@@ -201,7 +205,8 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "TC") tc = stod(value);
         if (key == "CH") ch = stod(value);
     }
-    if (std::abs(fs+ib+rz+lts+tc+ch > 1)) {
+    if (std::abs(fs+ib+rz+lts+tc+ch > 1 + 1e-5)) {
+        std::cerr << fs+ib+rz+lts+tc+ch;
         throw std::logic_error("The sum of all proportions is greater than 1");
     }
 }
