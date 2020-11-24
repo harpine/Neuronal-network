@@ -45,50 +45,48 @@ Network(char model, int nb, double p_FS, double p_IB, double p_RZ, double p_LTS,
 ~Network();
 
 /*! @brief initialize connections.
- determine the number of connections, given a mean number of conections.
- Connect the neurons together.
- @param lambda mean of distribution to know how many connections the neuron will make
+ * determine the number of connections, given a mean number of conections.
+ * Connect the neurons together.
+ * @param lambda mean of distribution to know how many connections the neuron will make
 */
 void makeConnections(double lambda);
 /*! @brief update the neurons.
  * Allows to update all the neurons of the network by step of time
- @param dt the time step
+ * @param dt the time step
  */
 	void update();
-/*!
-  @brief calculate synaptic current received by the neurons.
-  calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.
-  @param neuron the neuron on which we want to caculate the total current.
-  @return the intensity of the current on the neuron of index given.
+/*! @brief calculate synaptic current received by the neurons.
+ * calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.
+ * @param neuron the neuron on which we want to caculate the total current.
+ * @return the intensity of the current on the neuron of index given.
  */
-	void synapticCurrent(int index);
+void synapticCurrent(int index);
 
-	/*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
-	 * 0 = hasn't fired this step of time, 1 = fired this step of time
-	 * @return the list of neurons saying, if each neuron is firing (1) or not (0)
-	 */
-	 std::vector<bool> getCurrentstatus() const;
+/*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
+ * 0 = hasn't fired this step of time, 1 = fired this step of time
+ * @return the list of neurons saying, if each neuron is firing (1) or not (0)
+ */
+ std::vector<bool> getCurrentstatus() const;
 
-	 /*! @brief get the list of the neurons in the network
-	  * @return the network
-	  */
-	  std::vector<Neuron*> getNet() const;
-    /*! @brief get the list of the neurons in the network
-    * @return the vector of connections of the network
-    */
-    std::vector<std::map<Neuron*, double>> getCon() const;
-    /*! @brief get the 1st neuron of each type and put it in a list
-     * @return the an array on the first neuron
-     */
-    std::array<Neuron*,7> getNeuronsOutput() const;
-    /*! @brief get Valence of neuron given in parameters
-     * @return the sum of pondered intensity of current
-     */
-     double getValence(int index) const;
+ /*! @brief get the list of the neurons in the network
+  * @return the network
+  */
+  std::vector<Neuron*> getNet() const;
+/*! @brief get the list of the neurons in the network
+* @return the vector of connections of the network
+*/
+std::vector<std::map<Neuron*, double>> getCon() const;
+/*! @brief get the 1st neuron of each type and put it in a list
+ * @return the an array on the first neuron
+ */
+std::array<Neuron*,7> getNeuronsOutput() const;
+/*! @brief get Valence of neuron given in parameters
+ * @return the sum of pondered intensity of current
+ */
+ double getValence(int index) const;
 
 private:
-/*!
- collection of neurons that are in the network
+/*! collection of neurons that are in the network
  */
 std::vector<Neuron*> _network;
 
@@ -102,12 +100,12 @@ double _intensity;
 
 /*! name of model used for connections: basic, constant or overdispersed
  */
- char _model;
+char _model;
 
- /*! list of neurons that are taken for the test, the order is:
-  * FS, LTS, IB, RZ, TC, CH, RS
-  */
-  std::array<Neuron*,7> _neuronsforoutputs;
+/*! list of neurons that are taken for the test, the order is:
+ * FS, LTS, IB, RZ, TC, CH, RS
+ */
+std::array<Neuron*,7> _neuronsforoutputs;
 };
 
 #endif //NETWORK_HPP

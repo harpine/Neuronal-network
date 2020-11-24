@@ -115,7 +115,7 @@ void Network::makeConnections(double lambda)
             size_t k(_RNG->uniform_int(0, _network.size()-1)); //because k is the index, so we have to subtract 1 to the total size
             while (connections.find(_network[k]) != connections.end() or k == i) //avoid to have 2 times the same neuron
             {
-                k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution.
+                k+=1; //isn't really random, but can avoid to repeat thousands of time the uniform distribution and to fall in an infinite loop
                 if (k > _network.size()-1)
                 {
                         if (avoidProblem)
@@ -144,9 +144,6 @@ void Network::update()
 
 void Network::synapticCurrent(int index)
 {
-    //TODO: pas fait exactement comme dans la donnée, j'ai l'impression que c'est mieux???
-    //std:map<Neuron*, double> excitatory;
-    //std:map<Neuron*, double> inhibitory;
     double input(0);
     for (auto& pair: _connections[index])
     {
@@ -155,7 +152,6 @@ void Network::synapticCurrent(int index)
             input += pair.second;
         }
     }
-
     _network[index]->setCurrent(_network[index]->noise() + input);
 }
 
