@@ -14,22 +14,28 @@ class ExcitatoryNeuron :public Neuron
      * @brief Construct a new Excitatory Neuron object
      * 
      * @param delta The delta of uniform distribution determining the noise 
+     * @param type A string containing the type of excitatory neuron 
+     * 
+     * @note type has a default parameter "RS"
      */
-    ExcitatoryNeuron(double delta,std::string type="RS");
+    ExcitatoryNeuron(double delta, std::string type="RS");
+
     /**
      * @brief Destroy the Excitatory Neuron object
      */
     virtual ~ExcitatoryNeuron() override;
+
     /**
      * @brief A getter for the W of the Neuron
      * 
-     * @return int the W of the Excitatory Neuron
+     * @return the W of the Excitatory Neuron
      */   
     virtual int getW() const override;
+
     /**
      * @brief A getter for the factor of the Neuron
-     * 
-     * @return int the factor of the Excitatory Neuron
+
+     * @return the factor of the Excitatory Neuron
      */
     virtual int factor() const override;
 

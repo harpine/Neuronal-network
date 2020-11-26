@@ -6,7 +6,7 @@
 #include <algorithm>
 
 /*!
-  This is a random number class based on standard c++-11 generators. 
+  @brief This is a random number class based on standard c++-11 generators. 
   It provides functions to generate random numbers.
 */
 
@@ -20,24 +20,60 @@ public:
 ///@{
     Random(unsigned long int s=0);
 ///@}
+
 /*! @name Distributions
-  These functions either return a single number or boolean
-  or fill a given container with random numbers according to the specified distribution. 
-  The additional parameters are the standard parameters of these distributions.
+  These functions fill a given container with random numbers according to the specified distribution. 
+  @note The default parameters are the standard parameters of these distributions.
 */
 ///@{
-    double uniform_double(double lower=0, double upper=1);
     template<class T> void uniform_double(T&, double lower=0, double upper=1);
-    int uniform_int(int lower=0, int upper=100);
     template<class T> void uniform_int(T&, int lower=0, int upper=100);
-    double normal(double mean=0, double sd=1);
     template<class T> void normal(T&, double mean=0, double sd=1);
-    double exponential(const double rate=1);
     template<class T> void exponential(T&, const double rate=1);
-    int poisson(double mean=1);
     template<class T> void poisson(T&, double mean=1);
-    bool bernoulli(double p=0.5);
 ///@}
+
+    /**
+     * @brief Uses uniform distribution for double
+     * @note Default parameters are the standard parameters for this distribution
+     * @return single random number
+     */
+    double uniform_double(double lower=0, double upper=1);
+
+    /**
+     * @brief Uses uniform distribution for int
+     * @note Default parameters are the standard parameters for this distribution
+     * @return single random number
+     */
+    int uniform_int(int lower=0, int upper=100);
+    
+    /**
+     * @brief Uses normal distribution
+     * @note Default parameters are the standard parameters for this distribution
+     * @return single random number
+     */
+    double normal(double mean=0, double sd=1);
+    
+    /**
+     * @brief Uses exponential distribution
+     * @note Default parameters are the standard parameters for this distribution
+     * @return single random number
+     */
+    double exponential(const double rate=1);
+
+    /**
+     * @brief Uses poisson distribution
+     * @note Default parameters are the standard parameters for this distribution
+     * @return single random number
+     */
+    int poisson(double mean=1);
+
+    /**
+     * @brief Uses bernouilli experiment
+     * @note Default parameter is the standard parameter for this distribution
+     * @return single random boolean
+     */
+    bool bernoulli(double p=0.5);
 
 private:
     std::mt19937 _rng;

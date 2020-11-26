@@ -11,19 +11,19 @@
  * Class defined by 4 dimensionless parameters a,b,c,d. 
  * 2 systems of ordinary differential equaitons of who's variables are v,u 
  * and the current from the network it belongs to.
- * 
  */
+
 class Neuron{
     public:
     /**
      * @brief Construct a new Neuron object
      * 
-     * @param type string indicating the type of the Neuron 
+     * @param type String indicating the type of the Neuron 
      */
     Neuron(std::string type);
+
     /**
      * @brief Destroy the Neuron object
-     * 
      */
     virtual ~Neuron();
 
@@ -31,30 +31,32 @@ class Neuron{
     * @brief updates the parameters
     * 
     * Update is 1 simulation step. It updates the paramters of the Neuron using the correct
-    * forumla depending on the firing state of the Neuron
+    * forumla, depending on the firing state of the Neuron
     */
     void update();
+
     /**
      * @brief Set the current paramter
      * 
      * @param current The new current value
      */
-    void setCurrent(const double current){_current=current;};
+    void setCurrent(const double current) {_current=current;};
     
     
     /**
-     * @brief Computes the noise produced by the neuron
+     * @brief Computes the noise produced by the neuron using normal distribution
      * 
-     * @return (double) The noise produced 
+     * @return The noise produced by the neuron
      */
     double noise() const {return this->getW() * (_RNG->normal(0,1));};
     /**
-     * @brief Descrbies the firing state of the neuron
+     * @brief Describes the firing state of the neuron
      * 
-     * @return true When v passes the threshold
-     * @return false When v is under the threshold
+     * @return true when v passes the threshold
+     * @return false when v is under the threshold
      */
     bool isFiring();
+
     /**
      * @brief Getter for the _a,_b,_c,_d attributes
      * 
@@ -62,51 +64,42 @@ class Neuron{
      */
     std::vector<double> getAttributs();
     /**
-     * @brief Getter for the _v,_u variables
+     * @brief Getter for the _v,_u, _current variables
      * 
-     * @return std::vector<double> {_v,_u}
+     * @return std::vector<double> {_v,_u, _current}
      */
     std::vector<double> getVariables();
+
     /**
      * @brief pure virtual method returning the W of the neuron
      * 
-     * @return int w of the neuron
+     * @return w of the neuron
      */
     virtual int getW() const = 0;
+
     /**
-     * @brief pure virtual method return the factor of the neuron
+     * @brief pure virtual method returning the factor of the neuron
      * 
-     * @return int factor of the neuron
+     * @return factor of the neuron
      */
     virtual int factor() const = 0;
+
     /**
-     * @brief 
-     * 
+     * @brief Getter fot the type of the neuron
+     * @return type of the neuron
      */
     std::string getType() const; 
 
 
-    protected:
-    double _a;
-    /**
-     * @brief describes the sensitivity of the recovery variable v.
-     * 
-     */
-    double _b;
-    /**
-     * @brief describes the after-spike reset value of the membrane potential v.
-     * 
-     */
-    double _c;
-    /**
-     * @brief describes the after-spike reset of the recovery variable u.
-     * 
-     */
-    double _d;
-    double _v;
-    double _u;
-    double _current;
-    std::string _type;
+protected:
+    double _a; ///describes the time scale of the recovery variable u.
+    double _b; ///describes the sensitivity of the recovery variable u to the subthreshold of the fluctuation of membrane potential v.
+    double _c; ///describes the after-spike reset value of the membrane potential v.
+    double _d; ///describes the after-spike reset of the recovery variable u.
+    double _v; ///membrane potential of the neuron
+    double _u; ///membrane recovery variable 
+    double _current; ///synaptic current delivered by surrounding neurons
+    std::string _type; ///type depending on the pattern of spiking and bursting
 };
 
 

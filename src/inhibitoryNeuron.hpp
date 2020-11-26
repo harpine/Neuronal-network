@@ -14,24 +14,30 @@ class InhibitoryNeuron :public Neuron
     /**
      * @brief Construct a new Inhibitory Neuron object
      * 
-     * @param delta The delta of uniform distribution determining the noise 
+     * @param delta The delta of uniform distribution determining the noise
+     * @param type A string containing the type of inhibitory neuron 
+     * @note type has a default parameter "FS"
      */
     InhibitoryNeuron(double delta,std::string type="FS");
+
     /**
      * @brief Destroy the Inhibitory Neuron object
      * 
      */
     virtual ~InhibitoryNeuron() override;
+
     /**
      * @brief A getter for the W of the Neuron
      * 
-     * @return int the W of the Inhibitory Neuron
+     * @return the W of the Inhibitory Neuron
      */
+
     virtual int getW() const override;
+
     /**
      * @brief A getter for the factor of the Neuron
      * 
-     * @return int the factor of the Neuron
+     * @return the factor of the Neuron
      */
     virtual int factor() const override;
 
