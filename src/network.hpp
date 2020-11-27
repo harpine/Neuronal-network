@@ -21,6 +21,7 @@ public:
 /*! @brief Basic constructor.
     Initialize the network by adding the inhibitory & excitatory neurons, given a proportion of excitatory neurons.
     Initialize connection given a model and a mean intensity for the connections.
+    @param model the model of connection
     @param nb the number of neurons wanted
     @param p_E the proportion of excitatory neurons
     @param intensity the mean intensity of connection
@@ -33,6 +34,7 @@ Network(char model, int nb, double p_E, double intensity, double lambda, double 
     Initialize the network by adding the neurons, given the different types proportions.
     Initialize connection given a model and a mean intensity for the connections.
     Each type has to be explicitly given, except the type RS, which will be the rest of the neurons.
+    @param model the model of connection
     @param nb the number of neurons wanted
     @param p_FS the proportion of neurons of type FS
     @param p_IB the proportion of neurons of type IB
