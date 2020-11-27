@@ -59,13 +59,13 @@ void makeConnections(double lambda);
 /*! @brief update the neurons.
  * Allows to update all the neurons.
  */
-	void update();
+ void update();
 
 /*! @brief Calculate synaptic current received by the neurons.
  * Calculate the synaptic current that the neuron receive and set the current received in the neuron attribute.
  * @param index The index of the neuron on which we want to caculate the total current.
  */
-void synapticCurrent(int index);
+ void synapticCurrent(int index);
 
 /*! @brief return a list of 0 & 1, imaging if a vector is firing or not.
  * 0 = hasn't fired this step of time, 1 = fired this step of time
@@ -76,7 +76,7 @@ void synapticCurrent(int index);
  /*! @brief get the list of the neurons in the network
   * @return the _network attribute
   */
-  std::vector<Neuron*> getNet() const;
+ std::vector<Neuron*> getNet() const;
 
 /*! @brief get the list of the connections of neurons in the network
 * @return the vector of connections of the network

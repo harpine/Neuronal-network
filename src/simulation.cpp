@@ -42,22 +42,22 @@ Simulation::Simulation(int argc, char** argv)
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp) //TODO: on peut faire ce genre de warning?
             {
-                std::cerr << "Warning: The value of lambda you gave (or the default parameter we have) is greater"
-                             "than the possible numbers of connections, given the actual numbers of neurons. "
-                             "We replaced the value of lambda by " << tmp << "." << std::endl;
+                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons."
+                             "The value of lambda has been replaced " << tmp << "." << std::endl;
             }
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 std::cerr << "Warning: As you have not gave any precision on the parameters of the neurons " << std::endl
                              << "(to know how to give parameters please type ./neuron_network -h), " << std::endl
-                             << "we took the following default parameters: " << std::endl
+                             << "the following default parameters are used: " << std::endl
                              << _MODEL_TEXT_ << " : " << _MOD_ <<  std::endl
                              << _NEURON_NUMBER_ << " : " << _NB_ << std::endl
                              <<  _PERCENT_ACTIVE_ << " : " << _PERC_ << std::endl
                              << _INTENSITY_ << " : " << _INT_ << std::endl
                              <<  _LAMBDA_ << " : " << _LAMB_ << std::endl
                              <<  _D_TEXT_ << " : " << _DEL_ << std::endl;
+
                 if (_options) {
                     std::ofstream samples;
                     std::string file = _SAMPLES_;
@@ -72,6 +72,7 @@ Simulation::Simulation(int argc, char** argv)
                     samples.close();
                 }
             }
+
             else {
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
