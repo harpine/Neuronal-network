@@ -5,12 +5,14 @@
 #include <fstream>
 #include <time.h>
 
-/*!
-  @brief The \ref Simulation class is the main class in this program. It constructs the neuron network System according to user-specified parameters, and @ref run "runs" the simulation.
-  A \ref Simulation is made of an object network, which is a vector of pointers to neuron objects. These neurons are constructed with the function add_neurons.
-  Time (\ref _time) advances from 0 until it reaches T. The state of the network is updated at each time by the \ref run method.
-
-*/
+/**
+ * @brief The \ref Simulation class is the main class in this program.
+ * 
+ * It constructs the neuron network System according to user-specified parameters, and @ref run "runs" the simulation. 
+ * A \ref Simulation is made of an object network, which is a vector of pointers to neuron objects. These neurons are constructed with the function add_neurons.
+ * Time (\ref _time) advances from 0 until it reaches T. The state of the network is updated at each time by the \ref run method.
+ * 
+ */
 class Simulation {
 
 public : 
