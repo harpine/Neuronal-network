@@ -6,12 +6,11 @@
 Random* _RNG = new Random();
 
 int main(int argc, char** argv){
-    try {
+    try{
         Simulation sim(argc, argv);
         sim.run();
         if (_RNG) delete _RNG;
-    } catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
+    } catch (const std::exception &e) {
         return 1;
     }
     return 0;

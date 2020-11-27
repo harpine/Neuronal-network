@@ -9,13 +9,13 @@ Simulation::Simulation(int argc, char** argv)
     {
         try {
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<unsigned int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
+            TCLAP::ValueArg<unsigned int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "unsigned int");            
             cmd.add(time);
-            TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
+            TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "unsigned int");
             cmd.add(number);
             TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
             cmd.add(perc);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "string");
             cmd.add(rep);
             TCLAP::ValueArg<double> lambda("l", "lambda", _LAMBDA_, false, _LAMB_, "double");
             cmd.add(lambda);
@@ -42,22 +42,26 @@ Simulation::Simulation(int argc, char** argv)
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp) //TODO: on peut faire ce genre de warning?
             {
-                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons."
-                             "The value of lambda has been replaced " << tmp << "." << std::endl;
+                throw std::domain_error("The value of lambda is greater than the number of neuron");
+                /*std::cerr << "Warning: The value of lambda you gave (or the default parameter we have) is greater"
+                             "than the possible numbers of connections, given the actual numbers of neurons. "
+                             "We replaced the value of lambda by " << tmp << "." << std::endl;*/
+            }
+            if(delta.getValue() <= 0 or delta.getValue() >= 1) {
+                throw std::domain_error("The value of delta should be between 0 and 1");
             }
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 std::cerr << "Warning: As you have not gave any precision on the parameters of the neurons " << std::endl
                              << "(to know how to give parameters please type ./neuron_network -h), " << std::endl
-                             << "the following default parameters are used: " << std::endl
+                             << "we took the following default parameters: " << std::endl
                              << _MODEL_TEXT_ << " : " << _MOD_ <<  std::endl
                              << _NEURON_NUMBER_ << " : " << _NB_ << std::endl
                              <<  _PERCENT_ACTIVE_ << " : " << _PERC_ << std::endl
                              << _INTENSITY_ << " : " << _INT_ << std::endl
                              <<  _LAMBDA_ << " : " << _LAMB_ << std::endl
                              <<  _D_TEXT_ << " : " << _DEL_ << std::endl;
-
                 if (_options) {
                     std::ofstream samples;
                     std::string file = _SAMPLES_;
@@ -72,7 +76,6 @@ Simulation::Simulation(int argc, char** argv)
                     samples.close();
                 }
             }
-
             else {
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
@@ -84,8 +87,8 @@ Simulation::Simulation(int argc, char** argv)
             _outfile.open(_filename + _SPIKES_ + _EXTENSION_);
             
         } catch(const std::exception& e) {
-            std::cerr << e.what() << '\n';
-            throw std::domain_error("Program aborted");
+            std::cerr << e.what() << std::endl;
+            throw e;
         }
     } 
 
@@ -127,6 +130,7 @@ int Simulation::run() {
     ex_time = time(NULL);
     ptm = gmtime(&ex_time);
     return ptm->tm_sec;
+
 }
 
 void Simulation::print(int index) {
