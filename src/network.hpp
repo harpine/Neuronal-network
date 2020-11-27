@@ -7,9 +7,11 @@
 #include "neuron.hpp"
 
 
-/*! @brief class that handles the network of neurons.
-    Network class implement the notion of network, connecting the neurons together and handling the interactions between them.
-    It is defined by a set of neurons and associated connections and intensities, the mean intensity of the connections, a model for the connection
+/**
+ * @brief Class that handles the network of neurons.
+ * 
+ * Network class implement the notion of network, connecting the neurons together and handling the interactions between them.
+ * It is defined by a set of neurons and associated connections and intensities, the mean intensity of the connections, a model for the connection
 */
 
 class Network {
@@ -50,8 +52,8 @@ Network(char model, int nb, double p_FS, double p_IB, double p_RZ, double p_LTS,
 ~Network();
 
 /*! @brief Initialize connections.
- * Determine the number of connections for each neuron, given a mean number of connections and depending on the model chosen.
- * Associate for each neuron the neurons that will affect it and the intensity of the connection.
+ * Determine the number of connections for each neuron, given a mean number of connections and depending on the model chosen. 
+ * Connect the neurons to the other that will affect their current.
  * @param lambda mean of distribution to know how many connections the neuron will make
 */
 void makeConnections(double lambda);
@@ -74,7 +76,7 @@ void synapticCurrent(int index);
  std::vector<bool> getCurrentstatus() const;
 
  /*! @brief get the list of the neurons in the network
-  * @return the _network attribute
+  * @return the list of the neurons composing the networks
   */
   std::vector<Neuron*> getNet() const;
 
