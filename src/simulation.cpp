@@ -14,9 +14,8 @@ Simulation::Simulation(int argc, char** argv)
             TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
             cmd.add(number);
             TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
-            cmd.add(perc);
             TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "double");
-            cmd.add(rep);
+            cmd.xorAdd(perc,rep);
             TCLAP::ValueArg<double> lambda("l", "lambda", _LAMBDA_, false, _LAMB_, "double");
             cmd.add(lambda);
             TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
@@ -33,7 +32,8 @@ Simulation::Simulation(int argc, char** argv)
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
-            if(lambda.getValue() <= 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
@@ -131,7 +131,6 @@ int Simulation::run() {
 void Simulation::print(int index) {
     std::ostream *outstr = &std::cout;
     if (_outfile.is_open()) outstr = &_outfile;
-
     std::vector<bool> matrix = _net->getCurrentstatus();
     *outstr << index << " "; 
     for(auto neuron : matrix) {
@@ -151,7 +150,7 @@ void Simulation::paramPrint() {
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
     int inhib(0);
-    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n"; //déterminer si valence utile
+    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n";
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
         *outstr << netw[i]->getType()<< "\t ";
@@ -164,7 +163,7 @@ void Simulation::paramPrint() {
 }
 
 void Simulation::samplePrint(std::ofstream& file) {
-    std::ostream *outstr = &std::cout; //pas nécessaire ?
+    std::ostream *outstr = &std::cout; 
     if (file.is_open()) outstr = &file;
 
     std::vector<double> attributs;
@@ -221,22 +220,22 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
     std::string file = _SAMPLES_;
     samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
     std::string headers;
-    if (p_FS != 0) {
+    if (p_FS > 0) {
         headers += "FS.v\t FS.u\t FS.I";
     }
-    if (p_LTS != 0) {
+    if (p_LTS > 0) {
         headers += "\t LTS.v\t LTS.u\t LTS.I";
     }
-    if (p_IB != 0) {
+    if (p_IB > 0) {
         headers += "\t IB.v\t IB.u\t IB.I";
     }
-    if (p_RZ != 0) {
+    if (p_RZ > 0) {
         headers += "\t RZ.v\t RZ.u\t RZ.I";
     }
-    if (p_TC != 0) {
+    if (p_TC > 0) {
         headers += "\t TC.v\t TC.u\t TC.I";
     }
-    if (p_CH != 0) {
+    if (p_CH > 0) {
         headers += "\t CH.v\t CH.u\t CH.I";
     }
     if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1) {
