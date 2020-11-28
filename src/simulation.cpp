@@ -9,26 +9,27 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
+            std::string def (", by default : ");
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
-            cmd.add(time);
-            TCLAP::ValueArg<int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
-            cmd.add(number);
-            TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
-            cmd.add(perc);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "string");
-            cmd.add(rep);
-            TCLAP::ValueArg<double> lambda("l", "lambda", _LAMBDA_, false, _LAMB_, "double");
-            cmd.add(lambda);
-            TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
-            cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
-            TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
+            TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition", (_REP_TEXT_ + def + _REP_), false, _REP_, "string");
+            cmd.add(rep);
+            TCLAP::ValueArg<double> perc("p", "p_E", (_PERCENT_ACTIVE_ + def + std::to_string(_PERC_)), false, _PERC_, "double");
+            cmd.add(perc);
+            TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
+            TCLAP::ValueArg<double> inten("i", "intensity", (_INTENSITY_ + def + std::to_string(_INT_)), false, _INT_, "double");
+            cmd.add(inten);
+            TCLAP::ValueArg<double> lambda("l", "lambda", (_LAMBDA_ + def + std::to_string(_LAMB_)), false, _LAMB_, "double");
+            cmd.add(lambda);
+            TCLAP::ValueArg<int> time("t", "time", (_TIME_TEXT_ + def + std::to_string(_END_TIME_)), false, _END_TIME_, "int");            
+            cmd.add(time);
+            TCLAP::ValueArg<int> number("n", "number", (_NEURON_NUMBER_ + def + std::to_string(_NB_)), false, _NB_, "int");
+            cmd.add(number);
+            TCLAP::SwitchArg option("c", "options", (_OPTION_TEXT_ + def + _SAMPLES_ + _EXTENSION_ + " and " + _PARAMETERS_ + _EXTENSION_), false);
             cmd.add(option);
             cmd.parse(argc, argv);
 
@@ -79,6 +80,7 @@ Simulation::Simulation(int argc, char** argv)
                 }
             }
             else {
+                std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
