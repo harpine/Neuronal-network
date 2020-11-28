@@ -68,7 +68,7 @@
 #define _TIME_TEXT_ "Simulation end time"
 #define _NEURON_NUMBER_ "Number of neuron in simulation"
 #define _PERCENT_ACTIVE_ "Percentage of exciting neurons"
-#define _REP_TEXT_ "Repartition of the proportion of differents neurons"
+#define _REP_TEXT_ "Repartition of the proportion of differents neurons. Format is TYPE1:repartition,TYPE2:repartition,..."
 #define _LAMBDA_ "Mean connectivity between the neurons"
 #define _INTENSITY_ "Mean intensity of a connection"
 #define _PRGRM_TEXT_ "Neuron simulation"
