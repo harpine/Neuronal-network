@@ -1,5 +1,6 @@
 #include "simulation.hpp"
 #include "constants.hpp"
+#include <time.h>
 
 Simulation::Simulation(const std::string& outfile)
     : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
@@ -9,9 +10,9 @@ Simulation::Simulation(int argc, char** argv)
     {
         try {
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<unsigned int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "unsigned int");            
+            TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
             cmd.add(time);
-            TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "unsigned int");
+            TCLAP::ValueArg<int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
             cmd.add(number);
             TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
             cmd.add(perc);

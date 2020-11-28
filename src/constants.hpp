@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include <iostream>
 #include <fstream>
-#include <time.h>
 #include <map>
 #include <string>
 #include <algorithm>
