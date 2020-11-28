@@ -15,7 +15,7 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", (_REP_TEXT_ + def + _REP_), false, _REP_, "string");
+            TCLAP::ValueArg<std::string> rep("r", "repartition", (_REP_TEXT_ + def + _REP_), false, "", "string");
             cmd.add(rep);
             TCLAP::ValueArg<double> perc("p", "p_E", (_PERCENT_ACTIVE_ + def + std::to_string(_PERC_)), false, _PERC_, "double");
             cmd.add(perc);
@@ -55,17 +55,8 @@ Simulation::Simulation(int argc, char** argv)
             if(delta.getValue() <= 0 or delta.getValue() >= 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
             }
-            if (argc == 1)
-            {
-                std::cerr << "Warning: As you have not gave any precision on the parameters of the neurons " << std::endl
-                          << "(to know how to give parameters please type ./neuron_network -h), " << std::endl
-                          << "the following default parameters are used: " << std::endl
-                          << _MODEL_TEXT_ << " : " << _MOD_ <<  std::endl
-                          << _NEURON_NUMBER_ << " : " << _NB_ << std::endl
-                          <<  _PERCENT_ACTIVE_ << " : " << _PERC_ << std::endl
-                          << _INTENSITY_ << " : " << _INT_ << std::endl
-                          <<  _LAMBDA_ << " : " << _LAMB_ << std::endl
-                          <<  _D_TEXT_ << " : " << _DEL_ << std::endl;
+            if (argc == 1) {
+                std::cerr << "Warning : Please learn how to use the simulation by typing ./neuron_network -h" << std::endl;
             }
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
