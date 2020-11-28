@@ -1,5 +1,6 @@
 #include "simulation.hpp"
 #include "constants.hpp"
+#include <time.h>
 
 Simulation::Simulation(const std::string& outfile)
     : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
@@ -8,25 +9,26 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
+            std::string def (", by default : ");
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<unsigned int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
-            cmd.add(time);
-            TCLAP::ValueArg<unsigned int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
-            cmd.add(number);
-            TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
-            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "double");
-            cmd.xorAdd(perc,rep);
-            TCLAP::ValueArg<double> lambda("l", "lambda", _LAMBDA_, false, _LAMB_, "double");
-            cmd.add(lambda);
-            TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
-            cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, "", "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
-            TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
+            TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition", (_REP_TEXT_ + def + _REP_), false, "", "string");
+            TCLAP::ValueArg<double> perc("p", "p_E", (_PERCENT_ACTIVE_ + def + std::to_string(_PERC_)), false, _PERC_, "double");
+            cmd.xorAdd(rep,perc);
+            TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
+            TCLAP::ValueArg<double> inten("i", "intensity", (_INTENSITY_ + def + std::to_string(_INT_)), false, _INT_, "double");
+            cmd.add(inten);
+            TCLAP::ValueArg<double> lambda("l", "lambda", (_LAMBDA_ + def + std::to_string(_LAMB_)), false, _LAMB_, "double");
+            cmd.add(lambda);
+            TCLAP::ValueArg<int> time("t", "time", (_TIME_TEXT_ + def + std::to_string(_END_TIME_)), false, _END_TIME_, "int");            
+            cmd.add(time);
+            TCLAP::ValueArg<int> number("n", "number", (_NEURON_NUMBER_ + def + std::to_string(_NB_)), false, _NB_, "int");
+            cmd.add(number);
+            TCLAP::SwitchArg option("c", "options", (_OPTION_TEXT_ + def + _SAMPLES_ + _EXTENSION_ + " and " + _PARAMETERS_ + _EXTENSION_), false);
             cmd.add(option);
             cmd.parse(argc, argv);
 
@@ -38,26 +40,27 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
+            std::string filename(ofile.getValue());
             _filename = ofile.getValue();
-            double tmp = (number.getValue() - 1);
-            if (lambda.getValue() > tmp) //TODO: on peut faire ce genre de warning?
+            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos)
             {
-                std::cerr << "Warning: The value of lambda you gave (or the default parameter we have) is greater"
-                             "than the possible numbers of connections, given the actual numbers of neurons. "
-                             "We replaced the value of lambda by " << tmp << "." << std::endl;
+                _filename += _EXTENSION_;
+            }
+            double tmp = (number.getValue() - 1);
+            if (lambda.getValue() > tmp)
+            {
+                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
+                             "The value of lambda has been replaced by " << tmp << "." << std::endl;
+            }
+            if(delta.getValue() <= 0 or delta.getValue() >= 1) {
+                throw std::domain_error("The value of delta should be between 0 and 1");
+            }
+            if (argc == 1) {
+                std::cerr << "Warning : Please learn how to use the simulation by typing ./neuron_network -h" << std::endl;
             }
             if ((rep.getValue()).empty()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
-                std::cerr << "Warning: As you have not gave any precision on the parameters of the neurons " << std::endl
-                             << "(to know how to give parameters please type ./neuron_network -h), " << std::endl
-                             << "we took the following default parameters: " << std::endl
-                             << _MODEL_TEXT_ << " : " << _MOD_ <<  std::endl
-                             << _NEURON_NUMBER_ << " : " << _NB_ << std::endl
-                             <<  _PERCENT_ACTIVE_ << " : " << _PERC_ << std::endl
-                             << _INTENSITY_ << " : " << _INT_ << std::endl
-                             <<  _LAMBDA_ << " : " << _LAMB_ << std::endl
-                             <<  _D_TEXT_ << " : " << _DEL_ << std::endl;
                 if (_options) {
                     std::ofstream samples;
                     std::string file = _SAMPLES_;
@@ -73,6 +76,7 @@ Simulation::Simulation(int argc, char** argv)
                 }
             }
             else {
+                std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
@@ -80,11 +84,11 @@ Simulation::Simulation(int argc, char** argv)
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
             }
-            _outfile.open(_filename + _SPIKES_ + _EXTENSION_);
+            _outfile.open(_filename);
             
         } catch(const std::exception& e) {
-            std::cerr << e.what() << '\n';
-            throw std::domain_error("Program aborted");
+            std::cerr << e.what() << std::endl;
+            throw e;
         }
     } 
 
@@ -101,7 +105,7 @@ int Simulation::run() {
     if (_options) {
         std::ofstream samples;
         std::string file = _SAMPLES_;
-        samples.open(file + _EXTENSION_, std::ios::app); //trouver moyen plus optimal, deuxième attribut ?
+        samples.open(file + _EXTENSION_, std::ios::app);
         while (running_time < _time) {
             running_time += 2 * _dt;
             _net->update();

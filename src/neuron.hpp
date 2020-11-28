@@ -92,14 +92,22 @@ class Neuron{
 
 
 protected:
-    double _a; ///describes the time scale of the recovery variable u.
-    double _b; ///describes the sensitivity of the recovery variable u to the subthreshold of the fluctuation of membrane potential v.
-    double _c; ///describes the after-spike reset value of the membrane potential v.
-    double _d; ///describes the after-spike reset of the recovery variable u.
-    double _v; ///membrane potential of the neuron
-    double _u; ///membrane recovery variable 
-    double _current; ///synaptic current delivered by surrounding neurons
-    std::string _type; ///type depending on the pattern of spiking and bursting
+    ///describes the time scale of the recovery variable u.
+    double _a; 
+    ///describes the sensitivity of the recovery variable u to the subthreshold of the fluctuation of membrane potential v.
+    double _b; 
+    ///describes the after-spike reset value of the membrane potential v.
+    double _c; 
+    ///describes the after-spike reset of the recovery variable u.
+    double _d; 
+    ///membrane potential of the neuron
+    double _v; 
+    ///membrane recovery variable 
+    double _u; 
+    ///synaptic current delivered by surrounding neurons
+    double _current; 
+    ///type depending on the pattern of spiking and bursting
+    std::string _type; 
 };
 
 
