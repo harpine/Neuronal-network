@@ -40,7 +40,12 @@ Simulation::Simulation(int argc, char** argv)
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             _time = time.getValue();
             _options = option.getValue();
+            std::string filename(ofile.getValue());
             _filename = ofile.getValue();
+            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos)
+            {
+                _filename += _EXTENSION_;
+            }
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp)
             {
@@ -88,7 +93,7 @@ Simulation::Simulation(int argc, char** argv)
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
             }
-            _outfile.open(_filename + _SPIKES_ + _EXTENSION_);
+            _outfile.open(_filename);
             
         } catch(const std::exception& e) {
             std::cerr << e.what() << std::endl;
@@ -109,7 +114,7 @@ int Simulation::run() {
     if (_options) {
         std::ofstream samples;
         std::string file = _SAMPLES_;
-        samples.open(file + _EXTENSION_, std::ios::app); //trouver moyen plus optimal, deuxième attribut ?
+        samples.open(file + _EXTENSION_, std::ios::app);
         while (running_time < _time) {
             running_time += 2 * _dt;
             _net->update();
