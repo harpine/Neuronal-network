@@ -43,8 +43,8 @@ Simulation::Simulation(int argc, char** argv)
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp)
             {
-                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons."
-                             "The value of lambda has been replaced " << tmp << "." << std::endl;
+                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
+                             "The value of lambda has been replaced by " << tmp << "." << std::endl;
             }
             if(delta.getValue() <= 0 or delta.getValue() >= 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
