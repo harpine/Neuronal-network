@@ -15,8 +15,8 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", (_REP_TEXT_ + def + _REP_), false, "", "string");
-            TCLAP::ValueArg<double> perc("p", "p_E", (_PERCENT_ACTIVE_ + def + std::to_string(_PERC_)), false, _PERC_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, true, "", "string");
+            TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, true, _PERC_, "double");
             cmd.xorAdd(rep,perc);
             TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
@@ -56,30 +56,21 @@ Simulation::Simulation(int argc, char** argv)
                 throw std::domain_error("The value of delta should be between 0 and 1");
             }
             if (argc == 1) {
-                std::cerr << "Warning : Please learn how to use the simulation by typing ./neuron_network -h" << std::endl;
+                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
             }
-            if ((rep.getValue()).empty()) {
+            if (perc.isSet()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
-                    std::ofstream samples;
-                    std::string file = _SAMPLES_;
-                    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
-                    if (perc.getValue() == 0 or perc.getValue() * number.getValue() < 1) {
-                        samples << "FS.v\t FS.u\t FS.I\n";
-                    } else if (perc.getValue() == 1 or perc.getValue() * number.getValue() > number.getValue() -1 ) {
-                        samples << "RS.v\t RS.u\t RS.I\n";
-                    } else {
-                        samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
-                    }
-                    samples.close();
+                    initializeSample(perc.getValue());
                 }
             }
-            else {
+            else if(rep.isSet()){
                 std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
-                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
+                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
+                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
@@ -144,12 +135,13 @@ void Simulation::print(int index) {
 }
 
 void Simulation::paramPrint() {
-    std::ostream *outstr = &std::cout; //pas nécessaire ?
+    std::ostream *outstr = &std::cout;
     std::ofstream param;
     std::string file = _PARAMETERS_;
     param.open(file + _EXTENSION_);
-    if (param.is_open()) outstr = &param;
-
+    if (param.is_open()) {
+        outstr = &param;
+    }
     std::vector<Neuron*> netw(_net->getNet());
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
@@ -158,9 +150,15 @@ void Simulation::paramPrint() {
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
         *outstr << netw[i]->getType()<< "\t ";
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
-        if (netw[i]->getW() == 2) inhib = 1;
-        else inhib = 0;
+        for (size_t j(0); j<attributs.size(); ++j) {
+            *outstr << attributs[j] << "\t";
+        }
+        if (netw[i]->getW() == 2) {
+            inhib = 1;
+        }
+        else {
+            inhib = 0;
+        }
         *outstr << inhib << "\t" << con[i].size() << "\t" << _net->getValence(i) << "\n";
     }
     param.close();
@@ -168,13 +166,16 @@ void Simulation::paramPrint() {
 
 void Simulation::samplePrint(std::ofstream& file) {
     std::ostream *outstr = &std::cout; 
-    if (file.is_open()) outstr = &file;
-
+    if (file.is_open()) {
+        outstr = &file;
+    }
     std::vector<double> attributs;
     for (size_t k(0); k < _net->getNeuronsOutput().size(); k++) {
         if (_net->getNeuronsOutput()[k] != nullptr) {
             attributs = (_net->getNeuronsOutput()[k])->getVariables();
-            for (size_t j(0); j < attributs.size(); ++j) *outstr << "\t" << attributs[j];
+            for (size_t j(0); j < attributs.size(); ++j) {
+                *outstr << "\t" << attributs[j];
+            }
         }
     }
     *outstr << "\n";
