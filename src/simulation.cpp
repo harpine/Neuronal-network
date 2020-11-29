@@ -42,13 +42,11 @@ Simulation::Simulation(int argc, char** argv)
             _options = option.getValue();
             std::string filename(ofile.getValue());
             _filename = ofile.getValue();
-            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos)
-            {
+            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos) {
                 _filename += _EXTENSION_;
             }
             double tmp = (number.getValue() - 1);
-            if (lambda.getValue() > tmp)
-            {
+            if (lambda.getValue() > tmp) {
                 std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
                              "The value of lambda has been replaced by " << tmp << "." << std::endl;
             }
@@ -107,9 +105,7 @@ int Simulation::run() {
         }
         samples.close();
         paramPrint();
-    }
-    else
-    {
+    } else {
         while (running_time < _time) {
             running_time += 2 * _dt;
             _net->update();
@@ -186,8 +182,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     std::string value, key;
     line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
     std::stringstream ss(line);
-    while (std::getline(ss, key, ':')) 
-    {
+    while (std::getline(ss, key, ':')) {
         if (key.empty()) continue;
         std::getline(ss, value, ',');
         if (key == "FS") fs = stod(value);
@@ -209,11 +204,9 @@ void Simulation::initializeSample(double p_E)
     samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
     if (p_E == 0) {
         samples << "FS.v\t FS.u\t FS.I\n";
-    }
-    else if (p_E == 1) {
+    } else if (p_E == 1) {
         samples << "RS.v\t RS.u\t RS.I\n";
-    }
-    else {
+    } else {
         samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     }
     samples.close();
