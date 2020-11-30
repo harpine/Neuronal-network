@@ -61,7 +61,7 @@ Simulation::Simulation(int argc, char** argv)
                 throw std::domain_error("The value of delta should be between 0 and 1");
             }   
             if (perc.isSet()) {
-                _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
+                _net = new Network(model.getValue(), number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(perc.getValue());
@@ -70,7 +70,7 @@ Simulation::Simulation(int argc, char** argv)
             else if(rep.isSet()){
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
-                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
+                _net = new Network(model.getValue(), number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
                                     std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
