@@ -190,12 +190,14 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     while (std::getline(ss, key, ':')) {
         if (key.empty()) continue;
         std::getline(ss, value, ',');
-        if (key == "FS" or "fs") fs = stod(value);
-        if (key == "LTS" or "lts") lts = stod(value);
-        if (key == "IB" or "ib") ib = stod(value);
-        if (key == "RZ" or "rz") rz = stod(value);
-        if (key == "TC" or "tc") tc = stod(value);
-        if (key == "CH" or "ch") ch = stod(value);
+        std::transform(key.begin(), key.end(), key.begin(), ::toupper);
+        if (key == "FS") fs = stod(value);
+        std::cout << key << " "; 
+        if (key == "LTS") lts = stod(value);
+        if (key == "IB") ib = stod(value);
+        if (key == "RZ") rz = stod(value);
+        if (key == "TC") tc = stod(value);
+        if (key == "CH") ch = stod(value);
     }
     if ((fs+ib+rz+lts+tc+ch) > 1 + 1e-10) {
         throw std::logic_error("The sum of all proportions is greater than 1");
