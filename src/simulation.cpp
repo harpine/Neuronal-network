@@ -21,9 +21,9 @@ Simulation::Simulation(int argc, char** argv)
 		    TCLAP::ValuesConstraint<char> allowedVals( allowed );
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, &allowedVals);
             cmd.add(model);
-            TCLAP::ValueArg<std::string> type("T", "type",( _TYPE_TEXT_ + ex + _TYPE_), true, "", "string");
+            TCLAP::ValueArg<std::string> type("T", "type",( _TYPE_TEXT_ + ex + _TYPE_), false, "", "string");
             cmd.add(type);
-            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), true, _PERC_, "double");
+            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), false, _PERC_, "double");
             cmd.add(perc);
             TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
@@ -63,7 +63,7 @@ Simulation::Simulation(int argc, char** argv)
             }  
             if(type.isSet() and perc.isSet()) {
                 throw std::domain_error("Only the percentage of excitating neurons (p) or the proportion of different types (T) should be given");
-            } else if (perc.isSet()) {
+            } else if (perc.isSet() or (not perc.isSet() and not type.isSet())) {
                 _net = new Network(model.getValue(), number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
@@ -77,7 +77,7 @@ Simulation::Simulation(int argc, char** argv)
                 if (_options) {
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
-            } 
+            }
             _outfile.open(_filename);
             
         } catch(const std::exception& e) {
@@ -194,7 +194,6 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         std::getline(ss, value, ',');
         std::transform(key.begin(), key.end(), key.begin(), ::toupper);
         if (key == "FS") fs = stod(value);
-        std::cout << key << " "; 
         if (key == "LTS") lts = stod(value);
         if (key == "IB") ib = stod(value);
         if (key == "RZ") rz = stod(value);
