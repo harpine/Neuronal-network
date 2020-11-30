@@ -48,7 +48,7 @@ class Neuron{
      * 
      * @return The noise produced by the neuron
      */
-    double noise() const {return this->getW() * (_RNG->normal(0,1));};
+    double noise() const {return this->getW() * (_RNG->normal(0,2));}; //TODO faire un paramètre pour sd
     /**
      * @brief Describes the firing state of the neuron
      * 

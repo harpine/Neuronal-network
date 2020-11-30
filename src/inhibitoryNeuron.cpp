@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include <iostream>
 #include "constants.hpp"
-//TODO: Add JSON file with config of InhibitoryNeuron
 
 
 InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
@@ -29,6 +28,7 @@ InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
     _u=_b*_v;
     }catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
+            throw e.what();
     }
 }
 

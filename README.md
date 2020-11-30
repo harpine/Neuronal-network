@@ -21,8 +21,8 @@ $ mkdir build
 $ cd build
 $ cmake ..
 $ make
-$ ./neuron_network
-$ Rscript ../Rasterplots.R spikes.txt 
+$ ./neuron_network -p 0.5
+$ Rscript ../Rasterplots.R spikes.txt
 ```
 
 ### Options and default values
@@ -33,10 +33,15 @@ The command ./neuron_network -h make visible all possible options for the progra
 * -o "" (output file name) Default values for all output files are defined later if no name file is given
 * -i 8 (mean intensity of a connection)
 * -l 10 (mean connectivity between the neurons)
-* -r "" (repartition of all neuron types) If nothing is given, the parameter -p is used
-* -p .5 (proportion of excitatory neurons in the network) If repartition is given, this parameter is unused.
+* -r "" (repartition of all neuron types) If nothing is given, the parameter -p is used  **OR**  -p .5 (proportion of excitatory neurons in the network)
 * -n 10 000 (number of neurons in the network)
 * -t 500 (time of simulation in ms)
+
+The option for other files can be launched with the following instructions :
+```
+$ ./neuron_network -c -p 0.5
+$ Rscript ../Rasterplots.R spikes.txt samples.txt parameters.txt
+```
 
 ### Author rights
 ***
