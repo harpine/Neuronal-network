@@ -53,10 +53,7 @@ Simulation::Simulation(int argc, char** argv)
             }
             if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
-            }
-            if (argc == 1) {
-                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
-            }
+            }   
             if (perc.isSet()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
@@ -65,7 +62,6 @@ Simulation::Simulation(int argc, char** argv)
                 }
             }
             else if(rep.isSet()){
-                std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
@@ -122,7 +118,9 @@ int Simulation::run() {
 
 void Simulation::print(int index) {
     std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    if (_outfile.is_open()){
+        outstr = &_outfile;
+    } 
     std::vector<bool> matrix = _net->getCurrentstatus();
     *outstr << index << " "; 
     for(auto neuron : matrix) {
@@ -202,7 +200,7 @@ void Simulation::initializeSample(double p_E)
 {
     std::ofstream samples;
     std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+    samples.open(file + _EXTENSION_); 
     if (p_E == 0) {
         samples << "FS.v\t FS.u\t FS.I\n";
     } else if (p_E == 1) {
@@ -217,7 +215,7 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
 {
     std::ofstream samples;
     std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+    samples.open(file + _EXTENSION_);
     std::string headers;
     if (p_FS > 0) {
         headers += "FS.v\t FS.u\t FS.I";
