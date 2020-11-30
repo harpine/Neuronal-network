@@ -14,7 +14,12 @@ Simulation::Simulation(int argc, char** argv)
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
-            TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
+		    std::vector<char> allowed;
+		    allowed.push_back('o');
+		    allowed.push_back('b');
+		    allowed.push_back('c');
+		    TCLAP::ValuesConstraint<char> allowedVals( allowed );
+            TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, &allowedVals);
             cmd.add(model);
             TCLAP::ValueArg<std::string> rep("r", "repartition",( _REP_TEXT_ + ex + _REP_), true, "", "string");
             TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), true, _PERC_, "double");
@@ -36,9 +41,8 @@ Simulation::Simulation(int argc, char** argv)
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive and greater than 0");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
             if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(inten.getValue()<0)throw std::domain_error("The intensity must be positive");
             
-            char mod(std::tolower(model.getValue())); //in case upper case letter
-            if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             if ((number.getValue() * lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
                                                                                       "Please reduce the number of neurons or the mean connectivity (lambda)");
             _time = time.getValue();
@@ -55,10 +59,7 @@ Simulation::Simulation(int argc, char** argv)
             }
             if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
-            }
-            if (argc == 1) {
-                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
-            }
+            }   
             if (perc.isSet()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
@@ -67,7 +68,6 @@ Simulation::Simulation(int argc, char** argv)
                 }
             }
             else if(rep.isSet()){
-                std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
@@ -124,7 +124,9 @@ int Simulation::run() {
 
 void Simulation::print(int index) {
     std::ostream *outstr = &std::cout;
-    if (_outfile.is_open()) outstr = &_outfile;
+    if (_outfile.is_open()){
+        outstr = &_outfile;
+    } 
     std::vector<bool> matrix = _net->getCurrentstatus();
     *outstr << index << " "; 
     for(auto neuron : matrix) {
@@ -188,12 +190,12 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     while (std::getline(ss, key, ':')) {
         if (key.empty()) continue;
         std::getline(ss, value, ',');
-        if (key == "FS") fs = stod(value);
-        if (key == "LTS") lts = stod(value);
-        if (key == "IB") ib = stod(value);
-        if (key == "RZ") rz = stod(value);
-        if (key == "TC") tc = stod(value);
-        if (key == "CH") ch = stod(value);
+        if (key == "FS" or "fs") fs = stod(value);
+        if (key == "LTS" or "lts") lts = stod(value);
+        if (key == "IB" or "ib") ib = stod(value);
+        if (key == "RZ" or "rz") rz = stod(value);
+        if (key == "TC" or "tc") tc = stod(value);
+        if (key == "CH" or "ch") ch = stod(value);
     }
     if ((fs+ib+rz+lts+tc+ch) > 1 + 1e-10) {
         throw std::logic_error("The sum of all proportions is greater than 1");
@@ -204,7 +206,7 @@ void Simulation::initializeSample(double p_E)
 {
     std::ofstream samples;
     std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+    samples.open(file + _EXTENSION_); 
     if (p_E == 0) {
         samples << "FS.v\t FS.u\t FS.I\n";
     } else if (p_E == 1) {
@@ -219,7 +221,7 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
 {
     std::ofstream samples;
     std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
+    samples.open(file + _EXTENSION_);
     std::string headers;
     if (p_FS > 0) {
         headers += "FS.v\t FS.u\t FS.I";
