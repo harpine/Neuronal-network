@@ -127,7 +127,7 @@ void Network::makeConnections(double lambda)
                 }
             }
             avoidProblem = false;
-            connections.insert(std::make_pair(_network[k], _network[i]->factor() * _RNG->uniform_double(0, 2*_intensity)));
+            connections.insert(std::make_pair(_network[k], _network[k]->factor() * _RNG->uniform_double(0, 2*_intensity)));
         }
         _connections.push_back(connections);
     }
