@@ -33,12 +33,14 @@ Simulation::Simulation(int argc, char** argv)
             cmd.add(option);
             cmd.parse(argc, argv);
 
-            if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive");
+            if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive and greater than 0");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
             if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
+            if ((number.getValue() * lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
+                                                                                      "Please reduce the number of neurons or the mean connectivity (lambda)");
             _time = time.getValue();
             _options = option.getValue();
             std::string filename(ofile.getValue());
