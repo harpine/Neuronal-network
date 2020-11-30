@@ -34,8 +34,9 @@ Simulation::Simulation(int argc, char** argv)
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive and greater than 0");
-            if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
+            if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive or greater than 0");
             if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(inten.getValue() <= 0) throw  std::domain_error("The mean intensity of a connection must be positive and greater than 0");
             
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
