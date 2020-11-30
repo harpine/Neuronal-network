@@ -12,7 +12,7 @@
 #define _DELTA_T_ .5
 #define _NB_ 10000
 #define _PERC_ .5
-#define _REP_ ""
+#define _REP_ "FS:0.5"
 #define _LAMB_ 10
 #define _INT_ 8 // TODO: decide what will be the default parameter
 #define _MOD_ 'b'
@@ -65,14 +65,13 @@
 // *text messages *
 
 #define _TIME_TEXT_ "Simulation end time"
-#define _NEURON_NUMBER_ "Number of neuron in simulation"
-#define _PERCENT_ACTIVE_ "Percentage of exciting neurons"
-#define _REP_TEXT_ "Repartition of the proportion of differents neurons. Format is TYPE1:repartition,TYPE2:repartition,..."
+#define _NEURON_NUMBER_ "Number of neuron in the simulation"
+#define _PERCENT_ACTIVE_ "Percentage of exciting neurons.\nNeeds to be between 0 and 1"
+#define _REP_TEXT_ "Proportion of differents neurons.\nTypes: IB,CH,LTS,FS,TC,RZ the remaining propotion will be RS.\n Sum (including RS) is 1 \n Format is TYPE1:proportion,TYPE2:proportion,..."
 #define _LAMBDA_ "Mean connectivity between the neurons"
 #define _INTENSITY_ "Mean intensity of a connection"
 #define _PRGRM_TEXT_ "Neuron simulation"
-#define _CFILE_TEXT_ "Configuration file name"
 #define _OFILE_TEXT_ "Output file name"
-#define _MODEL_TEXT_ "Model for neuron connection, can be 'b' for basic, 'c' for constant and 'o' for overdispersed"
+#define _MODEL_TEXT_ "Model for neuron connections,'b' for basic, 'c' for constant and 'o' for overdispersed"
 #define _D_TEXT_ "Tunable number for neuron parameters creation"
 #define _OPTION_TEXT_ "Choice of optional output of supplementary files parameters and sample"

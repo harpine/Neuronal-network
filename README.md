@@ -9,6 +9,7 @@ Project status : completed.
 A list of technologies used within the project:
 * [doxygen]: Version 1.9.0
 * [cmake]: Version 3.10.2
+* [Rscript]: Version 3.4.4
 * [googletest]: Version 1.10.0
 
 ## Installation

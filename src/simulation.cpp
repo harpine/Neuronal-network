@@ -9,32 +9,34 @@ Simulation::Simulation(int argc, char** argv)
     : _dt(_DELTA_T_)
     {
         try {
+            std::string def (", by default : ");
+            std::string ex(" , for instance : ");
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<int> time("t", "time", _TIME_TEXT_, false, _END_TIME_, "int");            
-            cmd.add(time);
-            TCLAP::ValueArg<int> number("n", "number", _NEURON_NUMBER_, false, _NB_, "int");
-            cmd.add(number);
-            TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, false, _PERC_, "double");
-            cmd.add(perc);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, false, _REP_, "string");
-            cmd.add(rep);
-            TCLAP::ValueArg<double> lambda("l", "lambda", _LAMBDA_, false, _LAMB_, "double");
-            cmd.add(lambda);
-            TCLAP::ValueArg<double> inten("i", "intensity", _INTENSITY_, false, _INT_, "double");
-            cmd.add(inten);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", _OFILE_TEXT_, false, _SPIKES_, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
-            TCLAP::ValueArg<char> model("m", "model", _MODEL_TEXT_, false, _MOD_, "char");
+            TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<double> delta("d", "delta", _D_TEXT_, false, _DEL_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition",( _REP_TEXT_ + ex + _REP_), true, "", "string");
+            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), true, _PERC_, "double");
+            cmd.xorAdd(rep,perc);
+            TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::SwitchArg option("c", "options", _OPTION_TEXT_, false);
+            TCLAP::ValueArg<double> inten("i", "intensity", (_INTENSITY_ + def + std::to_string(_INT_)), false, _INT_, "double");
+            cmd.add(inten);
+            TCLAP::ValueArg<double> lambda("l", "lambda", (_LAMBDA_ + def + std::to_string(_LAMB_)), false, _LAMB_, "double");
+            cmd.add(lambda);
+            TCLAP::ValueArg<int> time("t", "time", (_TIME_TEXT_ + def + std::to_string(_END_TIME_)), false, _END_TIME_, "int");            
+            cmd.add(time);
+            TCLAP::ValueArg<int> number("n", "number", (_NEURON_NUMBER_ + def + std::to_string(_NB_)), false, _NB_, "int");
+            cmd.add(number);
+            TCLAP::SwitchArg option("c", "options", (_OPTION_TEXT_ + def + _SAMPLES_ + _EXTENSION_ + " and " + _PARAMETERS_ + _EXTENSION_), false);
             cmd.add(option);
             cmd.parse(argc, argv);
 
             if(time.getValue() <= 0) throw std::domain_error("The running time of the simulation must be positive and greater than 0");
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive");
-            if(lambda.getValue() <= 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
+            
             char mod(std::tolower(model.getValue())); //in case upper case letter
             if (!(mod=='o' or mod=='b' or mod=='c')) throw std::domain_error("The model chosen is not o, c or b");
             if ((number.getValue() * lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
@@ -43,52 +45,33 @@ Simulation::Simulation(int argc, char** argv)
             _options = option.getValue();
             std::string filename(ofile.getValue());
             _filename = ofile.getValue();
-            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos)
-            {
+            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos) {
                 _filename += _EXTENSION_;
             }
             double tmp = (number.getValue() - 1);
-            if (lambda.getValue() > tmp)
-            {
+            if (lambda.getValue() > tmp) {
                 std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
                              "The value of lambda has been replaced by " << tmp << "." << std::endl;
             }
-            if(delta.getValue() <= 0 or delta.getValue() >= 1) {
+            if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
             }
-            if (argc == 1)
-            {
-                std::cerr << "Warning: As you have not gave any precision on the parameters of the neurons " << std::endl
-                          << "(to know how to give parameters please type ./neuron_network -h), " << std::endl
-                          << "the following default parameters are used: " << std::endl
-                          << _MODEL_TEXT_ << " : " << _MOD_ <<  std::endl
-                          << _NEURON_NUMBER_ << " : " << _NB_ << std::endl
-                          <<  _PERCENT_ACTIVE_ << " : " << _PERC_ << std::endl
-                          << _INTENSITY_ << " : " << _INT_ << std::endl
-                          <<  _LAMBDA_ << " : " << _LAMB_ << std::endl
-                          <<  _D_TEXT_ << " : " << _DEL_ << std::endl;
+            if (argc == 1) {
+                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
             }
-            if ((rep.getValue()).empty()) {
+            if (perc.isSet()) {
                 _net = new Network(mod, number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
-                    std::ofstream samples;
-                    std::string file = _SAMPLES_;
-                    samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
-                    if (perc.getValue() == 0 or perc.getValue() * number.getValue() < 1) {
-                        samples << "FS.v\t FS.u\t FS.I\n";
-                    } else if (perc.getValue() == 1 or perc.getValue() * number.getValue() > number.getValue() -1 ) {
-                        samples << "RS.v\t RS.u\t RS.I\n";
-                    } else {
-                        samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
-                    }
-                    samples.close();
+                    initializeSample(perc.getValue());
                 }
             }
-            else {
+            else if(rep.isSet()){
+                std::cerr << "Warning : Please check if your command looks like FS:0.1,CH:0.1,TC:0.1" << std::endl;
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
-                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH, inten.getValue(), std::min(lambda.getValue(), tmp), delta.getValue());
+                _net = new Network(mod, number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
+                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
@@ -125,9 +108,7 @@ int Simulation::run() {
         }
         samples.close();
         paramPrint();
-    }
-    else
-    {
+    } else {
         while (running_time < _time) {
             running_time += 2 * _dt;
             _net->update();
@@ -144,7 +125,6 @@ int Simulation::run() {
 void Simulation::print(int index) {
     std::ostream *outstr = &std::cout;
     if (_outfile.is_open()) outstr = &_outfile;
-
     std::vector<bool> matrix = _net->getCurrentstatus();
     *outstr << index << " "; 
     for(auto neuron : matrix) {
@@ -154,37 +134,47 @@ void Simulation::print(int index) {
 }
 
 void Simulation::paramPrint() {
-    std::ostream *outstr = &std::cout; //pas nécessaire ?
+    std::ostream *outstr = &std::cout;
     std::ofstream param;
     std::string file = _PARAMETERS_;
     param.open(file + _EXTENSION_);
-    if (param.is_open()) outstr = &param;
-
+    if (param.is_open()) {
+        outstr = &param;
+    }
     std::vector<Neuron*> netw(_net->getNet());
     std::vector<std::map<Neuron*, double>> con(_net->getCon());
     std::vector<double> attributs;
     int inhib(0);
-    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n"; //déterminer si valence utile
+    *outstr << "\t a\t b\t c\t d\t Inhibitory\t degree\t valence\n";
     for(size_t i(0); i<netw.size(); ++i) {
         attributs = netw[i]->getAttributs();
         *outstr << netw[i]->getType()<< "\t ";
-        for (size_t j(0); j<attributs.size(); ++j) *outstr << attributs[j] << "\t";
-        if (netw[i]->getW() == 2) inhib = 1;
-        else inhib = 0;
+        for (size_t j(0); j<attributs.size(); ++j) {
+            *outstr << attributs[j] << "\t";
+        }
+        if (netw[i]->getW() == 2) {
+            inhib = 1;
+        }
+        else {
+            inhib = 0;
+        }
         *outstr << inhib << "\t" << con[i].size() << "\t" << _net->getValence(i) << "\n";
     }
     param.close();
 }
 
 void Simulation::samplePrint(std::ofstream& file) {
-    std::ostream *outstr = &std::cout; //pas nécessaire ?
-    if (file.is_open()) outstr = &file;
-
+    std::ostream *outstr = &std::cout; 
+    if (file.is_open()) {
+        outstr = &file;
+    }
     std::vector<double> attributs;
     for (size_t k(0); k < _net->getNeuronsOutput().size(); k++) {
         if (_net->getNeuronsOutput()[k] != nullptr) {
             attributs = (_net->getNeuronsOutput()[k])->getVariables();
-            for (size_t j(0); j < attributs.size(); ++j) *outstr << "\t" << attributs[j];
+            for (size_t j(0); j < attributs.size(); ++j) {
+                *outstr << "\t" << attributs[j];
+            }
         }
     }
     *outstr << "\n";
@@ -195,8 +185,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
     std::string value, key;
     line.erase(std::remove_if(line.begin(), line.end(), isspace), line.end());
     std::stringstream ss(line);
-    while (std::getline(ss, key, ':')) 
-    {
+    while (std::getline(ss, key, ':')) {
         if (key.empty()) continue;
         std::getline(ss, value, ',');
         if (key == "FS") fs = stod(value);
@@ -218,11 +207,9 @@ void Simulation::initializeSample(double p_E)
     samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
     if (p_E == 0) {
         samples << "FS.v\t FS.u\t FS.I\n";
-    }
-    else if (p_E == 1) {
+    } else if (p_E == 1) {
         samples << "RS.v\t RS.u\t RS.I\n";
-    }
-    else {
+    } else {
         samples << "FS.v\t FS.u\t FS.I\t RS.v\t RS.u\t RS.I\n";
     }
     samples.close();
@@ -234,22 +221,22 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
     std::string file = _SAMPLES_;
     samples.open(file + _EXTENSION_); //trouver moyen plus optimal, deuxième attribut ?
     std::string headers;
-    if (p_FS != 0) {
+    if (p_FS > 0) {
         headers += "FS.v\t FS.u\t FS.I";
     }
-    if (p_LTS != 0) {
+    if (p_LTS > 0) {
         headers += "\t LTS.v\t LTS.u\t LTS.I";
     }
-    if (p_IB != 0) {
+    if (p_IB > 0) {
         headers += "\t IB.v\t IB.u\t IB.I";
     }
-    if (p_RZ != 0) {
+    if (p_RZ > 0) {
         headers += "\t RZ.v\t RZ.u\t RZ.I";
     }
-    if (p_TC != 0) {
+    if (p_TC > 0) {
         headers += "\t TC.v\t TC.u\t TC.I";
     }
-    if (p_CH != 0) {
+    if (p_CH > 0) {
         headers += "\t CH.v\t CH.u\t CH.I";
     }
     if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1) {
