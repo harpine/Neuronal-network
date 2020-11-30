@@ -24,6 +24,7 @@ void Neuron::update()
 
 bool Neuron::isFiring(){
     if(_v>=_DISCHARGE_T_){
+        _v=_DISCHARGE_T_;
         return true;
     }
     return false;

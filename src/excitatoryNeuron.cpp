@@ -49,6 +49,7 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
     _u=_b*_v;
     }catch(const std::exception& e) {
             std::cerr << e.what() << '\n';
+            throw e.what();
     }
 }
 
