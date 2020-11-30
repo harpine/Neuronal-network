@@ -32,7 +32,7 @@ class InhibitoryNeuron :public Neuron
      * @return the W of the Inhibitory Neuron
      */
 
-    virtual int getW() const override;
+    virtual double getW() const override;
 
     /**
      * @brief A getter for the factor of the Neuron
