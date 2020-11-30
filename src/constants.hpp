@@ -12,7 +12,7 @@
 #define _DELTA_T_ .5
 #define _NB_ 10000
 #define _PERC_ .5
-#define _REP_ "FS:0.5,RS:0.5"
+#define _REP_ "FS:0.5"
 #define _LAMB_ 10
 #define _INT_ 8 // TODO: decide what will be the default parameter
 #define _MOD_ 'b'

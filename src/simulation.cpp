@@ -10,13 +10,14 @@ Simulation::Simulation(int argc, char** argv)
     {
         try {
             std::string def (", by default : ");
+            std::string ex(" , for instance : ");
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, "char");
             cmd.add(model);
-            TCLAP::ValueArg<std::string> rep("r", "repartition", _REP_TEXT_, true, "", "string");
-            TCLAP::ValueArg<double> perc("p", "p_E", _PERCENT_ACTIVE_, true, _PERC_, "double");
+            TCLAP::ValueArg<std::string> rep("r", "repartition",( _REP_TEXT_ + ex + _REP_), true, "", "string");
+            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), true, _PERC_, "double");
             cmd.xorAdd(rep,perc);
             TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
@@ -50,7 +51,7 @@ Simulation::Simulation(int argc, char** argv)
                 std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
                              "The value of lambda has been replaced by " << tmp << "." << std::endl;
             }
-            if(delta.getValue() <= 0 or delta.getValue() >= 1) {
+            if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
             }
             if (argc == 1) {
