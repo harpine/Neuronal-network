@@ -60,15 +60,16 @@ Simulation::Simulation(int argc, char** argv)
             }
             if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
-            }   
-            if (perc.isSet() or (perc.isSet() and type.isSet())) {
+            }  
+            if(type.isSet() and perc.isSet()) {
+                throw std::domain_error("Only the percentage of excitating neurons (p) or the proportion of different types (T) should be given");
+            } else if (perc.isSet()) {
                 _net = new Network(model.getValue(), number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(perc.getValue());
                 }
-            }
-            else if(type.isSet()){
+            } else if(type.isSet()) {
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(type.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(model.getValue(), number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
@@ -76,7 +77,7 @@ Simulation::Simulation(int argc, char** argv)
                 if (_options) {
                     initializeSample(FS, LTS, IB, RZ, TC, CH);
                 }
-            }
+            } 
             _outfile.open(_filename);
             
         } catch(const std::exception& e) {
