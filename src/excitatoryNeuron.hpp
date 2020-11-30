@@ -37,7 +37,7 @@ class ExcitatoryNeuron :public Neuron
 
      * @return the factor of the Excitatory Neuron
      */
-    virtual int factor() const override;
+    virtual double factor() const override;
 
 };
 

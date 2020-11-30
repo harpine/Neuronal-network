@@ -38,6 +38,6 @@ InhibitoryNeuron::~InhibitoryNeuron(){
 int InhibitoryNeuron::getW() const{
     return 2;
 }
-int InhibitoryNeuron::factor() const{
+double InhibitoryNeuron::factor() const{
     return -1;
 }

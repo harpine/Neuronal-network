@@ -39,7 +39,7 @@ class InhibitoryNeuron :public Neuron
      * 
      * @return the factor of the Neuron
      */
-    virtual int factor() const override;
+    virtual double factor() const override;
 
 };
 

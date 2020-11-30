@@ -61,6 +61,6 @@ ExcitatoryNeuron::~ExcitatoryNeuron(){
 int ExcitatoryNeuron::getW() const{
     return 5;
 }
-int ExcitatoryNeuron::factor()const{
+double ExcitatoryNeuron::factor()const{
     return 0.5;
 }
