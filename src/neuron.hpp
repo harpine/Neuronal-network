@@ -75,7 +75,7 @@ class Neuron{
      * 
      * @return w of the neuron
      */
-    virtual int getW() const = 0;
+    virtual double getW() const = 0;
 
     /**
      * @brief pure virtual method returning the factor of the neuron
