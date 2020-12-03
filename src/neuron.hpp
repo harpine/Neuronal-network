@@ -9,7 +9,7 @@
  * @brief A pure virtual class Neuron.
  * 
  * Class defined by 4 dimensionless parameters a,b,c,d. 
- * 2 systems of ordinary differential equaitons of who's variables are v,u 
+ * 2 systems of ordinary differential equations of who's variables are v,u
  * and the current from the network it belongs to.
  */
 
@@ -48,10 +48,10 @@ class Neuron{
      * 
      * @return The noise produced by the neuron
      */
-    double noise() const {return getW() * (_RNG->normal(0,1));}; //TODO faire un paramètre pour sd
+    double noise() const {return getW() * (_RNG->normal(0,10));}; //TODO faire un paramètre pour sd
     /**
      * @brief Describes the firing state of the neuron
-     * 
+     *
      * @return true when v passes the threshold
      * @return false when v is under the threshold
      */

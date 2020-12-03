@@ -192,7 +192,6 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         std::getline(ss, value, ',');
         std::transform(key.begin(), key.end(), key.begin(), ::toupper);
         if (key == "FS") fs = stod(value);
-        std::cout << key << " "; 
         if (key == "LTS") lts = stod(value);
         if (key == "IB") ib = stod(value);
         if (key == "RZ") rz = stod(value);
@@ -243,7 +242,7 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
     if (p_CH > 0) {
         headers += "\t CH.v\t CH.u\t CH.I";
     }
-    if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1) {
+    if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1 - 1e-10) {
         headers += "\t RS.v\t RS.u\t RS.I";
     }
     headers += "\n";

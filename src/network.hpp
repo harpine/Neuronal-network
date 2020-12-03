@@ -102,6 +102,9 @@ std::array<Neuron*,7> getNeuronsOutput() const;
 
 private:
 std::vector<Neuron*> _network;
+/*! Collection of connections to the neurons of corresponding index.
+ * The second parameter of the map is the intensity of the connection.
+*/
 std::vector<std::map<Neuron*, double>> _connections;
 double _intensity;
 char _model;
