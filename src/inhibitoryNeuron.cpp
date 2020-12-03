@@ -35,9 +35,9 @@ InhibitoryNeuron::InhibitoryNeuron(double delta,std::string type)
 InhibitoryNeuron::~InhibitoryNeuron(){
 
 }
-int InhibitoryNeuron::getW() const{
-    return 2;
+double InhibitoryNeuron::getW() const{
+    return _INHIB_W_;
 }
 double InhibitoryNeuron::factor() const{
-    return -1;
+    return _INHIB_FACTOR_;
 }

@@ -21,18 +21,19 @@ Simulation::Simulation(int argc, char** argv)
 		    TCLAP::ValuesConstraint<char> allowedVals( allowed );
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, &allowedVals);
             cmd.add(model);
-            TCLAP::ValueArg<std::string> rep("r", "repartition",( _REP_TEXT_ + ex + _REP_), true, "", "string");
-            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), true, _PERC_, "double");
-            cmd.xorAdd(rep,perc);
+            TCLAP::ValueArg<std::string> type("T", "type",( _TYPE_TEXT_ + ex + _TYPE_), false, "", "string");
+            cmd.add(type);
+            TCLAP::ValueArg<double> perc("p", "p_E",( _PERCENT_ACTIVE_ + ex + std::to_string(_PERC_)), false, _PERC_, "double");
+            cmd.add(perc);
             TCLAP::ValueArg<double> delta("d", "delta", (_D_TEXT_ + def + std::to_string(_DEL_)), false, _DEL_, "double");
             cmd.add(delta);
-            TCLAP::ValueArg<double> inten("i", "intensity", (_INTENSITY_ + def + std::to_string(_INT_)), false, _INT_, "double");
+            TCLAP::ValueArg<double> inten("L", "intensity", (_INTENSITY_ + def + std::to_string(_INT_)), false, _INT_, "double");
             cmd.add(inten);
             TCLAP::ValueArg<double> lambda("l", "lambda", (_LAMBDA_ + def + std::to_string(_LAMB_)), false, _LAMB_, "double");
             cmd.add(lambda);
             TCLAP::ValueArg<int> time("t", "time", (_TIME_TEXT_ + def + std::to_string(_END_TIME_)), false, _END_TIME_, "int");            
             cmd.add(time);
-            TCLAP::ValueArg<int> number("n", "number", (_NEURON_NUMBER_ + def + std::to_string(_NB_)), false, _NB_, "int");
+            TCLAP::ValueArg<int> number("N", "number", (_NEURON_NUMBER_ + def + std::to_string(_NB_)), false, _NB_, "int");
             cmd.add(number);
             TCLAP::SwitchArg option("c", "options", (_OPTION_TEXT_ + def + _SAMPLES_ + _EXTENSION_ + " and " + _PARAMETERS_ + _EXTENSION_), false);
             cmd.add(option);
@@ -59,17 +60,18 @@ Simulation::Simulation(int argc, char** argv)
             }
             if(delta.getValue() < 0 or delta.getValue() > 1) {
                 throw std::domain_error("The value of delta should be between 0 and 1");
-            }   
-            if (perc.isSet()) {
+            }  
+            if(type.isSet() and perc.isSet()) {
+                throw std::domain_error("Only the percentage of excitating neurons (p) or the proportion of different types (T) should be given");
+            } else if (perc.isSet() or (not perc.isSet() and not type.isSet())) {
                 _net = new Network(model.getValue(), number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(perc.getValue());
                 }
-            }
-            else if(rep.isSet()){
+            } else if(type.isSet()) {
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
-                readLine(rep.getValue(), FS, IB, RZ, LTS, TC, CH);
+                readLine(type.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(model.getValue(), number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
                                     std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {

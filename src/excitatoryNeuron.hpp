@@ -30,7 +30,7 @@ class ExcitatoryNeuron :public Neuron
      * 
      * @return the W of the Excitatory Neuron
      */   
-    virtual int getW() const override;
+    virtual double getW() const override;
 
     /**
      * @brief A getter for the factor of the Neuron

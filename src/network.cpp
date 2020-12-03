@@ -108,7 +108,7 @@ void Network::makeConnections(double lambda)
         {
             nbConnections = _RNG->poisson(lambda);
         }
-        for (int j(0); j < std::min(nbConnections, int(_network.size())-2) and _connections.size() < _network.size(); j++)
+        for (int j(0); j < std::min(nbConnections, int(_network.size())-1) and _connections.size() < _network.size(); j++)
         // we have to take the minimum of both, because the distribution result can be higher than lambda and make an error occuring.
         {
             //pick a random neuron and connect it to the actual neurons. -> using which distribution ??

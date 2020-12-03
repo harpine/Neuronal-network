@@ -56,9 +56,9 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta,std::string type)
 ExcitatoryNeuron::~ExcitatoryNeuron(){
 
 }
-int ExcitatoryNeuron::getW() const{
-    return 5;
+double ExcitatoryNeuron::getW() const{
+    return _EXCIT_W_;
 }
 double ExcitatoryNeuron::factor()const{
-    return 0.5;
+    return _EXCIT_FACTOR_;
 }
