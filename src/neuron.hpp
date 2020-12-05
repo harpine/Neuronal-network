@@ -16,19 +16,19 @@
 class Neuron{
     public:
     /**
-     * @brief Construct a new Neuron object
+     * @brief Constructs a new Neuron object
      * 
-     * @param type String indicating the type of the Neuron 
+     * @param type is a string indicating the type of the Neuron 
      */
     Neuron(std::string type);
 
     /**
-     * @brief Destroy the Neuron object
+     * @brief Destroys the Neuron object
      */
     virtual ~Neuron();
 
     /**
-    * @brief updates the parameters
+    * @brief Updates the parameters
     * 
     * Update is 1 simulation step. It updates the paramters of the Neuron using the correct
     * forumla, depending on the firing state of the Neuron
@@ -36,11 +36,11 @@ class Neuron{
     void update();
 
     /**
-     * @brief Set the current paramter
+     * @brief Sets the current paramter
      * 
-     * @param current The new current value
+     * @param current is the new current value
      */
-    void setCurrent(const double current) {_current=current;};
+    void setCurrent(const double current) {_current = current;};
     
     
     /**
@@ -48,7 +48,7 @@ class Neuron{
      * 
      * @return The noise produced by the neuron
      */
-    double noise() const {return getW() * (_RNG->normal(0,1));}; //TODO faire un paramètre pour sd
+    double noise() const {return getW() * (_RNG->normal(0,1));}; 
     /**
      * @brief Describes the firing state of the neuron
      *
@@ -58,35 +58,35 @@ class Neuron{
     bool isFiring();
 
     /**
-     * @brief Getter for the _a,_b,_c,_d attributes
+     * @brief Getter for the _a, _b, _c, _d attributes
      * 
-     * @return std::vector<double> {_a,_b,_c,_d}
+     * @return std::vector<double> {_a, _b, _c, _d}
      */
     std::vector<double> getAttributs();
     /**
-     * @brief Getter for the _v,_u, _current variables
+     * @brief Getter for the _v, _u,  _current variables
      * 
-     * @return std::vector<double> {_v,_u, _current}
+     * @return std::vector<double> {_v, _u, _current}
      */
     std::vector<double> getVariables();
 
     /**
-     * @brief pure virtual method returning the W of the neuron
+     * @brief Getter for the W of the neuron
      * 
-     * @return w of the neuron
+     * @return the w of the neuron
      */
     virtual double getW() const = 0;
 
     /**
-     * @brief pure virtual method returning the factor of the neuron
+     * @brief Pure virtual method returning the factor of the neuron
      * 
-     * @return factor of the neuron
+     * @return the factor of the neuron
      */
     virtual double factor() const = 0;
 
     /**
-     * @brief Getter fot the type of the neuron
-     * @return type of the neuron
+     * @brief Getter for the type of the neuron
+     * @return tthe type of the neuron
      */
     std::string getType() const; 
 
