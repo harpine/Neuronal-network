@@ -3,7 +3,7 @@
 #include "neuron.hpp"
 
 /**
- * @brief An excitatory Neuron class.
+ * @brief An ExcitatoryNeuron class.
  * 
  * A type of neuron inheriting from the pure virtual class Neuron.
  */
@@ -18,7 +18,7 @@ class ExcitatoryNeuron :public Neuron
      * 
      * @note type has a default parameter "RS"
      */
-    ExcitatoryNeuron(double delta, std::string type="RS");
+    ExcitatoryNeuron(double delta, std::string type = "RS");
 
     /**
      * @brief Destroy the Excitatory Neuron object
