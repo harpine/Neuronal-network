@@ -153,6 +153,7 @@ void Network::synapticCurrent(int index)
         }
     }
     _network[index]->setCurrent(_network[index]->noise() + input);
+
 }
 
 std::vector<bool> Network::getCurrentstatus() const

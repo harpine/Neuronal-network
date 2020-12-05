@@ -244,7 +244,7 @@ void Simulation::initializeSample(double p_FS, double p_LTS, double p_IB, double
     if (p_CH > 0) {
         headers += "\t CH.v\t CH.u\t CH.I";
     }
-    if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1) {
+    if ((p_FS + p_IB + p_RZ + p_LTS + p_TC + p_CH) < 1 - 1e-10) {
         headers += "\t RS.v\t RS.u\t RS.I";
     }
     headers += "\n";

@@ -8,7 +8,7 @@
 
 // * Default parameter values *
 
-#define _END_TIME_ 1000
+#define _END_TIME_ 500
 #define _DELTA_T_ .5
 #define _NB_ 10000
 #define _PERC_ .8
