@@ -1,5 +1,4 @@
 #include "random.hpp"
-#include <algorithm>
 
 Random::Random(unsigned long int s) : _seed(s) {
     if (_seed == 0) {
