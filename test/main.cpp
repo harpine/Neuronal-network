@@ -5,6 +5,10 @@
 #include "../src/excitatoryNeuron.hpp"
 #include "../src/inhibitoryNeuron.hpp"
 #include <cmath>
+#include <vector>
+#include <map>
+#include <fstream>
+#include <string>
 
 Random* _RNG = new Random(23948710923);
 
@@ -152,13 +156,13 @@ TEST(Neuron, update){
     double r=0.5;
     ExcitatoryNeuron* excitatory = new ExcitatoryNeuron(r);
     InhibitoryNeuron* inhibitory = new InhibitoryNeuron(r);
-    std::vector<double> excit_variablesInitial=excitatory->getVariables();
-    std::vector<double> inhib_varaiblesInitial=inhibitory->getVariables();
+    std::vector<double> excit_variablesInitial = excitatory->getVariables();
+    std::vector<double> inhib_varaiblesInitial = inhibitory->getVariables();
     excitatory->update();
     inhibitory->update();
     for(size_t i(0); i < (excit_variablesInitial.size()-1); ++i){
-        EXPECT_NE(excit_variablesInitial[i],excitatory->getVariables()[i]);
-        EXPECT_NE(inhib_varaiblesInitial[i],inhibitory->getVariables()[i]);
+        EXPECT_NE(excit_variablesInitial[i], excitatory->getVariables()[i]);
+        EXPECT_NE(inhib_varaiblesInitial[i], inhibitory->getVariables()[i]);
     }
 }
 
