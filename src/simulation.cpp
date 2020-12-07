@@ -3,10 +3,9 @@
 #include <time.h>
 
 Simulation::Simulation(const std::string& outfile)
-    : _dt(_DELTA_T_), _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
+    : _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
 
 Simulation::Simulation(int argc, char** argv)
-    : _dt(_DELTA_T_)
     {
         try {
             std::string def (", by default : ");
@@ -14,11 +13,8 @@ Simulation::Simulation(int argc, char** argv)
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
             TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
             cmd.add(ofile);
-		    std::vector<char> allowed;
-		    allowed.push_back('o');
-		    allowed.push_back('b');
-		    allowed.push_back('c');
-		    TCLAP::ValuesConstraint<char> allowedVals( allowed );
+		    std::vector<char> allowed = {'o', 'b', 'c'};
+		    TCLAP::ValuesConstraint<char> allowedVals(allowed);
             TCLAP::ValueArg<char> model("m", "model", (_MODEL_TEXT_ + def + _MOD_), false, _MOD_, &allowedVals);
             cmd.add(model);
             TCLAP::ValueArg<std::string> type("T", "type",( _TYPE_TEXT_ + ex + _TYPE_), false, "", "string");
@@ -44,13 +40,13 @@ Simulation::Simulation(int argc, char** argv)
             if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             if(inten.getValue() <= 0) throw  std::domain_error("The mean intensity of a connection must be positive and greater than 0");
             
-            if ((number.getValue() * lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
+            if ((number.getValue()*lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
                                                                                       "Please reduce the number of neurons or the mean connectivity (lambda)");
             _time = time.getValue();
             _options = option.getValue();
             std::string filename(ofile.getValue());
             _filename = ofile.getValue();
-            if (filename.find(_EXTENSION_, filename.size()-4) == std::string::npos) {
+            if (filename.find(_EXTENSION_, (filename.size() - 4)) == std::string::npos) {
                 _filename += _EXTENSION_;
             }
             double tmp = (number.getValue() - 1);
@@ -63,13 +59,15 @@ Simulation::Simulation(int argc, char** argv)
             }  
             if(type.isSet() and perc.isSet()) {
                 throw std::domain_error("Only the percentage of excitating neurons (p) or the proportion of different types (T) should be given");
-            } else if (perc.isSet() or (not perc.isSet() and not type.isSet())) {
+            }
+            else if (perc.isSet() or (not perc.isSet() and not type.isSet())) {
                 _net = new Network(model.getValue(), number.getValue(), perc.getValue(), inten.getValue(),
                                    std::min(lambda.getValue(), tmp), delta.getValue());
                 if (_options) {
                     initializeSample(perc.getValue());
                 }
-            } else if(type.isSet()) {
+            } 
+            else if(type.isSet()) {
                 double FS(0), IB(0), RZ(0), LTS(0), TC(0), CH(0);
                 readLine(type.getValue(), FS, IB, RZ, LTS, TC, CH);
                 _net = new Network(model.getValue(), number.getValue(), FS, IB, RZ, LTS, TC, CH,inten.getValue(),
@@ -86,8 +84,7 @@ Simulation::Simulation(int argc, char** argv)
         }
     } 
 
-Simulation::~Simulation() 
-{
+Simulation::~Simulation() {
     delete _net;
 }
 
@@ -101,7 +98,7 @@ int Simulation::run() {
         std::string file = _SAMPLES_;
         samples.open(file + _EXTENSION_, std::ios::app);
         while (running_time < _time) {
-            running_time += 2 * _dt;
+            running_time += 2*_DELTA_T_;
             _net->update();
             print(index);
             samples << index;
@@ -110,9 +107,10 @@ int Simulation::run() {
         }
         samples.close();
         paramPrint();
-    } else {
+    } 
+    else {
         while (running_time < _time) {
-            running_time += 2 * _dt;
+            running_time += 2*_DELTA_T_;
             _net->update();
             print(index);
             index += 1;

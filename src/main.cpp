@@ -6,7 +6,7 @@
 Random* _RNG = new Random();
 
 int main(int argc, char** argv){
-    try{
+    try {
         Simulation sim(argc, argv);
         sim.run();
         if (_RNG) delete _RNG;

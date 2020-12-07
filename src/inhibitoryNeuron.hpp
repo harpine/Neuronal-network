@@ -4,7 +4,7 @@
 
 
 /**
- * @brief An inhibitory Neuron class.
+ * @brief An InhibitoryNeuron class.
  * 
  * A type of neuron inheriting from the pure virtual class Neuron.
  */
@@ -18,7 +18,7 @@ class InhibitoryNeuron :public Neuron
      * @param type A string containing the type of inhibitory neuron 
      * @note type has a default parameter "FS"
      */
-    InhibitoryNeuron(double delta,std::string type="FS");
+    InhibitoryNeuron(double delta, std::string type = "FS");
 
     /**
      * @brief Destroy the Inhibitory Neuron object
