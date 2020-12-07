@@ -1,6 +1,5 @@
 #include "simulation.hpp"
 #include "constants.hpp"
-#include <time.h>
 
 Simulation::Simulation(const std::string& outfile)
     : _time(_END_TIME_), _net( new Network(_MOD_, _NB_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
@@ -48,6 +47,9 @@ Simulation::Simulation(int argc, char** argv)
             _filename = ofile.getValue();
             if (filename.find(_EXTENSION_, (filename.size() - 4)) == std::string::npos) {
                 _filename += _EXTENSION_;
+            }
+            if (argc == 1) {
+                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
             }
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp) {

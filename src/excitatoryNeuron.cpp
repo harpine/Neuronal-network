@@ -1,7 +1,5 @@
 #include "excitatoryNeuron.hpp"
-#include "random.hpp"
 #include <stdexcept>
-#include <iostream>
 #include "constants.hpp"
 
 
@@ -44,7 +42,7 @@ ExcitatoryNeuron::ExcitatoryNeuron(double delta, std::string type)
         else {
            throw std::domain_error("The " + type + " neuron does not exist");
         }
-        _v = -65;
+        _v = _INIT_V_;
         _u = _b*_v;
     } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';

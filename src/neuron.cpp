@@ -1,6 +1,5 @@
 #include "neuron.hpp"
 #include "constants.hpp"
-#include "random.hpp"
 
 Neuron::Neuron(std::string type)
 : _current(0.0), _type(type)
@@ -11,16 +10,15 @@ Neuron::~Neuron()
 
 void Neuron::update()
 {
-    double tmp_v(_v);
-    double tmp_u(_u);
     if(isFiring()){
         _v = _c;
         _u += _d;
     } 
     else {
-        _v += (0.5*(0.04*tmp_v*tmp_v + 5*tmp_v + 140 - tmp_u + _current));
-        _v += (0.5*(0.04*tmp_v*tmp_v + 5*tmp_v + 140 - tmp_u + _current));
-        _u += (_a*(_b*tmp_v - tmp_u));
+        //based on Izhikevich model, we have to udpate the v twice more often than the u.
+        _v += (0.5*(0.04*_v*_v + 5*_v + 140 - _u + _current));
+        _v += (0.5*(0.04*_v*_v + 5*_v + 140 - _u + _current));
+        _u += (_a*(_b*_v - _u));
     }
 }
 

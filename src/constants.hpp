@@ -27,6 +27,8 @@
 #define _EXTENSION_ ".txt"
 #define _PATH_TEST_ "test/"
 
+#define _INIT_V_ -65
+
 #define _EXCIT_W_ 5
 #define _EXCIT_FACTOR_ .5
 

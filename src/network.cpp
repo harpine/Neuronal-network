@@ -2,7 +2,6 @@
 #include <algorithm>
 #include "inhibitoryNeuron.hpp"
 #include "excitatoryNeuron.hpp"
-#include "iostream"
 
 Network::Network(char model, int nb, double p_E, double intensity, double lambda, double delta)
     : _intensity(intensity), _model(model)

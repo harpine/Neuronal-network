@@ -147,6 +147,7 @@ TEST(Neuron, attributs){
         EXPECT_NEAR(inhibitory_FS->getAttributs()[i], inhib_attributs_FS[i], std::abs(inhib_attributs_FS[i]*r));
     }
 }
+
 TEST(Neuron, update){
     double r=0.5;
     ExcitatoryNeuron* excitatory= new ExcitatoryNeuron(r);

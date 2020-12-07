@@ -1,5 +1,5 @@
 #include <iostream>
-#include <random.hpp>
+#include "random.hpp"
 #include "simulation.hpp"
 #include "constants.hpp"
 
