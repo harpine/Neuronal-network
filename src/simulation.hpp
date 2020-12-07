@@ -8,10 +8,10 @@
 /**
  * @brief The \ref Simulation class is the main class of this program.
  * 
- * It constructs the neuron network System according to user-specified parameters, and @ref runs the simulation. 
+ * It constructs the neuron \ref Network according to user-specified parameters, and runs the simulation. 
  * A \ref Simulation is made of a pointer to a network, which is a vector of pointers to neuron objects. These neurons are constructed within the constructor of the network, 
  * depending on the distribution of the different types of neuron the network will contain.
- * Time (\ref _time) advances from 0 until it reaches T the end of simulation time. The state of the network is updated at each time by the \ref run method.
+ * The time advances from 0 until it reaches T the end of simulation time. The state of the network is updated at each time by the \ref run method.
  * 
  */
 class Simulation {

@@ -1,6 +1,8 @@
 #include "excitatoryNeuron.hpp"
 #include <stdexcept>
 #include "constants.hpp"
+#include "random.hpp"
+#include <iostream>
 
 
 ExcitatoryNeuron::ExcitatoryNeuron(double delta, std::string type)

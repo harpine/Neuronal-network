@@ -1,6 +1,8 @@
 #include "inhibitoryNeuron.hpp"
 #include <stdexcept>
 #include "constants.hpp"
+#include "random.hpp"
+#include <iostream>
 
 
 InhibitoryNeuron::InhibitoryNeuron(double delta, std::string type)
