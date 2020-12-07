@@ -2,7 +2,6 @@
 #define INHIBITORYNEURON_HPP
 #include "neuron.hpp"
 
-
 /**
  * @brief An InhibitoryNeuron class.
  * 

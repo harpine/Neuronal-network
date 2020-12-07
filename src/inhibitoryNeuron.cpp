@@ -1,7 +1,8 @@
 #include "inhibitoryNeuron.hpp"
 #include <stdexcept>
-#include <iostream>
 #include "constants.hpp"
+#include "random.hpp"
+#include <iostream>
 
 
 InhibitoryNeuron::InhibitoryNeuron(double delta, std::string type)
@@ -25,7 +26,7 @@ InhibitoryNeuron::InhibitoryNeuron(double delta, std::string type)
         else {
            throw std::domain_error("The Inhibitory " + type + " neuron does not exist");
         }
-        _v = -65;
+        _v = _INIT_V_;
         _u = _b*_v;
     } catch(const std::exception& e) {
             std::cerr << e.what() << '\n';

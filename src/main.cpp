@@ -1,7 +1,7 @@
 #include <iostream>
-#include <random.hpp>
+#include "random.hpp"
 #include "simulation.hpp"
-#include "constants.hpp"
+#include <stdexcept>
 
 Random* _RNG = new Random();
 

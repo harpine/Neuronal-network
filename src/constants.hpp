@@ -1,11 +1,3 @@
-#include <tclap/CmdLine.h>
-#include <stdexcept>
-#include <iostream>
-#include <fstream>
-#include <map>
-#include <string>
-#include <algorithm>
-
 // * Default parameter values *
 
 #define _END_TIME_ 500
@@ -26,6 +18,8 @@
 #define _PATH_OUTFILE_ "../"
 #define _EXTENSION_ ".txt"
 #define _PATH_TEST_ "test/"
+
+#define _INIT_V_ -65
 
 #define _EXCIT_W_ 5
 #define _EXCIT_FACTOR_ .5
