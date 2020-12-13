@@ -116,8 +116,10 @@ void Network::makeConnections(double lambda) {
 }
 
 void Network::update() {
-    for (size_t i(0); i <_network.size(); i++) {
+    for (size_t i(0); i < _network.size(); i++) {
         synapticCurrent(i);
+    }
+    for (size_t i(0); i < _network.size(); i++) {
         _network[i]->update();
     }
 }
