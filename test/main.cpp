@@ -91,16 +91,19 @@ TEST(Network, current) {
 }
 
 TEST(Simulation, output) {
-    Simulation sim(_SPIKES_);
+
+    std::string file(_SPIKES_);
+    file += "_test";
+    file += _EXTENSION_;
+    Simulation sim(file);
     int result = sim.run();
     EXPECT_LE(result, 60);
 
     std::ifstream myfile;
     std::string print;
 
-    myfile.open(_SPIKES_);
+    myfile.open(file, std::ios::app);
     if (myfile.is_open()) {
-        EXPECT_FALSE(myfile.eof());
         int i(0);
         while (std::getline(myfile, print)) {
             print.erase(print.begin(), print.begin() + print.find(' '));
