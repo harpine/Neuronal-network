@@ -11,7 +11,7 @@
 #define _DEL_ .05
 #define _OPT_ false
 #define _DISCHARGE_T_ 30
-#define _NB_TEST_ 6
+#define _NB_TEST_ 50
 #define _SPIKES_ "spikes"
 #define _PARAMETERS_ "parameters"
 #define _SAMPLES_ "samples"
