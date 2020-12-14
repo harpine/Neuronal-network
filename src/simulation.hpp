@@ -32,6 +32,7 @@ public :
     Simulation(int argc, char** argv);
 
     /*! @brief Creates a new Simulation using default parameters and an ofstream in which the output will be written.
+               (Only used within the tests)
      *  @param outfile the file for the output
      */
     Simulation(const std::string& outfile);
