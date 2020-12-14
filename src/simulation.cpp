@@ -8,7 +8,7 @@
 #include <algorithm>
 
 Simulation::Simulation(const std::string& outfile)
-    : _time(_END_TIME_), _net( new Network(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
+    : _time(_END_TIME_TEST_), _net( new Network(_MOD_, _NB_TEST_, _PERC_, _INT_, _LAMB_, _DEL_)), _outfile(outfile), _options(false) {}
 
 Simulation::Simulation(int argc, char** argv)
     {

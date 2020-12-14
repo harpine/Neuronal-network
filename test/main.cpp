@@ -90,6 +90,23 @@ TEST(Network, current) {
     }
 }
 
+TEST(Simulation, readLine) {
+    std::string file(_SPIKES_);
+    file += "_test";
+    file += _EXTENSION_;
+    Simulation sim(file);
+    double FS(0.), IB(0.), RZ(0.), LTS(0.), TC(0.), CH(0.);
+    std::string proportions = "FS:0.1, IB:0.2, RZ:0.1, LTS:0.1, TC:0.2, CH:0.1";
+    sim.readLine(proportions, FS, IB, RZ, LTS, TC, CH);
+    EXPECT_NE(FS, 0);
+    EXPECT_NE(IB, 0);
+    EXPECT_NE(RZ, 0);
+    EXPECT_NE(LTS, 0);
+    EXPECT_NE(TC, 0);
+    EXPECT_NE(CH, 0);
+
+}
+
 TEST(Simulation, output) {
     std::string file(_SPIKES_);
     file += "_test";
@@ -113,27 +130,9 @@ TEST(Simulation, output) {
                 EXPECT_TRUE(neuron == '1' or neuron == '0');
             }
         }
-        EXPECT_EQ(i, _END_TIME_);
+        EXPECT_EQ(i, _END_TIME_TEST_);
     }
-
     myfile.close();
-}
-
-TEST(Simulation, readLine) {
-    std::string file(_SPIKES_);
-    file += "_test";
-    file += _EXTENSION_;
-    Simulation sim(file);
-    double FS(0.), IB(0.), RZ(0.), LTS(0.), TC(0.), CH(0.);
-    std::string proportions = "FS:0.1, IB:0.2, RZ:0.1, LTS:0.1, TC:0.2, CH:0.1";
-    sim.readLine(proportions, FS, IB, RZ, LTS, TC, CH);
-    EXPECT_NE(FS, 0);
-    EXPECT_NE(IB, 0);
-    EXPECT_NE(RZ, 0);
-    EXPECT_NE(LTS, 0);
-    EXPECT_NE(TC, 0);
-    EXPECT_NE(CH, 0);
-
 }
 
 TEST(Neuron, attributs){
