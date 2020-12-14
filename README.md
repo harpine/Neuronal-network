@@ -7,6 +7,7 @@ Project status : completed.
 ## Requirements
 ***
 A list of technologies used within the project:
+* **g++**: Version 7.5.0
 * **doxygen**: Version 1.9.0
 * **cmake**: Version 3.10.2
 * **Rscript**: Version 3.4.4
@@ -14,7 +15,7 @@ A list of technologies used within the project:
 
 ## Installation
 ***
-A little intro about the installation and steps to get appropriate result (without options)
+A little intro about the installation and steps to get appropriate results (without options)
 ```
 $ git clone https://gitlab.epfl.ch/sv_cpp_projects/team_9
 $ mkdir build
