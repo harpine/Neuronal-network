@@ -91,7 +91,6 @@ TEST(Network, current) {
 }
 
 TEST(Simulation, output) {
-
     std::string file(_SPIKES_);
     file += "_test";
     file += _EXTENSION_;
@@ -109,7 +108,7 @@ TEST(Simulation, output) {
             print.erase(print.begin(), print.begin() + print.find(' '));
             print.erase(std::remove_if(print.begin(), print.end(), isspace), print.end());
             i += 1;
-            EXPECT_EQ(print.size(), _NB_);
+            EXPECT_EQ(print.size(), _NB_TEST_);
             for(auto neuron : print) {
                 EXPECT_TRUE(neuron == '1' or neuron == '0');
             }
@@ -121,7 +120,10 @@ TEST(Simulation, output) {
 }
 
 TEST(Simulation, readLine) {
-    Simulation sim(_SPIKES_);
+    std::string file(_SPIKES_);
+    file += "_test";
+    file += _EXTENSION_;
+    Simulation sim(file);
     double FS(0.), IB(0.), RZ(0.), LTS(0.), TC(0.), CH(0.);
     std::string proportions = "FS:0.1, IB:0.2, RZ:0.1, LTS:0.1, TC:0.2, CH:0.1";
     sim.readLine(proportions, FS, IB, RZ, LTS, TC, CH);
