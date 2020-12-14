@@ -44,6 +44,7 @@ Simulation::Simulation(int argc, char** argv)
             if(number.getValue() <= 0) throw std::domain_error("The number of neuron must be positive or greater than 0");
             if(lambda.getValue() < 0) throw std::domain_error("The mean connection between neurons must be positive and not exceed the number of neuron");
             if(inten.getValue() <= 0) throw  std::domain_error("The mean intensity of a connection must be positive and greater than 0");
+            if(perc.getValue() < 0 or perc.getValue() > 1) throw std::domain_error("The proportion should be between 0 and 1");
             
             if ((number.getValue()*lambda.getValue()) > 1e8) throw std::domain_error("The computer probably won't have the memory necessary to deal with a network as large as this one. "
                                                                                       "Please reduce the number of neurons or the mean connectivity (lambda)");
@@ -205,6 +206,9 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "RZ") rz = stod(value);
         if (key == "TC") tc = stod(value);
         if (key == "CH") ch = stod(value);
+        if(key == "RS") {
+            std::cerr << "Warning : the given proportion of RS will not be taken into account as it is the default type." << std::endl;
+        }
     }
     if ((fs+ib+rz+lts+tc+ch) > 1 + 1e-10) {
         throw std::logic_error("The sum of all proportions is greater than 1");

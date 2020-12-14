@@ -7,7 +7,7 @@
 #define _PERC_ .8
 #define _TYPE_ "FS:0.8"
 #define _LAMB_ 10
-#define _INT_ 20
+#define _INT_ 12
 #define _MOD_ 'b'
 #define _DEL_ .05
 #define _OPT_ false
