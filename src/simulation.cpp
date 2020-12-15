@@ -16,7 +16,7 @@ Simulation::Simulation(int argc, char** argv)
             std::string def (", by default : ");
             std::string ex(" , for instance : ");
             TCLAP::CmdLine cmd(_PRGRM_TEXT_);
-            TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, _SPIKES_, "string");
+            TCLAP::ValueArg<std::string> ofile("o", "outptut", (_OFILE_TEXT_ + def + _SPIKES_ + _EXTENSION_), false, "", "string");
             cmd.add(ofile);
 		    std::vector<char> allowed = {'o', 'b', 'c'};
 		    TCLAP::ValuesConstraint<char> allowedVals(allowed);
@@ -50,9 +50,13 @@ Simulation::Simulation(int argc, char** argv)
                                                                                       "Please reduce the number of neurons or the mean connectivity (lambda)");
             _time = time.getValue();
             _options = option.getValue();
-            std::string filename(ofile.getValue());
-            _filename = ofile.getValue();
-            if (filename.find(_EXTENSION_, (filename.size() - 4)) == std::string::npos) {
+            if(ofile.isSet()){
+                _filename = ofile.getValue();
+            } else {
+                _filename = _SPIKES_;
+            }
+            
+            if (_filename.find(_EXTENSION_, (_filename.size() - 4)) == std::string::npos) {
                 _filename += _EXTENSION_;
             }
             if (argc == 1) {
@@ -104,8 +108,17 @@ int Simulation::run() {
     int index = 1;
     if (_options) {
         std::ofstream samples;
-        std::string file = _SAMPLES_;
-        samples.open(file + _EXTENSION_, std::ios::app);
+        std::string spikes = _SPIKES_;
+        std::string sample = _SAMPLES_;
+        std::string concat = "_";
+        concat += sample;
+        std::string file = _filename;
+        if(file != (spikes + _EXTENSION_)) {
+            file.insert(file.size() - 4, concat);
+        } else {
+            file = sample + _EXTENSION_;
+        }
+        samples.open(file, std::ios::app);
         while (running_time < _time) {
             running_time += 2*_DELTA_T_;
             _net->update();
@@ -147,8 +160,17 @@ void Simulation::print(int index) {
 void Simulation::paramPrint() {
     std::ostream *outstr = &std::cout;
     std::ofstream param;
-    std::string file = _PARAMETERS_;
-    param.open(file + _EXTENSION_);
+    std::string spikes = _SPIKES_;
+    std::string par = _PARAMETERS_;
+    std::string concat = "_";
+    concat += par;
+    std::string file = _filename;
+        if(file != (spikes + _EXTENSION_)) {
+            file.insert(file.size() - 4, concat);
+        } else {
+            file = par + _EXTENSION_;
+        }
+    param.open(file);
     if (param.is_open()) {
         outstr = &param;
     }
@@ -218,8 +240,17 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
 void Simulation::initializeSample(double p_E)
 {
     std::ofstream samples;
-    std::string file = _SAMPLES_;
-    samples.open(file + _EXTENSION_); 
+    std::string spikes = _SPIKES_;
+    std::string sample = _SAMPLES_;
+    std::string concat = "_";
+    concat += sample;
+    std::string file = _filename;
+    if(file != (spikes + _EXTENSION_)) {
+        file.insert(file.size() - 4, concat);
+    } else {
+        file = sample + _EXTENSION_;
+    }
+    samples.open(file); 
     if (p_E == 0) {
         samples << "FS.v\t FS.u\t FS.I\n";
     } else if (p_E == 1) {
