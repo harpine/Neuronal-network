@@ -56,11 +56,11 @@ Simulation::Simulation(int argc, char** argv)
                 _filename += _EXTENSION_;
             }
             if (argc == 1) {
-                std::cerr << "Warning : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
+                std::cerr << "Caution : For information on the usage of this program type ./neuron_network -h in the command line" << std::endl;
             }
             double tmp = (number.getValue() - 1);
             if (lambda.getValue() > tmp) {
-                std::cerr << "Warning: The value of lambda must be strictly less than the number of neurons. "
+                std::cerr << "Caution: The value of lambda must be strictly less than the number of neurons. "
                              "The value of lambda has been replaced by " << tmp << "." << std::endl;
             }
             if(delta.getValue() < 0 or delta.getValue() > 1) {
@@ -207,7 +207,7 @@ void Simulation::readLine(std::string& line,  double& fs, double& ib, double& rz
         if (key == "TC") tc = stod(value);
         if (key == "CH") ch = stod(value);
         if(key == "RS") {
-            std::cerr << "Warning : the given proportion of RS will not be taken into account as it is the default type." << std::endl;
+            std::cerr << "Caution : the given proportion of RS will not be taken into account as it is the default type." << std::endl;
         }
     }
     if ((fs+ib+rz+lts+tc+ch) > 1 + 1e-10) {
